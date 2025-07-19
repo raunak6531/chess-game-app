@@ -1,5 +1,5 @@
 import React from 'react';
-import { Move } from '../types/chess';
+import type { Move } from '../types/chess';
 import './MoveHistory.css';
 
 interface MoveHistoryProps {
@@ -7,9 +7,8 @@ interface MoveHistoryProps {
 }
 
 const MoveHistory: React.FC<MoveHistoryProps> = ({ moves }) => {
-  const formatMove = (move: Move, index: number): string => {
+  const formatMove = (move: Move): string => {
     const files = 'abcdefgh';
-    const fromNotation = `${files[move.from.col]}${move.from.row + 1}`;
     const toNotation = `${files[move.to.col]}${move.to.row + 1}`;
     
     let notation = '';
@@ -75,10 +74,10 @@ const MoveHistory: React.FC<MoveHistoryProps> = ({ moves }) => {
           <div key={turn.turnNumber} className="move-turn">
             <div className="turn-number">{turn.turnNumber}.</div>
             <div className="white-move">
-              {formatMove(turn.white, (turn.turnNumber - 1) * 2)}
+              {formatMove(turn.white)}
             </div>
             <div className="black-move">
-              {turn.black ? formatMove(turn.black, (turn.turnNumber - 1) * 2 + 1) : ''}
+              {turn.black ? formatMove(turn.black) : ''}
             </div>
           </div>
         ))}

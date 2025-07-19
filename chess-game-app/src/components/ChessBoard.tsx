@@ -1,6 +1,6 @@
 import React from 'react';
-import { Position, ChessPiece } from '../types/chess';
-import { ChessGameHook } from '../hooks/useChessGame';
+import type { Position, ChessPiece } from '../types/chess';
+import type { ChessGameHook } from '../hooks/useChessGame';
 import './ChessBoard.css';
 
 interface ChessBoardProps {

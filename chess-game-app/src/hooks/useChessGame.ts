@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { GameState, Position } from '../types/chess';
+import type { GameState, Position } from '../types/chess';
 import { initializeGameState } from '../logic/chessGame';
 import { executeMove, getValidMovesForPiece } from '../logic/moveValidation';
 

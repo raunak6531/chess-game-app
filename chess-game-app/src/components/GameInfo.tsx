@@ -1,5 +1,5 @@
 import React from 'react';
-import { ChessGameHook } from '../hooks/useChessGame';
+import type { ChessGameHook } from '../hooks/useChessGame';
 import MoveHistory from './MoveHistory';
 import './GameInfo.css';
 

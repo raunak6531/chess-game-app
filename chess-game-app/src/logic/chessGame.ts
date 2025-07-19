@@ -1,11 +1,12 @@
-import { 
-  Board, 
-  ChessPiece, 
-  GameState, 
-  Move, 
-  PieceColor, 
-  PieceType, 
-  Position,
+import type {
+  Board,
+  ChessPiece,
+  GameState,
+  PieceColor,
+  PieceType,
+  Position
+} from '../types/chess';
+import {
   isValidPosition,
   positionsEqual
 } from '../types/chess';

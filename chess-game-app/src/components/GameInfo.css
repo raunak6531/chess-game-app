@@ -16,6 +16,11 @@
   border-bottom: 2px solid #f3f4f6;
 }
 
+.header-buttons {
+  display: flex;
+  gap: 10px;
+}
+
 .game-header h1 {
   margin: 0;
   color: #1f2937;
@@ -38,6 +43,23 @@
   background: #dc2626;
   transform: translateY(-1px);
   box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+}
+
+.home-button {
+  background: #6366f1;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.home-button:hover {
+  background: #4f46e5;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
 }
 
 .game-status {

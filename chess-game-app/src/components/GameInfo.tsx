@@ -5,9 +5,10 @@ import './GameInfo.css';
 
 interface GameInfoProps {
   game: ChessGameHook;
+  onBackToHome?: () => void;
 }
 
-const GameInfo: React.FC<GameInfoProps> = ({ game }) => {
+const GameInfo: React.FC<GameInfoProps> = ({ game, onBackToHome }) => {
   const { gameState, resetGame } = game;
 
   const getStatusMessage = () => {
@@ -44,9 +45,16 @@ const GameInfo: React.FC<GameInfoProps> = ({ game }) => {
     <div className="game-info">
       <div className="game-header">
         <h1>Chess Game</h1>
-        <button className="reset-button" onClick={resetGame}>
-          New Game
-        </button>
+        <div className="header-buttons">
+          <button className="reset-button" onClick={resetGame}>
+            New Game
+          </button>
+          {onBackToHome && (
+            <button className="home-button" onClick={onBackToHome}>
+              ← Home
+            </button>
+          )}
+        </div>
       </div>
       
       <div className={`game-status ${getStatusColor()}`}>

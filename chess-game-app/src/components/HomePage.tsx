@@ -8,23 +8,29 @@ interface HomePageProps {
 const HomePage: React.FC<HomePageProps> = ({ onStartGame }) => {
   const pieceRef = useRef<HTMLDivElement>(null);
   const h1Ref = useRef<HTMLHeadingElement>(null);
+  const subtitleRef = useRef<HTMLParagraphElement>(null);
 
   const pieces = ["pawn", "bishop", "rook", "queen", "king", "knight"];
   const selectedIndexRef = useRef(0);
 
   useEffect(() => {
     const handlePieceClick = () => {
-      if (pieceRef.current && h1Ref.current) {
+      if (pieceRef.current && subtitleRef.current) {
         selectedIndexRef.current = selectedIndexRef.current + 1 === pieces.length ? 0 : selectedIndexRef.current + 1;
         pieceRef.current.setAttribute("data-type", pieces[selectedIndexRef.current]);
-        h1Ref.current.classList.add("hide");
+        subtitleRef.current.classList.add("hide");
 
         // Show start game button after first click
         setTimeout(() => {
           const startBtn = document.querySelector('.start-game-btn');
           if (startBtn) {
             (startBtn as HTMLElement).style.opacity = '1';
-            (startBtn as HTMLElement).style.transform = 'translateY(0)';
+            // Check if mobile
+            if (window.innerWidth <= 768) {
+              (startBtn as HTMLElement).style.transform = 'translateX(-50%) translateY(0)';
+            } else {
+              (startBtn as HTMLElement).style.transform = 'translateY(-50%) translateX(0)';
+            }
           }
         }, 1000);
       }
@@ -46,7 +52,15 @@ const HomePage: React.FC<HomePageProps> = ({ onStartGame }) => {
     <div className="home-page">
       <div className="bg"></div>
 
-      <h1 ref={h1Ref}>↓ click me ↓</h1>
+      {/* Ambient floating elements */}
+      <div className="ambient-elements">
+        <div className="floating-crown">♔</div>
+        <div className="floating-crown">♕</div>
+        <div className="floating-crown">♖</div>
+      </div>
+
+      <h1 ref={h1Ref}>LET'S MATE</h1>
+      <p className="subtitle" ref={subtitleRef}>↓ click the piece ↓</p>
 
       <div className="piece" data-type="pawn" ref={pieceRef}>
         <div className="head">

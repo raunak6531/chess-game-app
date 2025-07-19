@@ -1,11 +1,12 @@
 :root {
-	--fill: #e8e7e5;
-	--shade: #c0bab8;
-	--border: #3a3432;
-	--sqr-1: #ffe0b2;
-	--sqr-2: #6d4c41;
-	--bg: #fff8e1;
-	--tt: 1s;
+	--fill: #f2f1ef;
+	--shade: #d4cfc8;
+	--border: #2c2a28;
+	--sqr-1: #f5f5dc;
+	--sqr-2: #8b4513;
+	--bg: linear-gradient(135deg, #faf8f3 0%, #f0ede6 50%, #e8e3db 100%);
+	--accent: #d4af37;
+	--tt: 0.8s;
 }
 
 *,
@@ -38,64 +39,202 @@ html, body {
 
 h1 {
 	position: fixed;
-	top: 2vh;
-	font-size: 5em;
+	top: 3vh;
+	font-size: 7em;
 	width: 100%;
 	text-align: center;
-	color: #555;
+	background: linear-gradient(135deg, var(--accent) 0%, #b8860b 50%, var(--accent) 100%);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
 	text-transform: uppercase;
-	font-family: sans-serif;
+	font-family: 'Playfair Display', 'Georgia', serif;
+	font-weight: 900;
+	letter-spacing: 0.15em;
+	text-shadow: 0 4px 8px rgba(0,0,0,0.2);
 	transition: var(--tt);
 	z-index: 100;
+	margin: 0;
+	position: relative;
 }
 
-h1.hide {
+h1::before {
+	content: '';
+	position: absolute;
+	top: -10px;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 80%;
+	height: 4px;
+	background: linear-gradient(90deg, transparent, var(--accent), transparent);
+	border-radius: 2px;
+}
+
+h1::after {
+	content: '';
+	position: absolute;
+	bottom: -15px;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 60%;
+	height: 2px;
+	background: linear-gradient(90deg, transparent, var(--accent), transparent);
+	border-radius: 1px;
+}
+
+.subtitle {
+	position: fixed;
+	top: 14vh;
+	font-size: 1.8em;
+	width: 100%;
+	text-align: center;
+	color: #8b7355;
+	font-family: 'Georgia', serif;
+	font-weight: 400;
+	font-style: italic;
+	transition: var(--tt);
+	z-index: 100;
+	margin: 0;
+	opacity: 0.9;
+	animation: subtlePulse 3s ease-in-out infinite;
+}
+
+@keyframes subtlePulse {
+	0%, 100% { opacity: 0.9; transform: translateY(0px); }
+	50% { opacity: 0.7; transform: translateY(-2px); }
+}
+
+.subtitle.hide {
 	opacity: 0;
+	transform: translateY(-10px);
+}
+
+/* Ambient floating elements */
+.ambient-elements {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	pointer-events: none;
+	z-index: 1;
+}
+
+.floating-crown {
+	position: absolute;
+	font-size: 2.5em;
+	color: rgba(212, 175, 55, 0.15);
+	animation: ambientFloat 20s ease-in-out infinite;
+	text-shadow: 0 0 10px rgba(212, 175, 55, 0.1);
+}
+
+.floating-crown:nth-child(1) {
+	top: 20%;
+	left: 15%;
+	animation-delay: 0s;
+	animation-duration: 25s;
+}
+
+.floating-crown:nth-child(2) {
+	top: 60%;
+	right: 20%;
+	animation-delay: 8s;
+	animation-duration: 30s;
+}
+
+.floating-crown:nth-child(3) {
+	bottom: 40%;
+	left: 10%;
+	animation-delay: 15s;
+	animation-duration: 22s;
+}
+
+@keyframes ambientFloat {
+	0%, 100% {
+		transform: translateY(0px) translateX(0px) rotate(0deg) scale(0.8);
+		opacity: 0.1;
+	}
+	25% {
+		transform: translateY(-30px) translateX(20px) rotate(5deg) scale(1);
+		opacity: 0.2;
+	}
+	50% {
+		transform: translateY(-10px) translateX(-15px) rotate(-3deg) scale(1.1);
+		opacity: 0.15;
+	}
+	75% {
+		transform: translateY(20px) translateX(10px) rotate(2deg) scale(0.9);
+		opacity: 0.12;
+	}
 }
 
 .bg {
 	position: fixed;
 	inset: auto 0 0 -500%;
 	width: 1000%;
-	height: 30vh;
+	height: 35vh;
 	background: conic-gradient(
 		var(--sqr-1) 0 25%,
 		var(--sqr-2) 25% 50%,
 		var(--sqr-1) 50% 75%,
 		var(--sqr-2) 0
 	);
-	background-size: 90em 25em;
-	transform: skew(45deg);
+	background-size: 85em 22em;
+	transform: skew(42deg);
+	opacity: 0.9;
+	box-shadow: 0 -20px 40px rgba(0,0,0,0.1);
+}
+
+.bg::before {
+	content: '';
+	position: absolute;
+	top: -5px;
+	left: 0;
+	right: 0;
+	height: 5px;
+	background: linear-gradient(90deg,
+		transparent,
+		rgba(139, 69, 19, 0.3),
+		transparent
+	);
+	transform: skew(-42deg);
 }
 
 .piece {
 	position: absolute;
-	bottom: 10vh;
-	left: calc(50% - 20em);
+	bottom: 12vh;
+	left: calc(50% - 16em);
 	display: flex;
 	flex-flow: column;
 	align-items: center;
 	justify-content: end;
-	width: 40em;
-	height: 80em;
+	width: 32em;
+	height: 64em;
 	cursor: pointer;
+	transition: transform 0.3s ease;
+	filter: drop-shadow(0 10px 20px rgba(0,0,0,0.15));
+}
+
+.piece:hover {
+	transform: scale(1.02) translateY(-2px);
+	filter: drop-shadow(0 15px 30px rgba(0,0,0,0.2));
 }
 
 .base {
 	position: relative;
-	height: 4em;
-	width: 40em;
+	height: 3.2em;
+	width: 32em;
 	background: var(--fill);
 	border: var(--border-value);
-	border-radius: 2em 2em 0 0;
-	box-shadow: inset 2em -1em;
+	border-radius: 1.6em 1.6em 0 0;
+	box-shadow: inset 1.6em -0.8em;
 	z-index: 10;
 }
 
 .base:after,
 .base:before {
-	--width: 30em;
-	--height: 2em;
+	--width: 24em;
+	--height: 1.6em;
 	content: "";
 	display: block;
 	position: absolute;
@@ -108,16 +247,16 @@ h1.hide {
 }
 
 .base:before {
-	--width: 32em;
+	--width: 25.6em;
 	top: calc(var(--height) * -2 + var(--border-size));
 	border-radius: var(--height);
 	background: var(--fill);
-	box-shadow: inset 2em 0;
+	box-shadow: inset 1.6em 0;
 }
 
 .body {
-	--width: 28em;
-	--height: 40em;
+	--width: 22.4em;
+	--height: 32em;
 	width: 100%;
 	height: var(--height);
 	display: flex;
@@ -135,7 +274,7 @@ h1.hide {
 	border-right: var(--border-value);
 	width: calc(var(--width) / 2);
 	transform: rotate(-5deg);
-	margin-left: -2em;
+	margin-left: -1.6em;
 	transition: var(--tt);
 }
 
@@ -143,30 +282,30 @@ h1.hide {
 	border-right: none;
 	border-left: var(--border-value);
 	margin-left: 0;
-	margin-right: -2em;
+	margin-right: -1.6em;
 	transform: rotate(5deg);
-	box-shadow: inset 2em 0;
+	box-shadow: inset 1.6em 0;
 }
 
 .neck {
 	position: relative;
-	height: 2em;
-	width: 26em;
+	height: 1.6em;
+	width: 20.8em;
 	background: var(--shade);
 	border: var(--border-value);
-	border-radius: 2em;
+	border-radius: 1.6em;
 	z-index: 10;
 }
 
 .head {
 	position: relative;
-	height: 25em;
-	width: 25em;
-	margin-bottom: -4em;
+	height: 20em;
+	width: 20em;
+	margin-bottom: -3.2em;
 	border-radius: 50%;
 	background: var(--fill);
 	border: var(--border-value);
-	box-shadow: inset 2em 0;
+	box-shadow: inset 1.6em 0;
 	transition: var(--tt);
 }
 
@@ -178,7 +317,7 @@ h1.hide {
 }
 
 [data-type="pawn"] .body {
-	--height: 35em;
+	--height: 28em;
 }
 
 [data-type="bishop"] .head {
@@ -303,39 +442,61 @@ h1.hide {
 }
 
 [data-type="knight"] .knight:before {
-	content: "🦄";
+	content: "♞";
 	display: block;
-	font-size: 35em;
-	margin-top: -1em;
+	font-size: 28em;
+	margin-top: -0.8em;
 	opacity: 1;
+	color: var(--shade);
+	text-shadow:
+		1.6px 1.6px 0 var(--border),
+		-1.6px -1.6px 0 var(--border),
+		1.6px -1.6px 0 var(--border),
+		-1.6px 1.6px 0 var(--border);
 }
 
 .start-game-btn {
 	position: fixed;
-	bottom: 5vh;
-	left: 50%;
-	transform: translateX(-50%) translateY(50px);
-	background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%);
+	top: 50%;
+	right: 5vw;
+	transform: translateY(-50%) translateX(80px);
+	background: linear-gradient(135deg, var(--accent) 0%, #b8860b 50%, var(--accent) 100%);
 	background-size: 200% 200%;
-	border: none;
-	border-radius: 60px;
-	padding: 1.4rem 3.5rem;
-	font-size: 1.2rem;
-	font-weight: 700;
-	color: white;
+	border: 3px solid rgba(212, 175, 55, 0.5);
+	border-radius: 50px;
+	padding: 1.8rem 4.5rem;
+	font-size: 1.4rem;
+	font-weight: 800;
+	color: #2c2a28;
 	cursor: pointer;
 	overflow: hidden;
 	transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 	display: inline-flex;
 	align-items: center;
-	gap: 1rem;
+	gap: 1.2rem;
 	box-shadow:
-		0 20px 40px rgba(59, 130, 246, 0.3),
-		0 0 0 1px rgba(255, 255, 255, 0.1);
-	font-family: 'Inter', sans-serif;
-	letter-spacing: 0.5px;
+		0 20px 40px rgba(212, 175, 55, 0.5),
+		inset 0 1px 0 rgba(255, 255, 255, 0.4),
+		0 0 0 2px rgba(212, 175, 55, 0.3);
+	font-family: 'Playfair Display', 'Georgia', serif;
+	letter-spacing: 0.8px;
+	text-transform: uppercase;
 	opacity: 0;
 	z-index: 100;
+	position: fixed;
+}
+
+.start-game-btn::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: linear-gradient(135deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+	border-radius: inherit;
+	opacity: 0;
+	transition: opacity 0.3s ease;
 }
 
 .start-game-btn::before {
@@ -354,15 +515,21 @@ h1.hide {
 }
 
 .start-game-btn:hover {
-	transform: translateX(-50%) translateY(-4px);
+	transform: translateY(-50%) translateX(-10px) scale(1.08);
 	background-position: 100% 0;
 	box-shadow:
-		0 30px 60px rgba(139, 92, 246, 0.4),
-		0 0 0 1px rgba(255, 255, 255, 0.2);
+		0 30px 60px rgba(212, 175, 55, 0.7),
+		inset 0 1px 0 rgba(255, 255, 255, 0.5),
+		0 0 0 2px rgba(212, 175, 55, 0.6);
+	border-color: rgba(212, 175, 55, 0.7);
+}
+
+.start-game-btn:hover::after {
+	opacity: 1;
 }
 
 .start-game-btn:active {
-	transform: translateX(-50%) translateY(-2px);
+	transform: translateY(-50%) translateX(-3px) scale(1.02);
 }
 
 .btn-chess-piece {
@@ -394,9 +561,23 @@ h1.hide {
 	}
 
 	.start-game-btn {
+		position: fixed;
+		top: auto;
+		bottom: 8vh;
+		right: auto;
+		left: 50%;
+		transform: translateX(-50%) translateY(50px);
 		padding: 1.2rem 2.5rem;
 		font-size: 1.1rem;
 		border-radius: 50px;
+	}
+
+	.start-game-btn:hover {
+		transform: translateX(-50%) translateY(-6px) scale(1.05);
+	}
+
+	.start-game-btn:active {
+		transform: translateX(-50%) translateY(-3px) scale(1.02);
 	}
 }
 

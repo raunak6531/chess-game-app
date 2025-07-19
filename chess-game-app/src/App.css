@@ -1,0 +1,42 @@
+#root {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.app {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.game-container {
+  display: flex;
+  gap: 40px;
+  align-items: flex-start;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.game-info-section {
+  flex-shrink: 0;
+}
+
+.chess-board-section {
+  flex-shrink: 0;
+}
+
+@media (max-width: 1024px) {
+  .game-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+}

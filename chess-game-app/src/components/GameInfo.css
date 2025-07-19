@@ -1,0 +1,143 @@
+.game-info {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+  min-width: 300px;
+}
+
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #f3f4f6;
+}
+
+.game-header h1 {
+  margin: 0;
+  color: #1f2937;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.reset-button {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.reset-button:hover {
+  background: #dc2626;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+}
+
+.game-status {
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-weight: 600;
+  font-size: 18px;
+  text-align: center;
+}
+
+.game-status.normal {
+  background: #f0f9ff;
+  color: #0369a1;
+  border: 1px solid #bae6fd;
+}
+
+.game-status.warning {
+  background: #fef3c7;
+  color: #d97706;
+  border: 1px solid #fde68a;
+}
+
+.game-status.success {
+  background: #dcfce7;
+  color: #16a34a;
+  border: 1px solid #bbf7d0;
+}
+
+.game-status.info {
+  background: #f3f4f6;
+  color: #4b5563;
+  border: 1px solid #d1d5db;
+}
+
+.game-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.stat-label {
+  font-weight: 600;
+  color: #4b5563;
+}
+
+.stat-value {
+  font-weight: bold;
+  color: #1f2937;
+  font-size: 18px;
+}
+
+.current-player {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.player-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: bold;
+  font-size: 16px;
+  padding: 6px 12px;
+  border-radius: 6px;
+}
+
+.player-indicator.white {
+  background: #f9fafb;
+  color: #1f2937;
+  border: 1px solid #d1d5db;
+}
+
+.player-indicator.black {
+  background: #1f2937;
+  color: #ffffff;
+  border: 1px solid #374151;
+}
+
+.last-move {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 16px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.move-notation {
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+  color: #1f2937;
+  background: #f3f4f6;
+  padding: 4px 8px;
+  border-radius: 4px;
+}

@@ -1,0 +1,167 @@
+.chess-board-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.board-with-coordinates {
+  position: relative;
+}
+
+.chess-board {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+  width: 480px;
+  height: 480px;
+  border: 3px solid #8B4513;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.chess-square {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 60px;
+  height: 60px;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.chess-square.light {
+  background-color: #f0d9b5;
+}
+
+.chess-square.dark {
+  background-color: #b58863;
+}
+
+.chess-square:hover {
+  opacity: 0.8;
+  transform: scale(1.02);
+}
+
+.chess-square.selected {
+  background-color: #7dd3fc !important;
+  box-shadow: inset 0 0 0 3px #0ea5e9;
+  animation: pulse-selected 1s ease-in-out infinite alternate;
+}
+
+@keyframes pulse-selected {
+  0% {
+    box-shadow: inset 0 0 0 3px #0ea5e9;
+  }
+  100% {
+    box-shadow: inset 0 0 0 3px #0ea5e9, 0 0 10px rgba(14, 165, 233, 0.5);
+  }
+}
+
+.chess-square.valid-move {
+  background-color: #86efac !important;
+}
+
+.chess-square.valid-move:hover {
+  background-color: #4ade80 !important;
+}
+
+.chess-piece {
+  font-size: 36px;
+  font-weight: bold;
+  user-select: none;
+  pointer-events: none;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  transition: transform 0.1s ease;
+}
+
+.chess-piece.white {
+  color: #ffffff;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.chess-piece.black {
+  color: #000000;
+  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.3);
+}
+
+.chess-square:hover .chess-piece {
+  transform: scale(1.1);
+}
+
+.move-indicator {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background-color: #22c55e;
+  border-radius: 50%;
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+.chess-square.valid-move .move-indicator {
+  background-color: #16a34a;
+}
+
+/* Animation for piece movement */
+@keyframes piece-move {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.chess-piece.moving {
+  animation: piece-move 0.3s ease-in-out;
+}
+
+/* Coordinate labels */
+.coordinates {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.files {
+  position: absolute;
+  bottom: -25px;
+  left: 3px;
+  right: 3px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.file-label {
+  width: 60px;
+  text-align: center;
+  font-weight: bold;
+  color: #8B4513;
+  font-size: 14px;
+}
+
+.ranks {
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  left: -25px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.rank-label {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  color: #8B4513;
+  font-size: 14px;
+}

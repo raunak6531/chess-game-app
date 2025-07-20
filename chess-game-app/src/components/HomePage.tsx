@@ -57,6 +57,27 @@ const HomePage: React.FC<HomePageProps> = ({ onStartGame }) => {
         <div className="floating-crown">♔</div>
         <div className="floating-crown">♕</div>
         <div className="floating-crown">♖</div>
+        <div className="floating-crown">♗</div>
+        <div className="floating-crown">♘</div>
+        <div className="floating-crown">♙</div>
+        <div className="floating-crown">♚</div>
+        <div className="floating-crown">♛</div>
+        <div className="floating-crown">♜</div>
+        <div className="floating-crown">♝</div>
+        <div className="floating-crown">♞</div>
+        <div className="floating-crown">♟</div>
+        <div className="floating-crown">♔</div>
+        <div className="floating-crown">♕</div>
+        <div className="floating-crown">♖</div>
+        <div className="floating-crown">♗</div>
+        <div className="floating-crown">♘</div>
+        <div className="floating-crown">♙</div>
+        <div className="floating-crown">♚</div>
+        <div className="floating-crown">♛</div>
+        <div className="floating-crown">♜</div>
+        <div className="floating-crown">♝</div>
+        <div className="floating-crown">♞</div>
+        <div className="floating-crown">♟</div>
       </div>
 
       <h1 ref={h1Ref}>LET'S MATE</h1>

@@ -130,6 +130,8 @@ h1::after {
 	color: rgba(212, 175, 55, 0.15);
 	animation: ambientFloat 20s ease-in-out infinite;
 	text-shadow: 0 0 10px rgba(212, 175, 55, 0.1);
+	user-select: none;
+	pointer-events: none;
 }
 
 .floating-crown:nth-child(1) {
@@ -153,6 +155,196 @@ h1::after {
 	animation-duration: 22s;
 }
 
+.floating-crown:nth-child(4) {
+	top: 35%;
+	right: 10%;
+	animation-delay: 5s;
+	animation-duration: 28s;
+	font-size: 2em;
+	opacity: 0.8;
+}
+
+.floating-crown:nth-child(5) {
+	bottom: 25%;
+	right: 15%;
+	animation-delay: 12s;
+	animation-duration: 26s;
+	font-size: 1.8em;
+	opacity: 0.7;
+}
+
+.floating-crown:nth-child(6) {
+	top: 70%;
+	left: 25%;
+	animation-delay: 3s;
+	animation-duration: 24s;
+	font-size: 1.5em;
+	opacity: 0.6;
+}
+
+.floating-crown:nth-child(7) {
+	top: 45%;
+	left: 5%;
+	animation-delay: 18s;
+	animation-duration: 32s;
+	font-size: 2.2em;
+	opacity: 0.9;
+}
+
+.floating-crown:nth-child(8) {
+	bottom: 60%;
+	right: 25%;
+	animation-delay: 7s;
+	animation-duration: 29s;
+	font-size: 1.9em;
+	opacity: 0.8;
+}
+
+.floating-crown:nth-child(9) {
+	top: 15%;
+	left: 35%;
+	animation-delay: 22s;
+	animation-duration: 27s;
+	font-size: 1.7em;
+	opacity: 0.7;
+}
+
+.floating-crown:nth-child(10) {
+	bottom: 15%;
+	right: 35%;
+	animation-delay: 10s;
+	animation-duration: 31s;
+	font-size: 2.1em;
+	opacity: 0.8;
+}
+
+.floating-crown:nth-child(11) {
+	top: 55%;
+	right: 5%;
+	animation-delay: 25s;
+	animation-duration: 23s;
+	font-size: 1.6em;
+	opacity: 0.6;
+}
+
+.floating-crown:nth-child(12) {
+	bottom: 35%;
+	left: 30%;
+	animation-delay: 14s;
+	animation-duration: 35s;
+	font-size: 1.4em;
+	opacity: 0.5;
+}
+
+/* Additional floating pieces for thorough coverage */
+.floating-crown:nth-child(13) {
+	top: 8%;
+	left: 8%;
+	animation-delay: 28s;
+	animation-duration: 33s;
+	font-size: 1.3em;
+	opacity: 0.4;
+}
+
+.floating-crown:nth-child(14) {
+	top: 12%;
+	right: 8%;
+	animation-delay: 35s;
+	animation-duration: 29s;
+	font-size: 1.8em;
+	opacity: 0.6;
+}
+
+.floating-crown:nth-child(15) {
+	top: 25%;
+	left: 50%;
+	animation-delay: 42s;
+	animation-duration: 31s;
+	font-size: 1.6em;
+	opacity: 0.5;
+}
+
+.floating-crown:nth-child(16) {
+	top: 38%;
+	right: 40%;
+	animation-delay: 17s;
+	animation-duration: 27s;
+	font-size: 2.3em;
+	opacity: 0.7;
+}
+
+.floating-crown:nth-child(17) {
+	top: 52%;
+	left: 12%;
+	animation-delay: 31s;
+	animation-duration: 34s;
+	font-size: 1.5em;
+	opacity: 0.4;
+}
+
+.floating-crown:nth-child(18) {
+	top: 68%;
+	right: 12%;
+	animation-delay: 6s;
+	animation-duration: 26s;
+	font-size: 1.9em;
+	opacity: 0.6;
+}
+
+.floating-crown:nth-child(19) {
+	bottom: 8%;
+	left: 8%;
+	animation-delay: 39s;
+	animation-duration: 32s;
+	font-size: 1.7em;
+	opacity: 0.5;
+}
+
+.floating-crown:nth-child(20) {
+	bottom: 12%;
+	right: 8%;
+	animation-delay: 21s;
+	animation-duration: 28s;
+	font-size: 2.0em;
+	opacity: 0.7;
+}
+
+.floating-crown:nth-child(21) {
+	bottom: 45%;
+	left: 45%;
+	animation-delay: 13s;
+	animation-duration: 30s;
+	font-size: 1.4em;
+	opacity: 0.4;
+}
+
+.floating-crown:nth-child(22) {
+	top: 82%;
+	left: 40%;
+	animation-delay: 26s;
+	animation-duration: 25s;
+	font-size: 1.8em;
+	opacity: 0.6;
+}
+
+.floating-crown:nth-child(23) {
+	top: 28%;
+	left: 75%;
+	animation-delay: 44s;
+	animation-duration: 36s;
+	font-size: 1.2em;
+	opacity: 0.3;
+}
+
+.floating-crown:nth-child(24) {
+	bottom: 55%;
+	right: 45%;
+	animation-delay: 9s;
+	animation-duration: 24s;
+	font-size: 2.1em;
+	opacity: 0.8;
+}
+
 @keyframes ambientFloat {
 	0%, 100% {
 		transform: translateY(0px) translateX(0px) rotate(0deg) scale(0.8);
@@ -169,6 +361,92 @@ h1::after {
 	75% {
 		transform: translateY(20px) translateX(10px) rotate(2deg) scale(0.9);
 		opacity: 0.12;
+	}
+}
+
+/* Additional animation variations for more organic movement */
+.floating-crown:nth-child(4),
+.floating-crown:nth-child(8),
+.floating-crown:nth-child(12) {
+	animation-name: ambientFloat2;
+}
+
+.floating-crown:nth-child(5),
+.floating-crown:nth-child(9) {
+	animation-name: ambientFloat3;
+}
+
+.floating-crown:nth-child(6),
+.floating-crown:nth-child(10) {
+	animation-name: ambientFloat4;
+}
+
+.floating-crown:nth-child(13),
+.floating-crown:nth-child(17),
+.floating-crown:nth-child(21) {
+	animation-name: ambientFloat2;
+}
+
+.floating-crown:nth-child(14),
+.floating-crown:nth-child(18),
+.floating-crown:nth-child(22) {
+	animation-name: ambientFloat3;
+}
+
+.floating-crown:nth-child(15),
+.floating-crown:nth-child(19),
+.floating-crown:nth-child(23) {
+	animation-name: ambientFloat4;
+}
+
+.floating-crown:nth-child(16),
+.floating-crown:nth-child(20),
+.floating-crown:nth-child(24) {
+	animation-name: ambientFloat;
+}
+
+@keyframes ambientFloat2 {
+	0%, 100% {
+		transform: translateY(0px) translateX(0px) rotate(0deg) scale(1);
+		opacity: 0.12;
+	}
+	33% {
+		transform: translateY(25px) translateX(-20px) rotate(-3deg) scale(1.1);
+		opacity: 0.22;
+	}
+	66% {
+		transform: translateY(-15px) translateX(25px) rotate(2deg) scale(0.9);
+		opacity: 0.18;
+	}
+}
+
+@keyframes ambientFloat3 {
+	0%, 100% {
+		transform: translateY(0px) translateX(0px) rotate(0deg) scale(1);
+		opacity: 0.1;
+	}
+	40% {
+		transform: translateY(-30px) translateX(15px) rotate(4deg) scale(1.05);
+		opacity: 0.2;
+	}
+	80% {
+		transform: translateY(20px) translateX(-10px) rotate(-2deg) scale(0.95);
+		opacity: 0.15;
+	}
+}
+
+@keyframes ambientFloat4 {
+	0%, 100% {
+		transform: translateY(0px) translateX(0px) rotate(0deg) scale(1);
+		opacity: 0.08;
+	}
+	20% {
+		transform: translateY(10px) translateX(-25px) rotate(-1deg) scale(1.08);
+		opacity: 0.18;
+	}
+	60% {
+		transform: translateY(-25px) translateX(20px) rotate(3deg) scale(0.92);
+		opacity: 0.14;
 	}
 }
 

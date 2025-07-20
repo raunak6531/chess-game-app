@@ -1,10 +1,10 @@
 :root {
-	--fill: #f2f1ef;
-	--shade: #d4cfc8;
-	--border: #2c2a28;
-	--sqr-1: #f5f5dc;
-	--sqr-2: #8b4513;
-	--bg: linear-gradient(135deg, #faf8f3 0%, #f0ede6 50%, #e8e3db 100%);
+	--fill: #f4e4bc;
+	--shade: #c9a96e;
+	--border: #d4af37;
+	--sqr-1: #f4e4bc;
+	--sqr-2: #8b7355;
+	--bg: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #533483 100%);
 	--accent: #d4af37;
 	--tt: 0.8s;
 }
@@ -43,11 +43,15 @@ h1 {
 	font-size: 7em;
 	width: 100%;
 	text-align: center;
-	background: linear-gradient(135deg, var(--accent) 0%, #b8860b 50%, var(--accent) 100%);
+	background: linear-gradient(135deg, #d4af37 0%, #ffd700 25%, #f4e4bc 50%, #d4af37 75%, #b8860b 100%);
 	-webkit-background-clip: text;
 	-webkit-text-fill-color: transparent;
 	background-clip: text;
 	text-transform: uppercase;
+	font-family: 'Georgia', 'Times New Roman', serif;
+	font-weight: 800;
+	letter-spacing: 0.1em;
+	text-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
 	font-family: 'Playfair Display', 'Georgia', serif;
 	font-weight: 900;
 	letter-spacing: 0.15em;

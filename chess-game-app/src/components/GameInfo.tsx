@@ -11,6 +11,7 @@ interface GameInfoProps {
   analysisEnabled?: boolean;
   showClock?: boolean;
   showSuggestions?: boolean;
+  backButtonText?: string;
 }
 
 const GameInfo: React.FC<GameInfoProps> = ({
@@ -18,7 +19,8 @@ const GameInfo: React.FC<GameInfoProps> = ({
   onBackToHome,
   analysisEnabled = false,
   showClock = true,
-  showSuggestions = false
+  showSuggestions = false,
+  backButtonText = "← Menu"
 }) => {
   const { gameState, resetGame } = game;
 
@@ -68,7 +70,7 @@ const GameInfo: React.FC<GameInfoProps> = ({
           </button>
           {onBackToHome && (
             <button className="home-button" onClick={onBackToHome}>
-              ← Home
+              {backButtonText}
             </button>
           )}
         </div>

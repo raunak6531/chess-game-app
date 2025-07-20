@@ -9,7 +9,9 @@
     0 0 0 1px rgba(255, 255, 255, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.3);
   border: 1px solid rgba(255, 255, 255, 0.18);
-  min-width: 350px;
+  min-width: 300px;
+  max-width: 400px;
+  width: 100%;
   position: relative;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -459,4 +461,71 @@
   background: rgba(255, 255, 255, 0.15);
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive Design for Game Info */
+@media (max-width: 1024px) {
+  .game-info {
+    min-width: 280px;
+    max-width: 100%;
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .game-info {
+    padding: 20px;
+    min-width: 250px;
+    border-radius: 16px;
+  }
+
+  .game-header h1 {
+    font-size: 24px;
+  }
+
+  .game-status {
+    font-size: 16px;
+    padding: 16px;
+  }
+
+  .stat-value {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .game-info {
+    padding: 16px;
+    min-width: 200px;
+    border-radius: 12px;
+  }
+
+  .game-header {
+    flex-direction: column;
+    gap: 10px;
+    align-items: stretch;
+  }
+
+  .game-header h1 {
+    font-size: 20px;
+    text-align: center;
+  }
+
+  .header-buttons {
+    justify-content: center;
+  }
+
+  .game-status {
+    font-size: 14px;
+    padding: 12px;
+  }
+
+  .stat-value {
+    font-size: 14px;
+  }
+
+  .home-button, .new-game-button {
+    padding: 8px 16px;
+    font-size: 12px;
+  }
 }

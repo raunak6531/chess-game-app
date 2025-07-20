@@ -1,0 +1,179 @@
+/* GameMenu Styles - Elegant & Classy Theme for "Let's Mate" */
+.game-menu {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #533483 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.game-menu::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(139, 92, 246, 0.1) 0%, rgba(0, 0, 0, 0.3) 70%);
+}
+
+.game-menu-bg-effects {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.bg-effect-1 {
+  position: absolute;
+  top: 20%;
+  left: 20%;
+  width: 400px;
+  height: 400px;
+  background: linear-gradient(45deg, #d4af37, #ffd700);
+  border-radius: 50%;
+  mix-blend-mode: soft-light;
+  filter: blur(80px);
+  opacity: 0.15;
+  animation: elegantFloat 6s ease-in-out infinite;
+}
+
+.bg-effect-2 {
+  position: absolute;
+  top: 60%;
+  right: 20%;
+  width: 350px;
+  height: 350px;
+  background: linear-gradient(45deg, #c9a96e, #b8860b);
+  border-radius: 50%;
+  mix-blend-mode: soft-light;
+  filter: blur(70px);
+  opacity: 0.12;
+  animation: elegantFloat 8s ease-in-out infinite;
+  animation-delay: 2s;
+}
+
+.bg-effect-3 {
+  position: absolute;
+  bottom: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  height: 300px;
+  background: linear-gradient(45deg, #8b7355, #a0522d);
+  border-radius: 50%;
+  mix-blend-mode: soft-light;
+  filter: blur(60px);
+  opacity: 0.1;
+  animation: elegantFloat 10s ease-in-out infinite;
+  animation-delay: 4s;
+}
+
+.game-menu-header {
+  position: relative;
+  z-index: 10;
+  padding-top: 2rem;
+  padding-bottom: 1rem;
+  text-align: center;
+}
+
+.game-menu-title {
+  font-size: 4rem;
+  font-weight: 800;
+  color: white;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #d4af37 0%, #ffd700 25%, #f4e4bc 50%, #d4af37 75%, #b8860b 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
+  letter-spacing: 0.1em;
+  font-family: 'Georgia', 'Times New Roman', serif;
+}
+
+.game-menu-subtitle {
+  font-size: 1.125rem;
+  color: #e5e7eb;
+  margin-bottom: 2rem;
+  font-weight: 300;
+  letter-spacing: 0.05em;
+  opacity: 0.9;
+}
+
+.back-button {
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+  padding: 0.875rem 2rem;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(184, 134, 11, 0.3));
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  border-radius: 50px;
+  color: #f4e4bc;
+  font-weight: 500;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 20px rgba(212, 175, 55, 0.1);
+}
+
+.back-button:hover {
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.3), rgba(184, 134, 11, 0.4));
+  border-color: rgba(212, 175, 55, 0.6);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(212, 175, 55, 0.2);
+  color: #ffd700;
+}
+
+.game-menu-content {
+  position: relative;
+  z-index: 10;
+  height: calc(100vh - 200px);
+}
+
+@keyframes elegantFloat {
+  0%, 100% {
+    opacity: 0.1;
+    transform: translateY(0px) scale(1);
+  }
+  33% {
+    opacity: 0.15;
+    transform: translateY(-20px) scale(1.05);
+  }
+  66% {
+    opacity: 0.12;
+    transform: translateY(10px) scale(0.98);
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .game-menu-title {
+    font-size: 2.5rem;
+  }
+  
+  .game-menu-subtitle {
+    font-size: 1rem;
+  }
+  
+  .back-button {
+    top: 1rem;
+    left: 1rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+  
+  .bg-effect-1,
+  .bg-effect-2,
+  .bg-effect-3 {
+    width: 256px;
+    height: 256px;
+  }
+}
+
+@media (max-width: 480px) {
+  .game-menu-title {
+    font-size: 2rem;
+  }
+  
+  .game-menu-subtitle {
+    font-size: 0.875rem;
+  }
+}

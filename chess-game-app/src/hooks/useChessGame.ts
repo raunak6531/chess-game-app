@@ -1,7 +1,8 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import type { GameState, Position } from '../types/chess';
 import { initializeGameState } from '../logic/chessGame';
 import { executeMove, getValidMovesForPiece } from '../logic/moveValidation';
+import { makeComputerMoveWithDelay, type Difficulty } from '../utils/computerPlayer';
 
 export interface ChessGameHook {
   gameState: GameState;
@@ -12,12 +13,27 @@ export interface ChessGameHook {
   resetGame: () => void;
   isSquareSelected: (position: Position) => boolean;
   isValidMoveTarget: (position: Position) => boolean;
+  setGameMode: (mode: 'vs-friend' | 'vs-computer') => void;
+  setDifficulty: (difficulty: Difficulty) => void;
 }
 
 export const useChessGame = (): ChessGameHook => {
   const [gameState, setGameState] = useState<GameState>(initializeGameState());
   const [selectedSquare, setSelectedSquare] = useState<Position | null>(null);
   const [validMoves, setValidMoves] = useState<Position[]>([]);
+  const [gameMode, setGameMode] = useState<'vs-friend' | 'vs-computer'>('vs-friend');
+  const [difficulty, setDifficulty] = useState<Difficulty>('medium');
+
+  // Computer move effect
+  useEffect(() => {
+    if (gameMode === 'vs-computer' &&
+        gameState.currentPlayer === 'black' &&
+        gameState.gameStatus === 'active') {
+      makeComputerMoveWithDelay(gameState, difficulty, (from, to) => {
+        makeMove(from, to);
+      });
+    }
+  }, [gameState.currentPlayer, gameMode, difficulty, gameState.gameStatus]);
 
   const selectSquare = useCallback((position: Position) => {
     const piece = gameState.board[position.row][position.col];
@@ -108,6 +124,8 @@ export const useChessGame = (): ChessGameHook => {
     makeMove,
     resetGame,
     isSquareSelected,
-    isValidMoveTarget
+    isValidMoveTarget,
+    setGameMode,
+    setDifficulty
   };
 };

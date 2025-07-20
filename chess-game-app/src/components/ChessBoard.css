@@ -42,8 +42,10 @@
   display: grid;
   grid-template-columns: repeat(8, 1fr);
   grid-template-rows: repeat(8, 1fr);
-  width: 520px;
-  height: 520px;
+  width: min(520px, 90vw);
+  height: min(520px, 90vw);
+  max-width: 520px;
+  max-height: 520px;
   border-radius: 12px;
   overflow: hidden;
   box-shadow:
@@ -54,8 +56,8 @@
               linear-gradient(-45deg, #f5f5dc 25%, transparent 25%),
               linear-gradient(45deg, transparent 75%, #f5f5dc 75%),
               linear-gradient(-45deg, transparent 75%, #f5f5dc 75%);
-  background-size: 130px 130px;
-  background-position: 0 0, 0 65px, 65px -65px, -65px 0px;
+  background-size: 12.5% 12.5%;
+  background-position: 0 0, 0 6.25%, 6.25% -6.25%, -6.25% 0px;
   transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -112,8 +114,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 65px;
-  height: 65px;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 1;
   cursor: pointer;
   position: relative;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -680,11 +683,11 @@
 }
 
 .file-label {
-  width: 65px;
+  width: 12.5%;
   text-align: center;
   font-weight: 800;
   color: #ffd700;
-  font-size: 16px;
+  font-size: clamp(12px, 2.5vw, 16px);
   text-shadow:
     1px 1px 2px rgba(0, 0, 0, 0.8),
     0 0 8px rgba(255, 215, 0, 0.3);
@@ -702,14 +705,49 @@
 }
 
 .rank-label {
-  height: 65px;
+  height: 12.5%;
   display: flex;
   align-items: center;
   font-weight: 800;
   color: #ffd700;
-  font-size: 16px;
+  font-size: clamp(12px, 2.5vw, 16px);
   text-shadow:
     1px 1px 2px rgba(0, 0, 0, 0.8),
     0 0 8px rgba(255, 215, 0, 0.3);
   font-family: 'Georgia', serif;
+}
+
+/* Responsive Design for Chess Board */
+@media (max-width: 768px) {
+  .chess-board {
+    width: min(400px, 85vw);
+    height: min(400px, 85vw);
+  }
+
+  .files, .ranks {
+    font-size: 12px;
+  }
+
+  .file-label, .rank-label {
+    font-size: clamp(10px, 2vw, 14px);
+  }
+}
+
+@media (max-width: 480px) {
+  .chess-board {
+    width: min(320px, 90vw);
+    height: min(320px, 90vw);
+  }
+
+  .files, .ranks {
+    font-size: 10px;
+  }
+
+  .file-label, .rank-label {
+    font-size: clamp(8px, 1.8vw, 12px);
+  }
+
+  .chess-piece {
+    font-size: clamp(20px, 5vw, 32px);
+  }
 }

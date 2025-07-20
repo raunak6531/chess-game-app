@@ -1,8 +1,8 @@
 import { useState, useCallback, useEffect } from 'react';
 import type { GameState, Position } from '../types/chess';
-import { initializeGameState } from '../logic/chessGame';
+import { initializeGameState, gameStateToFen } from '../logic/chessGame';
 import { executeMove, getValidMovesForPiece } from '../logic/moveValidation';
-import { makeComputerMoveWithDelay, type Difficulty } from '../utils/computerPlayer';
+import { stockfishService, type Difficulty } from '../services/stockfishService';
 
 export interface ChessGameHook {
   gameState: GameState;
@@ -13,27 +13,99 @@ export interface ChessGameHook {
   resetGame: () => void;
   isSquareSelected: (position: Position) => boolean;
   isValidMoveTarget: (position: Position) => boolean;
-  setGameMode: (mode: 'vs-friend' | 'vs-computer') => void;
   setDifficulty: (difficulty: Difficulty) => void;
+  isComputerThinking: boolean;
+  isEngineReady: boolean;
 }
 
 export const useChessGame = (): ChessGameHook => {
   const [gameState, setGameState] = useState<GameState>(initializeGameState());
   const [selectedSquare, setSelectedSquare] = useState<Position | null>(null);
   const [validMoves, setValidMoves] = useState<Position[]>([]);
-  const [gameMode, setGameMode] = useState<'vs-friend' | 'vs-computer'>('vs-friend');
-  const [difficulty, setDifficulty] = useState<Difficulty>('medium');
+  const [difficulty, setDifficulty] = useState<Difficulty>('intermediate');
+  const [isComputerThinking, setIsComputerThinking] = useState(false);
+  const [isEngineReady, setIsEngineReady] = useState(false);
 
-  // Computer move effect
+  // Initialize Stockfish engine
   useEffect(() => {
-    if (gameMode === 'vs-computer' &&
-        gameState.currentPlayer === 'black' &&
-        gameState.gameStatus === 'active') {
-      makeComputerMoveWithDelay(gameState, difficulty, (from, to) => {
-        makeMove(from, to);
-      });
+    const initEngine = async () => {
+      try {
+        console.log('Starting Stockfish initialization...');
+        await stockfishService.initialize();
+        setIsEngineReady(true);
+        console.log('Stockfish engine initialized successfully');
+      } catch (error) {
+        console.error('Failed to initialize Stockfish:', error);
+        // Don't block the UI if Stockfish fails to initialize
+        setIsEngineReady(false);
+      }
+    };
+
+    initEngine();
+
+    // Cleanup on unmount
+    return () => {
+      try {
+        stockfishService.destroy();
+      } catch (error) {
+        console.error('Error destroying Stockfish:', error);
+      }
+    };
+  }, []);
+
+  // Computer move effect - now using Stockfish
+  useEffect(() => {
+    console.log('Computer move effect triggered:', {
+      isEngineReady,
+      currentPlayer: gameState.currentPlayer,
+      gameStatus: gameState.gameStatus,
+      isComputerThinking
+    });
+
+    try {
+      if (isEngineReady &&
+          gameState.currentPlayer === 'black' &&
+          gameState.gameStatus === 'playing' &&
+          !isComputerThinking) {
+
+        console.log('Requesting computer move...');
+
+        // Set position in Stockfish
+        try {
+          const fen = gameStateToFen(gameState);
+          console.log('Generated FEN:', fen);
+          stockfishService.setPosition(fen);
+        } catch (fenError) {
+          console.error('Error generating FEN:', fenError);
+          return;
+        }
+
+        // Request computer move
+        stockfishService.requestMove(
+          (move) => {
+            console.log('Received computer move:', move);
+            console.log('Computer thinking state before move:', isComputerThinking);
+
+            // Convert Stockfish move to our format and execute
+            const moveSuccess = makeMove(move.from, move.to);
+            console.log('Move executed successfully:', moveSuccess);
+
+            if (!moveSuccess) {
+              console.error('Computer move was invalid:', move);
+              // Reset thinking state if move failed
+              setIsComputerThinking(false);
+            }
+          },
+          (thinking) => {
+            console.log('Computer thinking state changed to:', thinking);
+            setIsComputerThinking(thinking);
+          }
+        );
+      }
+    } catch (error) {
+      console.error('Error in computer move effect:', error);
     }
-  }, [gameState.currentPlayer, gameMode, difficulty, gameState.gameStatus]);
+  }, [gameState.currentPlayer, gameState.gameStatus, isEngineReady, isComputerThinking]);
 
   const selectSquare = useCallback((position: Position) => {
     const piece = gameState.board[position.row][position.col];
@@ -116,6 +188,14 @@ export const useChessGame = (): ChessGameHook => {
       move.row === position.row && move.col === position.col);
   }, [validMoves]);
 
+  // Update difficulty in Stockfish service
+  const handleSetDifficulty = useCallback((newDifficulty: Difficulty) => {
+    setDifficulty(newDifficulty);
+    if (isEngineReady) {
+      stockfishService.setDifficulty(newDifficulty);
+    }
+  }, [isEngineReady]);
+
   return {
     gameState,
     selectedSquare,
@@ -125,7 +205,8 @@ export const useChessGame = (): ChessGameHook => {
     resetGame,
     isSquareSelected,
     isValidMoveTarget,
-    setGameMode,
-    setDifficulty
+    setDifficulty: handleSetDifficulty,
+    isComputerThinking,
+    isEngineReady
   };
 };

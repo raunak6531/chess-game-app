@@ -4,18 +4,20 @@ import './GameMenu.css';
 
 interface GameMenuProps {
   onPlayVsComputer: () => void;
-  onPlayVsFriend: () => void;
   onBoardTheme: () => void;
   onDifficulty: () => void;
   onBackToHome: () => void;
+  difficulty: string;
+  boardTheme: string;
 }
 
 const GameMenu: React.FC<GameMenuProps> = ({
   onPlayVsComputer,
-  onPlayVsFriend,
   onBoardTheme,
   onDifficulty,
-  onBackToHome
+  onBackToHome,
+  difficulty,
+  boardTheme
 }) => {
   const menuItems = [
     {
@@ -26,19 +28,13 @@ const GameMenu: React.FC<GameMenuProps> = ({
     },
     {
       link: "#",
-      text: "Play vs Friend",
-      image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E👥%3C/text%3E%3C/svg%3E",
-      onClick: onPlayVsFriend
-    },
-    {
-      link: "#",
-      text: "Board Theme",
+      text: `Board Theme: ${boardTheme}`,
       image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🎨%3C/text%3E%3C/svg%3E",
       onClick: onBoardTheme
     },
     {
       link: "#",
-      text: "Difficulty",
+      text: `Difficulty: ${difficulty}`,
       image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E⚡%3C/text%3E%3C/svg%3E",
       onClick: onDifficulty
     }

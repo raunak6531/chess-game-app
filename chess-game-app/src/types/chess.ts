@@ -38,6 +38,8 @@ export interface GameState {
     blackKingside: boolean;
     blackQueenside: boolean;
   };
+  halfMoveClock?: number; // For 50-move rule
+  fullMoveNumber?: number; // Full move counter
 }
 
 // Helper function to convert position to chess notation

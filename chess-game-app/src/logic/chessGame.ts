@@ -52,7 +52,9 @@ export const initializeGameState = (): GameState => {
       whiteQueenside: true,
       blackKingside: true,
       blackQueenside: true,
-    }
+    },
+    halfMoveClock: 0,
+    fullMoveNumber: 1
   };
 };
 
@@ -167,6 +169,72 @@ const isPathClear = (board: Board, from: Position, to: Position): boolean => {
     currentRow += rowStep;
     currentCol += colStep;
   }
-  
+
   return true;
+};
+
+// Convert game state to FEN notation for Stockfish
+export const gameStateToFen = (gameState: GameState): string => {
+  const { board, currentPlayer, canCastle, enPassantTarget, halfMoveClock, fullMoveNumber } = gameState;
+
+  // 1. Piece placement
+  let fenBoard = '';
+  for (let row = 7; row >= 0; row--) { // FEN starts from rank 8 (row 7)
+    let emptyCount = 0;
+    let rankStr = '';
+
+    for (let col = 0; col < 8; col++) {
+      const piece = board[row][col];
+      if (piece) {
+        if (emptyCount > 0) {
+          rankStr += emptyCount.toString();
+          emptyCount = 0;
+        }
+
+        const pieceChar = getPieceChar(piece);
+        rankStr += pieceChar;
+      } else {
+        emptyCount++;
+      }
+    }
+
+    if (emptyCount > 0) {
+      rankStr += emptyCount.toString();
+    }
+
+    fenBoard += rankStr;
+    if (row > 0) fenBoard += '/';
+  }
+
+  // 2. Active color
+  const activeColor = currentPlayer === 'white' ? 'w' : 'b';
+
+  // 3. Castling availability
+  let castling = '';
+  if (canCastle.whiteKingside) castling += 'K';
+  if (canCastle.whiteQueenside) castling += 'Q';
+  if (canCastle.blackKingside) castling += 'k';
+  if (canCastle.blackQueenside) castling += 'q';
+  if (castling === '') castling = '-';
+
+  // 4. En passant target square
+  const enPassant = enPassantTarget ?
+    `${String.fromCharCode(97 + enPassantTarget.col)}${enPassantTarget.row + 1}` : '-';
+
+  // 5. Halfmove clock (for 50-move rule)
+  const halfmove = halfMoveClock || 0;
+
+  // 6. Fullmove number
+  const fullmove = fullMoveNumber || 1;
+
+  return `${fenBoard} ${activeColor} ${castling} ${enPassant} ${halfmove} ${fullmove}`;
+};
+
+// Helper function to get FEN character for a piece
+const getPieceChar = (piece: ChessPiece): string => {
+  const chars = {
+    white: { king: 'K', queen: 'Q', rook: 'R', bishop: 'B', knight: 'N', pawn: 'P' },
+    black: { king: 'k', queen: 'q', rook: 'r', bishop: 'b', knight: 'n', pawn: 'p' }
+  };
+  return chars[piece.color][piece.type];
 };

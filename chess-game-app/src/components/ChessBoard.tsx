@@ -8,10 +8,11 @@ interface ChessBoardProps {
   game: ChessGameHook;
   rotated?: boolean;
   soundEnabled?: boolean;
+  boardTheme?: string;
 }
 
-const ChessBoard: React.FC<ChessBoardProps> = ({ game, rotated = false, soundEnabled = true }) => {
-  const { gameState, selectSquare, isSquareSelected, isValidMoveTarget } = game;
+const ChessBoard: React.FC<ChessBoardProps> = ({ game, rotated = false, soundEnabled = true, boardTheme = 'classic' }) => {
+  const { gameState, selectSquare, isSquareSelected, isValidMoveTarget, isComputerThinking, isEngineReady } = game;
   const [lastMoveCount, setLastMoveCount] = useState(0);
   const [particles, setParticles] = useState<Array<{id: number, type: string, x: number, y: number}>>([]);
 
@@ -144,6 +145,26 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ game, rotated = false, soundEna
           {/* Check indicator */}
           {gameState.gameStatus === 'check' && (
             <div className="check-indicator" />
+          )}
+
+          {/* Computer thinking indicator */}
+          {isComputerThinking && (
+            <div className="computer-thinking-overlay">
+              <div className="thinking-indicator">
+                <div className="thinking-spinner"></div>
+                <span>Computer is thinking...</span>
+              </div>
+            </div>
+          )}
+
+          {/* Engine status indicator */}
+          {!isEngineReady && (
+            <div className="engine-loading-overlay">
+              <div className="loading-indicator">
+                <div className="loading-spinner"></div>
+                <span>Loading chess engine...</span>
+              </div>
+            </div>
           )}
         </div>
 

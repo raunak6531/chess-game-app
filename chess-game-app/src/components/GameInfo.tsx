@@ -2,24 +2,19 @@ import React from 'react';
 import type { ChessGameHook } from '../hooks/useChessGame';
 import MoveHistory from './MoveHistory';
 import ChessClock from './ChessClock';
-import MoveSuggestions from './MoveSuggestions';
 import './GameInfo.css';
 
 interface GameInfoProps {
   game: ChessGameHook;
   onBackToHome?: () => void;
-  analysisEnabled?: boolean;
-  showClock?: boolean;
-  showSuggestions?: boolean;
+  difficulty: string;
   backButtonText?: string;
 }
 
 const GameInfo: React.FC<GameInfoProps> = ({
   game,
   onBackToHome,
-  analysisEnabled = false,
-  showClock = true,
-  showSuggestions = false,
+  difficulty,
   backButtonText = "← Menu"
 }) => {
   const { gameState, resetGame } = game;
@@ -104,78 +99,23 @@ const GameInfo: React.FC<GameInfoProps> = ({
         </div>
       )}
 
-      {analysisEnabled && (
-        <div className="analysis-panel">
-          <h3>Game Analysis</h3>
-          <div className="analysis-stats">
-            <div className="stat">
-              <span className="stat-label">Material Balance:</span>
-              <span className="stat-value">{calculateMaterialBalance()}</span>
-            </div>
-            <div className="stat">
-              <span className="stat-label">Game Phase:</span>
-              <span className="stat-value">{getGamePhase()}</span>
-            </div>
-            <div className="stat">
-              <span className="stat-label">Tempo:</span>
-              <span className="stat-value">{gameState.currentPlayer === 'white' ? 'White' : 'Black'}</span>
-            </div>
-          </div>
-        </div>
-      )}
+      <div className="difficulty-display">
+        <span className="stat-label">Difficulty:</span>
+        <span className="stat-value difficulty-badge">{difficulty}</span>
+      </div>
 
-      {showClock && (
-        <ChessClock
-          currentPlayer={gameState.currentPlayer}
-          gameStatus={gameState.gameStatus}
-          onTimeUp={handleTimeUp}
-          initialTime={600} // 10 minutes
-        />
-      )}
-
-      {showSuggestions && (
-        <MoveSuggestions
-          game={game}
-          enabled={showSuggestions}
-        />
-      )}
+      <ChessClock
+        currentPlayer={gameState.currentPlayer}
+        gameStatus={gameState.gameStatus}
+        onTimeUp={handleTimeUp}
+        initialTime={600} // 10 minutes
+      />
 
       <MoveHistory moves={gameState.moveHistory} />
     </div>
   );
 
-  function calculateMaterialBalance(): string {
-    // Simple material calculation
-    const pieceValues = { pawn: 1, knight: 3, bishop: 3, rook: 5, queen: 9, king: 0 };
-    let whiteTotal = 0;
-    let blackTotal = 0;
 
-    for (let row = 0; row < 8; row++) {
-      for (let col = 0; col < 8; col++) {
-        const piece = gameState.board[row][col];
-        if (piece) {
-          const value = pieceValues[piece.type];
-          if (piece.color === 'white') {
-            whiteTotal += value;
-          } else {
-            blackTotal += value;
-          }
-        }
-      }
-    }
-
-    const balance = whiteTotal - blackTotal;
-    if (balance > 0) return `+${balance} White`;
-    if (balance < 0) return `${balance} Black`;
-    return 'Equal';
-  }
-
-  function getGamePhase(): string {
-    const totalPieces = gameState.board.flat().filter(piece => piece !== null).length;
-    if (totalPieces > 24) return 'Opening';
-    if (totalPieces > 12) return 'Middlegame';
-    return 'Endgame';
-  }
 };
 
 const formatLastMove = (move: any) => {

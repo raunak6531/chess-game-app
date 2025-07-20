@@ -3,26 +3,19 @@ import HomePage from './components/HomePage';
 import GameMenu from './components/GameMenu';
 import ChessBoard from './components/ChessBoard';
 import GameInfo from './components/GameInfo';
-import FloatingActions from './components/FloatingActions';
 import { useChessGame } from './hooks/useChessGame';
 import { soundSystem } from './utils/soundSystem';
 import './App.css';
 
 type AppPage = 'home' | 'menu' | 'game';
-type GameMode = 'vs-computer' | 'vs-friend';
 type BoardTheme = 'classic' | 'modern' | 'wood';
-type Difficulty = 'easy' | 'medium' | 'hard';
+type Difficulty = 'beginner' | 'intermediate' | 'advanced' | 'expert';
 
 function App() {
   const [currentPage, setCurrentPage] = useState<AppPage>(() => {
     // Check localStorage for current page on initial load
     const savedPage = localStorage.getItem('chess-current-page');
     return (savedPage as AppPage) || 'home';
-  });
-
-  const [gameMode, setGameMode] = useState<GameMode>(() => {
-    const saved = localStorage.getItem('chess-game-mode');
-    return (saved as GameMode) || 'vs-friend';
   });
 
   const [boardTheme, setBoardTheme] = useState<BoardTheme>(() => {
@@ -32,36 +25,39 @@ function App() {
 
   const [difficulty, setDifficulty] = useState<Difficulty>(() => {
     const saved = localStorage.getItem('chess-difficulty');
-    return (saved as Difficulty) || 'medium';
+    // Validate saved difficulty against new difficulty types
+    const validDifficulties: Difficulty[] = ['beginner', 'intermediate', 'advanced', 'expert'];
+    if (saved && validDifficulties.includes(saved as Difficulty)) {
+      return saved as Difficulty;
+    }
+    // Clear invalid difficulty from localStorage and return default
+    localStorage.removeItem('chess-difficulty');
+    return 'intermediate';
   });
 
   const [boardRotated, setBoardRotated] = useState(() => {
     const saved = localStorage.getItem('chess-board-rotated');
     return saved === 'true';
   });
+
   const [soundEnabled, setSoundEnabled] = useState(() => {
     const saved = localStorage.getItem('chess-sound-enabled');
     return saved !== 'false'; // Default to true
   });
-  const [analysisEnabled, setAnalysisEnabled] = useState(() => {
-    const saved = localStorage.getItem('chess-analysis-enabled');
-    return saved === 'true';
-  });
-  const [showClock, setShowClock] = useState(() => {
-    const saved = localStorage.getItem('chess-show-clock');
-    return saved !== 'false'; // Default to true
-  });
-  const [showSuggestions, setShowSuggestions] = useState(() => {
-    const saved = localStorage.getItem('chess-show-suggestions');
-    return saved === 'true';
-  });
+
   const game = useChessGame();
 
-  // Update game settings when they change
-  useEffect(() => {
-    game.setGameMode(gameMode);
-  }, [gameMode, game]);
+  // Add error boundary
+  if (!game) {
+    return (
+      <div style={{ color: 'white', padding: '20px', textAlign: 'center' }}>
+        <h1>Loading Chess Game...</h1>
+        <p>Initializing game engine...</p>
+      </div>
+    );
+  }
 
+  // Update game settings when they change
   useEffect(() => {
     game.setDifficulty(difficulty);
   }, [difficulty, game]);
@@ -70,10 +66,6 @@ function App() {
   useEffect(() => {
     localStorage.setItem('chess-current-page', currentPage);
   }, [currentPage]);
-
-  useEffect(() => {
-    localStorage.setItem('chess-game-mode', gameMode);
-  }, [gameMode]);
 
   useEffect(() => {
     localStorage.setItem('chess-board-theme', boardTheme);
@@ -91,18 +83,6 @@ function App() {
     localStorage.setItem('chess-sound-enabled', soundEnabled.toString());
     soundSystem.setEnabled(soundEnabled);
   }, [soundEnabled]);
-
-  useEffect(() => {
-    localStorage.setItem('chess-analysis-enabled', analysisEnabled.toString());
-  }, [analysisEnabled]);
-
-  useEffect(() => {
-    localStorage.setItem('chess-show-clock', showClock.toString());
-  }, [showClock]);
-
-  useEffect(() => {
-    localStorage.setItem('chess-show-suggestions', showSuggestions.toString());
-  }, [showSuggestions]);
 
   // Navigation handlers
   const handleStartGame = () => {
@@ -123,13 +103,6 @@ function App() {
 
   // Game mode handlers
   const handlePlayVsComputer = () => {
-    setGameMode('vs-computer');
-    setCurrentPage('game');
-    soundSystem.playGameStart();
-  };
-
-  const handlePlayVsFriend = () => {
-    setGameMode('vs-friend');
     setCurrentPage('game');
     soundSystem.playGameStart();
   };
@@ -145,7 +118,7 @@ function App() {
 
   const handleDifficulty = () => {
     // Cycle through difficulties
-    const difficulties: Difficulty[] = ['easy', 'medium', 'hard'];
+    const difficulties: Difficulty[] = ['beginner', 'intermediate', 'advanced', 'expert'];
     const currentIndex = difficulties.indexOf(difficulty);
     const nextIndex = (currentIndex + 1) % difficulties.length;
     setDifficulty(difficulties[nextIndex]);
@@ -166,83 +139,87 @@ function App() {
     }
   };
 
-  const handleToggleAnalysis = () => {
-    const newAnalysisState = !analysisEnabled;
-    setAnalysisEnabled(newAnalysisState);
-    setShowSuggestions(newAnalysisState); // Enable suggestions with analysis
-    soundSystem.playMove();
-  };
+  // Debug logging (can be removed in production)
+  // console.log('Current page:', currentPage);
+  // console.log('Difficulty:', difficulty);
 
-  const handleExportGame = () => {
-    // Export game logic will be implemented later
-    const gameData = {
-      moves: game.gameState.moveHistory,
-      result: game.gameState.gameStatus,
-      timestamp: new Date().toISOString()
-    };
 
-    const dataStr = JSON.stringify(gameData, null, 2);
-    const dataBlob = new Blob([dataStr], { type: 'application/json' });
-    const url = URL.createObjectURL(dataBlob);
-
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `chess-game-${Date.now()}.json`;
-    link.click();
-
-    URL.revokeObjectURL(url);
-    soundSystem.playMove();
-  };
 
   // Render different pages based on current page
   if (currentPage === 'home') {
+    console.log('Rendering HomePage');
     return <HomePage onStartGame={handleStartGame} />;
   }
 
   if (currentPage === 'menu') {
+    console.log('Rendering GameMenu');
     return (
       <GameMenu
         onPlayVsComputer={handlePlayVsComputer}
-        onPlayVsFriend={handlePlayVsFriend}
         onBoardTheme={handleBoardTheme}
         onDifficulty={handleDifficulty}
         onBackToHome={handleBackToHome}
+        difficulty={difficulty}
+        boardTheme={boardTheme}
       />
     );
   }
 
+  console.log('Rendering game page');
+
   // Game page
-  return (
-    <div className="app">
-      <div className="game-container">
-        <div className="game-info-section">
-          <GameInfo
-            game={game}
-            onBackToHome={handleBackToMenu}
-            analysisEnabled={analysisEnabled}
-            showClock={showClock}
-            showSuggestions={showSuggestions}
-          />
+  try {
+    return (
+      <div className="app">
+        <div className="game-container">
+          <div className="game-info-section">
+            <GameInfo
+              game={game}
+              onBackToHome={handleBackToMenu}
+              difficulty={difficulty}
+            />
+          </div>
+          <div className="chess-board-section">
+            <ChessBoard
+              game={game}
+              rotated={boardRotated}
+              soundEnabled={soundEnabled}
+              boardTheme={boardTheme}
+            />
+          </div>
         </div>
-        <div className="chess-board-section">
-          <ChessBoard
-            game={game}
-            rotated={boardRotated}
-            soundEnabled={soundEnabled}
-          />
+
+        {/* Simple floating action buttons */}
+        <div className="floating-actions">
+          <button
+            className="fab-item"
+            onClick={handleRotateBoard}
+            title="Rotate Board"
+          >
+            🔄
+          </button>
+
+          <button
+            className={`fab-item ${soundEnabled ? 'active' : ''}`}
+            onClick={handleToggleSound}
+            title={soundEnabled ? 'Disable Sound' : 'Enable Sound'}
+          >
+            {soundEnabled ? '🔊' : '🔇'}
+          </button>
         </div>
       </div>
-
-      <FloatingActions
-        onRotateBoard={handleRotateBoard}
-        onToggleSound={handleToggleSound}
-        onToggleAnalysis={handleToggleAnalysis}
-        onExportGame={handleExportGame}
-        soundEnabled={soundEnabled}
-        analysisEnabled={analysisEnabled}
-      />
-    </div>
-  );
+    );
+  } catch (error) {
+    console.error('Error rendering game page:', error);
+    return (
+      <div style={{ color: 'white', padding: '20px' }}>
+        <h1>Error rendering game</h1>
+        <p>Current page: {currentPage}</p>
+        <p>Error: {String(error)}</p>
+        <button onClick={handleBackToHome}>Back to Home</button>
+      </div>
+    );
+  }
 }
 
 export default App

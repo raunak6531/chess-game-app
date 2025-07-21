@@ -23,7 +23,9 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ game, rotated = false, soundEna
     if (currentMoveCount > lastMoveCount && soundEnabled) {
       const lastMove = gameState.moveHistory[currentMoveCount - 1];
 
-      if (lastMove?.capturedPiece) {
+      if (lastMove?.isCastling) {
+        soundSystem.playCastling();
+      } else if (lastMove?.capturedPiece) {
         soundSystem.playCapture();
         // Add capture particles
         addParticles('capture', lastMove.to.col * 65 + 32, (7 - lastMove.to.row) * 65 + 32);

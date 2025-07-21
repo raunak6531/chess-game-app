@@ -65,7 +65,7 @@ export const useChessGame = (): ChessGameHook => {
     try {
       if (isEngineReady &&
           gameState.currentPlayer === 'black' &&
-          gameState.gameStatus === 'playing' &&
+          (gameState.gameStatus === 'playing' || gameState.gameStatus === 'check') &&
           !isComputerThinking) {
 
         console.log('Requesting computer move...');

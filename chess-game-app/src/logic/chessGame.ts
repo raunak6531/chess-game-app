@@ -125,7 +125,7 @@ export const canPieceMoveTo = (board: Board, from: Position, to: Position, piece
     case 'queen':
       return (rowDiff === 0 || colDiff === 0 || absRowDiff === absColDiff) && isPathClear(board, from, to);
     case 'king':
-      return absRowDiff <= 1 && absColDiff <= 1;
+      return canKingMoveTo(board, from, to, piece, absRowDiff, absColDiff);
     case 'knight':
       return (absRowDiff === 2 && absColDiff === 1) || (absRowDiff === 1 && absColDiff === 2);
     default:
@@ -152,6 +152,72 @@ const canPawnMoveTo = (board: Board, from: Position, to: Position, piece: ChessP
   }
   
   return false;
+};
+
+// King movement logic including castling
+const canKingMoveTo = (board: Board, from: Position, to: Position, piece: ChessPiece, absRowDiff: number, absColDiff: number): boolean => {
+  // Normal king move (one square in any direction)
+  if (absRowDiff <= 1 && absColDiff <= 1) {
+    return true;
+  }
+
+  // Check for castling
+  if (absRowDiff === 0 && absColDiff === 2) {
+    return canCastle(board, from, to, piece);
+  }
+
+  return false;
+};
+
+// Check if castling is possible
+const canCastle = (board: Board, from: Position, to: Position, piece: ChessPiece): boolean => {
+  // King must not have moved
+  if (piece.hasMoved) return false;
+
+  // Must be on the back rank
+  const backRank = piece.color === 'white' ? 0 : 7;
+  if (from.row !== backRank) return false;
+
+  // King must be on e-file (column 4)
+  if (from.col !== 4) return false;
+
+  // Determine if kingside or queenside castling
+  const isKingside = to.col === 6;
+  const isQueenside = to.col === 2;
+
+  if (!isKingside && !isQueenside) return false;
+
+  // Check rook position and if it has moved
+  const rookCol = isKingside ? 7 : 0;
+  const rook = getPieceAt(board, { row: backRank, col: rookCol });
+
+  if (!rook || rook.type !== 'rook' || rook.color !== piece.color || rook.hasMoved) {
+    return false;
+  }
+
+  // Check if path is clear between king and rook
+  const startCol = Math.min(from.col, rookCol);
+  const endCol = Math.max(from.col, rookCol);
+
+  for (let col = startCol + 1; col < endCol; col++) {
+    if (getPieceAt(board, { row: backRank, col }) !== null) {
+      return false;
+    }
+  }
+
+  // King must not be in check
+  if (isInCheck(board, piece.color)) return false;
+
+  // King must not pass through or end up in check
+  const kingPath = isKingside ? [5, 6] : [3, 2];
+  for (const col of kingPath) {
+    const testPos = { row: backRank, col };
+    if (isSquareAttacked(board, testPos, piece.color === 'white' ? 'black' : 'white')) {
+      return false;
+    }
+  }
+
+  return true;
 };
 
 // Check if path is clear between two positions

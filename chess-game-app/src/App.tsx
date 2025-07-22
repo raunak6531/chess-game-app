@@ -12,11 +12,7 @@ type BoardTheme = 'classic' | 'modern' | 'wood';
 type Difficulty = 'beginner' | 'intermediate' | 'advanced' | 'expert';
 
 function App() {
-  const [currentPage, setCurrentPage] = useState<AppPage>(() => {
-    // Check localStorage for current page on initial load
-    const savedPage = localStorage.getItem('chess-current-page');
-    return (savedPage as AppPage) || 'home';
-  });
+  const [currentPage, setCurrentPage] = useState<AppPage>('home');
 
   const [boardTheme, setBoardTheme] = useState<BoardTheme>(() => {
     const saved = localStorage.getItem('chess-board-theme');
@@ -62,10 +58,7 @@ function App() {
     game.setDifficulty(difficulty);
   }, [difficulty, game]);
 
-  // Persist state changes to localStorage
-  useEffect(() => {
-    localStorage.setItem('chess-current-page', currentPage);
-  }, [currentPage]);
+  // Note: We don't persist currentPage to localStorage so the app always starts from home
 
   useEffect(() => {
     localStorage.setItem('chess-board-theme', boardTheme);
@@ -93,8 +86,6 @@ function App() {
   const handleBackToHome = () => {
     setCurrentPage('home');
     game.resetGame();
-    // Clear current page from localStorage when going back to home
-    localStorage.removeItem('chess-current-page');
   };
 
   const handleBackToMenu = () => {

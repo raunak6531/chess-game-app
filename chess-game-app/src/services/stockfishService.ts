@@ -24,29 +24,29 @@ class StockfishService {
   private thinkingCallback: ((isThinking: boolean) => void) | null = null;
   private currentTimeout: number | null = null;
 
-  // Difficulty configurations based on the plan
+  // Difficulty configurations based on ELO ratings
   private difficultyConfigs: Record<Difficulty, StockfishConfig> = {
     beginner: {
-      skill: 2,
+      skill: 0,
       depth: 1,
-      time: 100,
-      multiPV: 3
+      time: 50,
+      multiPV: 4
     },
     intermediate: {
-      skill: 10,
-      depth: 3,
-      time: 500,
-      multiPV: 2
+      skill: 5,
+      depth: 2,
+      time: 200,
+      multiPV: 3
     },
     advanced: {
-      skill: 16,
-      depth: 5,
-      time: 2000
+      skill: 12,
+      depth: 4,
+      time: 1000
     },
     expert: {
-      skill: 20,
-      depth: 8,
-      time: 5000
+      skill: 18,
+      depth: 6,
+      time: 3000
     }
   };
 

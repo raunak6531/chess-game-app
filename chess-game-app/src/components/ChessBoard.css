@@ -7,55 +7,58 @@
   position: relative;
 }
 
+/* Rich Walnut Frame with Gold Bezel */
 .board-with-coordinates {
   position: relative;
-  padding: 32px;
+  padding: 36px;
   background:
-    linear-gradient(145deg, #2c1810 0%, #3d2317 25%, #4a2a1a 50%, #3d2317 75%, #2c1810 100%);
-  border-radius: 20px;
+    linear-gradient(145deg, #1a0f0a 0%, #2d1b12 25%, #3f2818 50%, #2d1b12 75%, #1a0f0a 100%);
+  border-radius: 12px;
   box-shadow:
-    0 30px 60px rgba(0, 0, 0, 0.5),
-    0 10px 20px rgba(0, 0, 0, 0.3),
-    inset 0 2px 4px rgba(255, 255, 255, 0.1),
-    inset 0 -2px 8px rgba(0, 0, 0, 0.4);
-  border: 3px solid #8B4513;
+    0 35px 70px rgba(0, 0, 0, 0.6),
+    0 15px 30px rgba(0, 0, 0, 0.4),
+    inset 0 2px 4px rgba(212, 175, 55, 0.1),
+    inset 0 -2px 8px rgba(0, 0, 0, 0.6);
+  border: 4px solid #d4af37;
   position: relative;
   overflow: visible;
 }
 
+/* Rich Walnut Wood Grain Texture */
 .board-with-coordinates::before {
   content: '';
   position: absolute;
-  top: 16px;
-  left: 16px;
-  right: 16px;
-  bottom: 16px;
+  top: 20px;
+  left: 20px;
+  right: 20px;
+  bottom: 20px;
   background:
-    linear-gradient(45deg, rgba(139, 69, 19, 0.1) 0%, transparent 50%),
+    linear-gradient(45deg, rgba(212, 175, 55, 0.08) 0%, transparent 50%),
     repeating-linear-gradient(
       45deg,
-      rgba(205, 133, 63, 0.05) 0px,
-      rgba(205, 133, 63, 0.05) 1px,
+      rgba(63, 40, 24, 0.3) 0px,
+      rgba(63, 40, 24, 0.3) 1px,
       transparent 1px,
-      transparent 3px
+      transparent 4px
     );
-  border-radius: 16px;
+  border-radius: 8px;
   pointer-events: none;
-  border: 1px solid rgba(139, 69, 19, 0.3);
+  border: 2px solid rgba(212, 175, 55, 0.4);
 }
 
+/* Subtle Gold Glow Around Frame */
 .board-with-coordinates::after {
   content: '';
   position: absolute;
-  top: -6px;
-  left: -6px;
-  right: -6px;
-  bottom: -6px;
+  top: -8px;
+  left: -8px;
+  right: -8px;
+  bottom: -8px;
   background:
-    linear-gradient(145deg, rgba(139, 69, 19, 0.2) 0%, transparent 50%, rgba(139, 69, 19, 0.1) 100%);
-  border-radius: 26px;
+    linear-gradient(145deg, rgba(212, 175, 55, 0.15) 0%, transparent 50%, rgba(212, 175, 55, 0.08) 100%);
+  border-radius: 20px;
   z-index: -1;
-  filter: blur(2px);
+  filter: blur(3px);
 }
 
 .chess-board {
@@ -73,7 +76,7 @@
     inset 0 2px 4px rgba(255, 255, 255, 0.1),
     0 8px 24px rgba(0, 0, 0, 0.3);
   position: relative;
-  border: 2px solid rgba(139, 69, 19, 0.6);
+  border: 3px solid rgba(212, 175, 55, 0.6);
   transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -164,15 +167,15 @@
   border: 1px solid rgba(235, 230, 216, 0.3);
 }
 
-/* Dark squares - Rich mahogany/walnut */
+/* Dark squares - Rich walnut with gold accents */
 .chess-square.dark {
   background:
-    linear-gradient(145deg, #5d2f0f 0%, #7a3f1a 25%, #8b4513 50%, #7a3f1a 75%, #5d2f0f 100%);
+    linear-gradient(145deg, #3f2818 0%, #2d1b12 25%, #1a0f0a 50%, #2d1b12 75%, #3f2818 100%);
   box-shadow:
-    inset 2px 2px 4px rgba(255, 255, 255, 0.15),
-    inset -2px -2px 4px rgba(0, 0, 0, 0.4),
-    inset 0 0 8px rgba(139, 69, 19, 0.3);
-  border: 1px solid rgba(93, 47, 15, 0.4);
+    inset 2px 2px 4px rgba(212, 175, 55, 0.08),
+    inset -2px -2px 4px rgba(0, 0, 0, 0.6),
+    inset 0 0 8px rgba(63, 40, 24, 0.4);
+  border: 1px solid rgba(63, 40, 24, 0.5);
 }
 
 .chess-square:hover {

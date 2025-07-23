@@ -1,16 +1,12 @@
-/* Professional Game Info Panel */
+/* Sophisticated Game Info Panel - Navy Theme */
 .game-info {
-  background:
-    linear-gradient(145deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.08) 100%);
-  backdrop-filter: blur(25px) saturate(200%);
-  border-radius: 28px;
+  background: rgba(15, 15, 35, 0.95);
+  border-radius: 8px;
   padding: 36px;
   box-shadow:
-    0 25px 50px rgba(0, 0, 0, 0.2),
-    0 10px 20px rgba(0, 0, 0, 0.1),
-    0 0 0 1px rgba(255, 255, 255, 0.15),
-    inset 0 2px 4px rgba(255, 255, 255, 0.2);
-  border: 2px solid rgba(255, 255, 255, 0.12);
+    0 25px 50px rgba(0, 0, 0, 0.4),
+    0 10px 20px rgba(0, 0, 0, 0.2);
+  border: 2px solid rgba(212, 175, 55, 0.3);
   min-width: 350px;
   max-width: 420px;
   width: 100%;
@@ -19,40 +15,12 @@
   overflow: hidden;
 }
 
-.game-info::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background:
-    linear-gradient(145deg, rgba(255, 255, 255, 0.08) 0%, transparent 50%, rgba(255, 255, 255, 0.04) 100%);
-  border-radius: 28px;
-  pointer-events: none;
-}
-
-.game-info::after {
-  content: '';
-  position: absolute;
-  top: -3px;
-  left: -3px;
-  right: -3px;
-  bottom: -3px;
-  background:
-    linear-gradient(145deg, rgba(255, 255, 255, 0.1) 0%, transparent 50%, rgba(255, 255, 255, 0.05) 100%);
-  border-radius: 31px;
-  z-index: -1;
-  filter: blur(1px);
-}
-
 .game-info:hover {
   transform: translateY(-3px);
   box-shadow:
-    0 30px 60px rgba(0, 0, 0, 0.25),
-    0 15px 30px rgba(0, 0, 0, 0.15),
-    0 0 0 1px rgba(255, 255, 255, 0.2),
-    inset 0 2px 6px rgba(255, 255, 255, 0.3);
+    0 30px 60px rgba(0, 0, 0, 0.5),
+    0 15px 30px rgba(0, 0, 0, 0.3);
+  border-color: rgba(212, 175, 55, 0.5);
 }
 
 .game-header {
@@ -91,7 +59,8 @@
   font-size: 36px;
   font-weight: 900;
   font-family: 'Playfair Display', 'Georgia', serif;
-  letter-spacing: 1.5px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
   text-shadow:
     2px 2px 4px rgba(0, 0, 0, 0.2),
     0 0 12px rgba(212, 175, 55, 0.3);
@@ -110,26 +79,27 @@
   border-radius: 1px;
 }
 
-/* Professional Button Styling */
+/* Professional Button Styling - Gold Accent */
 .reset-button {
-  background: linear-gradient(145deg, #ef4444 0%, #dc2626 50%, #b91c1c 100%);
-  color: white;
+  background: linear-gradient(145deg, #d4af37 0%, #b8860b 50%, #9a7209 100%);
+  color: #2c2a28;
   border: none;
   padding: 14px 28px;
-  border-radius: 16px;
+  border-radius: 8px;
   cursor: pointer;
   font-weight: 800;
   font-size: 15px;
   letter-spacing: 0.8px;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow:
-    0 6px 20px rgba(239, 68, 68, 0.4),
-    0 2px 8px rgba(239, 68, 68, 0.2),
+    0 6px 20px rgba(212, 175, 55, 0.4),
+    0 2px 8px rgba(212, 175, 55, 0.2),
     inset 0 2px 4px rgba(255, 255, 255, 0.2);
-  border: 2px solid rgba(239, 68, 68, 0.3);
+  border: 2px solid rgba(212, 175, 55, 0.3);
   position: relative;
   overflow: hidden;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Playfair Display', 'Georgia', serif;
+  text-transform: uppercase;
 }
 
 .reset-button::before {
@@ -148,33 +118,34 @@
 }
 
 .reset-button:hover {
-  background: linear-gradient(145deg, #dc2626 0%, #b91c1c 50%, #991b1b 100%);
+  background: linear-gradient(145deg, #ffd700 0%, #d4af37 50%, #b8860b 100%);
   transform: translateY(-3px) scale(1.02);
   box-shadow:
-    0 10px 30px rgba(239, 68, 68, 0.5),
-    0 4px 12px rgba(239, 68, 68, 0.3),
+    0 10px 30px rgba(212, 175, 55, 0.5),
+    0 4px 12px rgba(212, 175, 55, 0.3),
     inset 0 2px 6px rgba(255, 255, 255, 0.3);
 }
 
 .home-button {
-  background: linear-gradient(145deg, #6366f1 0%, #4f46e5 50%, #4338ca 100%);
-  color: white;
+  background: linear-gradient(145deg, #d4af37 0%, #b8860b 50%, #9a7209 100%);
+  color: #2c2a28;
   border: none;
   padding: 14px 28px;
-  border-radius: 16px;
+  border-radius: 8px;
   cursor: pointer;
   font-weight: 800;
   font-size: 15px;
   letter-spacing: 0.8px;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow:
-    0 6px 20px rgba(99, 102, 241, 0.4),
-    0 2px 8px rgba(99, 102, 241, 0.2),
+    0 6px 20px rgba(212, 175, 55, 0.4),
+    0 2px 8px rgba(212, 175, 55, 0.2),
     inset 0 2px 4px rgba(255, 255, 255, 0.2);
-  border: 2px solid rgba(99, 102, 241, 0.3);
+  border: 2px solid rgba(212, 175, 55, 0.3);
   position: relative;
   overflow: hidden;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Playfair Display', 'Georgia', serif;
+  text-transform: uppercase;
 }
 
 .home-button::before {
@@ -193,31 +164,30 @@
 }
 
 .home-button:hover {
-  background: linear-gradient(145deg, #4f46e5 0%, #4338ca 50%, #3730a3 100%);
+  background: linear-gradient(145deg, #ffd700 0%, #d4af37 50%, #b8860b 100%);
   transform: translateY(-3px) scale(1.02);
   box-shadow:
-    0 10px 30px rgba(99, 102, 241, 0.5),
-    0 4px 12px rgba(99, 102, 241, 0.3),
+    0 10px 30px rgba(212, 175, 55, 0.5),
+    0 4px 12px rgba(212, 175, 55, 0.3),
     inset 0 2px 6px rgba(255, 255, 255, 0.3);
 }
 
-/* Professional Game Status */
+/* Prominent Game Status - Primary Typography */
 .game-status {
   padding: 24px;
-  border-radius: 20px;
+  border-radius: 8px;
   margin-bottom: 28px;
-  font-weight: 800;
-  font-size: 22px;
+  font-weight: 700;
+  font-size: 28px;
   text-align: center;
-  backdrop-filter: blur(15px) saturate(180%);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
-  font-family: 'Inter', sans-serif;
-  letter-spacing: 0.5px;
+  font-family: 'Inter', 'Helvetica Neue', sans-serif;
+  letter-spacing: 0.8px;
   box-shadow:
-    0 8px 24px rgba(0, 0, 0, 0.1),
-    inset 0 2px 4px rgba(255, 255, 255, 0.2);
+    0 8px 24px rgba(0, 0, 0, 0.2),
+    inset 0 2px 4px rgba(255, 255, 255, 0.1);
 }
 
 .game-status::before {
@@ -364,15 +334,22 @@
   align-items: center;
 }
 
+/* Secondary Typography - Clean Sans-serif */
 .stat-label {
-  font-weight: 600;
-  color: #4b5563;
+  font-weight: 500;
+  color: #d1d5db;
+  font-size: 14px;
+  font-family: 'Inter', 'Helvetica Neue', sans-serif;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
 }
 
 .stat-value {
-  font-weight: bold;
-  color: #1f2937;
+  font-weight: 700;
+  color: #ffffff;
   font-size: 18px;
+  font-family: 'Inter', 'Helvetica Neue', sans-serif;
+  letter-spacing: 0.2px;
 }
 
 .current-player {
@@ -385,31 +362,34 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-weight: bold;
+  font-weight: 700;
   font-size: 16px;
-  padding: 6px 12px;
+  padding: 8px 16px;
   border-radius: 6px;
+  font-family: 'Inter', 'Helvetica Neue', sans-serif;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
 }
 
 .player-indicator.white {
   background:
-    linear-gradient(145deg, #f9fafb 0%, #e5e7eb 100%);
-  color: #1f2937;
-  border: 1px solid #d1d5db;
+    linear-gradient(145deg, #d4af37 0%, #b8860b 100%);
+  color: #2c2a28;
+  border: 1px solid rgba(212, 175, 55, 0.5);
   box-shadow:
-    0 2px 8px rgba(0, 0, 0, 0.1),
+    0 2px 8px rgba(212, 175, 55, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.5);
   animation: player-white-active 0.4s ease-out;
 }
 
 .player-indicator.black {
   background:
-    linear-gradient(145deg, #1f2937 0%, #111827 100%);
-  color: #ffffff;
-  border: 1px solid #374151;
+    linear-gradient(145deg, #d4af37 0%, #b8860b 100%);
+  color: #2c2a28;
+  border: 1px solid rgba(212, 175, 55, 0.5);
   box-shadow:
-    0 2px 8px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    0 2px 8px rgba(212, 175, 55, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
   animation: player-black-active 0.4s ease-out;
 }
 
@@ -475,18 +455,18 @@
   justify-content: space-between;
   align-items: center;
   padding-top: 16px;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid rgba(212, 175, 55, 0.3);
 }
 
 .move-notation {
   font-family: 'Courier New', monospace;
   font-weight: bold;
-  color: #1f2937;
-  background: rgba(243, 244, 246, 0.8);
+  color: #2c2a28;
+  background: rgba(212, 175, 55, 0.9);
   backdrop-filter: blur(10px);
   padding: 6px 12px;
   border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(212, 175, 55, 0.5);
 }
 
 /* Analysis Panel */
@@ -614,18 +594,20 @@
 }
 
 .difficulty-badge {
-  background: linear-gradient(135deg, #4CAF50, #45a049);
-  color: white;
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-weight: 600;
+  background: linear-gradient(135deg, #d4af37, #b8860b);
+  color: #2c2a28;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 700;
   font-size: 14px;
-  text-transform: capitalize;
-  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+  text-transform: uppercase;
+  font-family: 'Inter', 'Helvetica Neue', sans-serif;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
   transition: all 0.3s ease;
 }
 
 .difficulty-badge:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.4);
 }

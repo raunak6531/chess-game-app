@@ -1,63 +1,79 @@
+/* Professional Chess Board - Classy Design */
 .chess-board-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 30px;
+  padding: 40px;
   position: relative;
 }
 
 .board-with-coordinates {
   position: relative;
-  padding: 20px;
+  padding: 32px;
   background:
-    linear-gradient(145deg, #8B4513 0%, #A0522D 50%, #8B4513 100%);
-  border-radius: 16px;
+    linear-gradient(145deg, #2c1810 0%, #3d2317 25%, #4a2a1a 50%, #3d2317 75%, #2c1810 100%);
+  border-radius: 20px;
   box-shadow:
-    0 20px 40px rgba(0, 0, 0, 0.4),
-    inset 0 2px 4px rgba(255, 255, 255, 0.2),
-    inset 0 -2px 4px rgba(0, 0, 0, 0.2);
-  border: 2px solid rgba(139, 69, 19, 0.8);
+    0 30px 60px rgba(0, 0, 0, 0.5),
+    0 10px 20px rgba(0, 0, 0, 0.3),
+    inset 0 2px 4px rgba(255, 255, 255, 0.1),
+    inset 0 -2px 8px rgba(0, 0, 0, 0.4);
+  border: 3px solid #8B4513;
+  position: relative;
+  overflow: visible;
 }
 
 .board-with-coordinates::before {
   content: '';
   position: absolute;
-  top: 8px;
-  left: 8px;
-  right: 8px;
-  bottom: 8px;
+  top: 16px;
+  left: 16px;
+  right: 16px;
+  bottom: 16px;
   background:
+    linear-gradient(45deg, rgba(139, 69, 19, 0.1) 0%, transparent 50%),
     repeating-linear-gradient(
       45deg,
-      rgba(160, 82, 45, 0.1) 0px,
-      rgba(160, 82, 45, 0.1) 2px,
-      transparent 2px,
-      transparent 4px
+      rgba(205, 133, 63, 0.05) 0px,
+      rgba(205, 133, 63, 0.05) 1px,
+      transparent 1px,
+      transparent 3px
     );
-  border-radius: 12px;
+  border-radius: 16px;
   pointer-events: none;
+  border: 1px solid rgba(139, 69, 19, 0.3);
+}
+
+.board-with-coordinates::after {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: -6px;
+  right: -6px;
+  bottom: -6px;
+  background:
+    linear-gradient(145deg, rgba(139, 69, 19, 0.2) 0%, transparent 50%, rgba(139, 69, 19, 0.1) 100%);
+  border-radius: 26px;
+  z-index: -1;
+  filter: blur(2px);
 }
 
 .chess-board {
   display: grid;
   grid-template-columns: repeat(8, 1fr);
   grid-template-rows: repeat(8, 1fr);
-  width: min(520px, 90vw);
-  height: min(520px, 90vw);
-  max-width: 520px;
-  max-height: 520px;
-  border-radius: 12px;
+  width: min(560px, 85vw);
+  height: min(560px, 85vw);
+  max-width: 560px;
+  max-height: 560px;
+  border-radius: 16px;
   overflow: hidden;
   box-shadow:
-    inset 0 0 20px rgba(0, 0, 0, 0.3),
-    0 8px 16px rgba(0, 0, 0, 0.2);
+    inset 0 0 30px rgba(0, 0, 0, 0.4),
+    inset 0 2px 4px rgba(255, 255, 255, 0.1),
+    0 8px 24px rgba(0, 0, 0, 0.3);
   position: relative;
-  background: linear-gradient(45deg, #f5f5dc 25%, transparent 25%),
-              linear-gradient(-45deg, #f5f5dc 25%, transparent 25%),
-              linear-gradient(45deg, transparent 75%, #f5f5dc 75%),
-              linear-gradient(-45deg, transparent 75%, #f5f5dc 75%);
-  background-size: 12.5% 12.5%;
-  background-position: 0 0, 0 6.25%, 6.25% -6.25%, -6.25% 0px;
+  border: 2px solid rgba(139, 69, 19, 0.6);
   transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -119,7 +135,7 @@
   aspect-ratio: 1;
   cursor: pointer;
   position: relative;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
 }
 
@@ -131,35 +147,42 @@
   right: 0;
   bottom: 0;
   background:
-    radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.3) 0%, transparent 50%);
+    radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.4) 0%, transparent 60%);
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.4s ease;
   pointer-events: none;
 }
 
+/* Light squares - Elegant cream/ivory */
 .chess-square.light {
   background:
-    linear-gradient(145deg, #f8f6f0 0%, #f5f3e7 50%, #f0ede1 100%);
+    linear-gradient(145deg, #faf8f3 0%, #f5f2ea 25%, #f0ede1 50%, #ebe6d8 75%, #e6e0d0 100%);
   box-shadow:
-    inset 1px 1px 2px rgba(255, 255, 255, 0.8),
-    inset -1px -1px 2px rgba(0, 0, 0, 0.1);
+    inset 2px 2px 4px rgba(255, 255, 255, 0.9),
+    inset -2px -2px 4px rgba(0, 0, 0, 0.08),
+    inset 0 0 8px rgba(245, 242, 234, 0.5);
+  border: 1px solid rgba(235, 230, 216, 0.3);
 }
 
+/* Dark squares - Rich mahogany/walnut */
 .chess-square.dark {
   background:
-    linear-gradient(145deg, #8b4513 0%, #a0522d 50%, #8b4513 100%);
+    linear-gradient(145deg, #5d2f0f 0%, #7a3f1a 25%, #8b4513 50%, #7a3f1a 75%, #5d2f0f 100%);
   box-shadow:
-    inset 1px 1px 2px rgba(255, 255, 255, 0.2),
-    inset -1px -1px 2px rgba(0, 0, 0, 0.3);
+    inset 2px 2px 4px rgba(255, 255, 255, 0.15),
+    inset -2px -2px 4px rgba(0, 0, 0, 0.4),
+    inset 0 0 8px rgba(139, 69, 19, 0.3);
+  border: 1px solid rgba(93, 47, 15, 0.4);
 }
 
 .chess-square:hover {
-  transform: translateY(-2px) scale(1.02);
+  transform: translateY(-3px) scale(1.03);
   box-shadow:
-    0 8px 16px rgba(0, 0, 0, 0.2),
-    inset 1px 1px 3px rgba(255, 255, 255, 0.4),
-    inset -1px -1px 3px rgba(0, 0, 0, 0.2);
-  animation: square-hover 0.3s ease-out;
+    0 12px 24px rgba(0, 0, 0, 0.25),
+    inset 2px 2px 6px rgba(255, 255, 255, 0.3),
+    inset -2px -2px 6px rgba(0, 0, 0, 0.3);
+  animation: square-hover 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 10;
 }
 
 .chess-square:hover::before {
@@ -169,12 +192,24 @@
 @keyframes square-hover {
   0% {
     transform: translateY(0) scale(1);
+    box-shadow:
+      0 2px 4px rgba(0, 0, 0, 0.1),
+      inset 2px 2px 4px rgba(255, 255, 255, 0.2),
+      inset -2px -2px 4px rgba(0, 0, 0, 0.2);
   }
   50% {
-    transform: translateY(-3px) scale(1.03);
+    transform: translateY(-4px) scale(1.04);
+    box-shadow:
+      0 16px 32px rgba(0, 0, 0, 0.3),
+      inset 2px 2px 8px rgba(255, 255, 255, 0.4),
+      inset -2px -2px 8px rgba(0, 0, 0, 0.4);
   }
   100% {
-    transform: translateY(-2px) scale(1.02);
+    transform: translateY(-3px) scale(1.03);
+    box-shadow:
+      0 12px 24px rgba(0, 0, 0, 0.25),
+      inset 2px 2px 6px rgba(255, 255, 255, 0.3),
+      inset -2px -2px 6px rgba(0, 0, 0, 0.3);
   }
 }
 
@@ -233,13 +268,15 @@
 
 .chess-square.selected {
   background:
-    radial-gradient(circle, rgba(255, 215, 0, 0.3) 0%, transparent 70%) !important;
+    radial-gradient(circle, rgba(255, 215, 0, 0.25) 0%, rgba(255, 215, 0, 0.1) 50%, transparent 70%) !important;
   box-shadow:
-    inset 0 0 0 3px #ffd700,
-    0 0 20px rgba(255, 215, 0, 0.6),
-    inset 1px 1px 3px rgba(255, 255, 255, 0.5) !important;
-  animation: pulse-selected 2s ease-in-out infinite alternate;
-  transform: translateY(-3px) scale(1.05);
+    inset 0 0 0 4px #ffd700,
+    0 0 25px rgba(255, 215, 0, 0.7),
+    0 0 50px rgba(255, 215, 0, 0.3),
+    inset 2px 2px 6px rgba(255, 255, 255, 0.4) !important;
+  animation: pulse-selected 2.5s ease-in-out infinite alternate;
+  transform: translateY(-4px) scale(1.06);
+  z-index: 15;
 }
 
 @keyframes pulse-selected {
@@ -258,67 +295,88 @@
 }
 
 .chess-square.valid-move {
-  background:
-    radial-gradient(circle, rgba(34, 197, 94, 0.4) 0%, transparent 70%) !important;
-  box-shadow:
-    inset 0 0 0 2px #22c55e,
-    0 0 15px rgba(34, 197, 94, 0.4) !important;
-  animation: pulse-valid-move 1.5s ease-in-out infinite alternate;
+  position: relative;
 }
 
-.chess-square.valid-move:hover {
+.chess-square.valid-move::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 24px;
+  height: 24px;
   background:
-    radial-gradient(circle, rgba(34, 197, 94, 0.6) 0%, transparent 70%) !important;
+    radial-gradient(circle, #22c55e 0%, #16a34a 70%, transparent 100%);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
   box-shadow:
-    inset 0 0 0 3px #16a34a,
-    0 0 25px rgba(34, 197, 94, 0.6) !important;
-  transform: translateY(-3px) scale(1.05);
+    0 0 15px rgba(34, 197, 94, 0.6),
+    inset 0 2px 4px rgba(255, 255, 255, 0.3),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.2);
+  animation: pulse-valid-move 2s ease-in-out infinite alternate;
+  z-index: 5;
+}
+
+.chess-square.valid-move:hover::after {
+  width: 28px;
+  height: 28px;
+  background:
+    radial-gradient(circle, #16a34a 0%, #15803d 70%, transparent 100%);
+  box-shadow:
+    0 0 20px rgba(34, 197, 94, 0.8),
+    inset 0 2px 6px rgba(255, 255, 255, 0.4),
+    inset 0 -2px 6px rgba(0, 0, 0, 0.3);
 }
 
 @keyframes pulse-valid-move {
   0% {
-    box-shadow:
-      inset 0 0 0 2px #22c55e,
-      0 0 15px rgba(34, 197, 94, 0.4);
+    transform: translate(-50%, -50%) scale(0.9);
+    opacity: 0.7;
   }
   100% {
-    box-shadow:
-      inset 0 0 0 3px #16a34a,
-      0 0 20px rgba(34, 197, 94, 0.6);
+    transform: translate(-50%, -50%) scale(1.1);
+    opacity: 1;
   }
 }
 
 .chess-piece {
-  font-size: 42px;
-  font-weight: bold;
+  font-size: 46px;
+  font-weight: 900;
   user-select: none;
   pointer-events: none;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
-  z-index: 2;
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+  z-index: 10;
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.4));
+  font-family: 'Segoe UI Symbol', 'Apple Color Emoji', sans-serif;
 }
 
+/* White pieces - Elegant ivory with gold accents */
 .chess-piece.white {
-  color: #ffffff;
+  color: #fefefe;
   text-shadow:
-    2px 2px 4px rgba(0, 0, 0, 0.8),
-    0 0 8px rgba(255, 255, 255, 0.3),
-    0 0 16px rgba(255, 255, 255, 0.1);
+    3px 3px 6px rgba(0, 0, 0, 0.9),
+    0 0 12px rgba(255, 255, 255, 0.4),
+    0 0 24px rgba(255, 255, 255, 0.2),
+    1px 1px 2px rgba(255, 215, 0, 0.3);
   filter:
-    drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4))
-    drop-shadow(0 0 12px rgba(255, 255, 255, 0.2));
+    drop-shadow(0 6px 12px rgba(0, 0, 0, 0.5))
+    drop-shadow(0 0 16px rgba(255, 255, 255, 0.3))
+    drop-shadow(0 0 8px rgba(255, 215, 0, 0.2));
 }
 
+/* Black pieces - Rich obsidian with silver highlights */
 .chess-piece.black {
-  color: #1a1a1a;
+  color: #0f0f0f;
   text-shadow:
-    2px 2px 4px rgba(255, 255, 255, 0.4),
-    0 0 8px rgba(0, 0, 0, 0.5),
-    0 0 16px rgba(0, 0, 0, 0.3);
+    3px 3px 6px rgba(255, 255, 255, 0.5),
+    0 0 12px rgba(0, 0, 0, 0.7),
+    0 0 24px rgba(0, 0, 0, 0.4),
+    1px 1px 2px rgba(192, 192, 192, 0.4);
   filter:
-    drop-shadow(0 4px 8px rgba(0, 0, 0, 0.6))
-    drop-shadow(0 0 12px rgba(0, 0, 0, 0.2));
+    drop-shadow(0 6px 12px rgba(0, 0, 0, 0.7))
+    drop-shadow(0 0 16px rgba(0, 0, 0, 0.3))
+    drop-shadow(0 0 8px rgba(192, 192, 192, 0.2));
 }
 
 .chess-square:hover .chess-piece {
@@ -663,7 +721,7 @@
   }
 }
 
-/* Coordinate labels */
+/* Professional Coordinate Labels */
 .coordinates {
   position: absolute;
   top: 0;
@@ -675,9 +733,9 @@
 
 .files {
   position: absolute;
-  bottom: -25px;
-  left: 3px;
-  right: 3px;
+  bottom: -32px;
+  left: 4px;
+  right: 4px;
   display: flex;
   justify-content: space-between;
 }
@@ -685,20 +743,26 @@
 .file-label {
   width: 12.5%;
   text-align: center;
-  font-weight: 800;
-  color: #ffd700;
-  font-size: clamp(12px, 2.5vw, 16px);
+  font-weight: 900;
+  color: #d4af37;
+  font-size: clamp(14px, 2.8vw, 18px);
   text-shadow:
-    1px 1px 2px rgba(0, 0, 0, 0.8),
-    0 0 8px rgba(255, 215, 0, 0.3);
-  font-family: 'Georgia', serif;
+    2px 2px 4px rgba(0, 0, 0, 0.9),
+    0 0 12px rgba(212, 175, 55, 0.4),
+    0 0 24px rgba(212, 175, 55, 0.2);
+  font-family: 'Playfair Display', 'Georgia', serif;
+  letter-spacing: 1px;
+  background: linear-gradient(145deg, #d4af37 0%, #ffd700 50%, #d4af37 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .ranks {
   position: absolute;
-  top: 3px;
-  bottom: 3px;
-  left: -30px;
+  top: 4px;
+  bottom: 4px;
+  left: -36px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -708,47 +772,80 @@
   height: 12.5%;
   display: flex;
   align-items: center;
-  font-weight: 800;
-  color: #ffd700;
-  font-size: clamp(12px, 2.5vw, 16px);
+  font-weight: 900;
+  color: #d4af37;
+  font-size: clamp(14px, 2.8vw, 18px);
   text-shadow:
-    1px 1px 2px rgba(0, 0, 0, 0.8),
-    0 0 8px rgba(255, 215, 0, 0.3);
-  font-family: 'Georgia', serif;
+    2px 2px 4px rgba(0, 0, 0, 0.9),
+    0 0 12px rgba(212, 175, 55, 0.4),
+    0 0 24px rgba(212, 175, 55, 0.2);
+  font-family: 'Playfair Display', 'Georgia', serif;
+  letter-spacing: 1px;
+  background: linear-gradient(145deg, #d4af37 0%, #ffd700 50%, #d4af37 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-/* Responsive Design for Chess Board */
-@media (max-width: 768px) {
+/* Professional Responsive Design */
+@media (max-width: 1024px) {
   .chess-board {
-    width: min(400px, 85vw);
-    height: min(400px, 85vw);
+    width: min(480px, 80vw);
+    height: min(480px, 80vw);
   }
 
-  .files, .ranks {
-    font-size: 12px;
+  .board-with-coordinates {
+    padding: 28px;
+  }
+}
+
+@media (max-width: 768px) {
+  .chess-board {
+    width: min(420px, 85vw);
+    height: min(420px, 85vw);
+  }
+
+  .board-with-coordinates {
+    padding: 24px;
+  }
+
+  .chess-piece {
+    font-size: 40px;
+  }
+
+  .file-label, .rank-label {
+    font-size: clamp(12px, 2.2vw, 16px);
+  }
+}
+
+@media (max-width: 480px) {
+  .chess-board-container {
+    padding: 20px;
+  }
+
+  .chess-board {
+    width: min(340px, 90vw);
+    height: min(340px, 90vw);
+  }
+
+  .board-with-coordinates {
+    padding: 20px;
+  }
+
+  .chess-piece {
+    font-size: clamp(28px, 6vw, 36px);
   }
 
   .file-label, .rank-label {
     font-size: clamp(10px, 2vw, 14px);
   }
-}
 
-@media (max-width: 480px) {
-  .chess-board {
-    width: min(320px, 90vw);
-    height: min(320px, 90vw);
+  .files {
+    bottom: -28px;
   }
 
-  .files, .ranks {
-    font-size: 10px;
-  }
-
-  .file-label, .rank-label {
-    font-size: clamp(8px, 1.8vw, 12px);
-  }
-
-  .chess-piece {
-    font-size: clamp(20px, 5vw, 32px);
+  .ranks {
+    left: -32px;
   }
 }
 

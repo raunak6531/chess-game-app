@@ -55,7 +55,6 @@ const GameMenu: React.FC<GameMenuProps> = ({
           <h1 className="game-menu-title">
             LET'S MATE
           </h1>
-          <p className="game-menu-subtitle">Choose your game mode</p>
         </div>
 
         {/* Back button */}

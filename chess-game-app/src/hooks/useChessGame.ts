@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
-import type { GameState, Position } from '../types/chess';
+import type { GameState, Position, PieceType } from '../types/chess';
 import { initializeGameState, gameStateToFen } from '../logic/chessGame';
-import { executeMove, getValidMovesForPiece } from '../logic/moveValidation';
+import { executeMove, getValidMovesForPiece, isPromotionMove } from '../logic/moveValidation';
 import { stockfishService, type Difficulty } from '../services/stockfishService';
 
 export interface ChessGameHook {
@@ -9,13 +9,16 @@ export interface ChessGameHook {
   selectedSquare: Position | null;
   validMoves: Position[];
   selectSquare: (position: Position) => void;
-  makeMove: (from: Position, to: Position) => boolean;
+  makeMove: (from: Position, to: Position, promotionPiece?: PieceType) => boolean;
   resetGame: () => void;
   isSquareSelected: (position: Position) => boolean;
   isValidMoveTarget: (position: Position) => boolean;
   setDifficulty: (difficulty: Difficulty) => void;
   isComputerThinking: boolean;
   isEngineReady: boolean;
+  pendingPromotion: { from: Position; to: Position } | null;
+  handlePromotion: (pieceType: PieceType) => void;
+  cancelPromotion: () => void;
 }
 
 export const useChessGame = (): ChessGameHook => {
@@ -25,6 +28,7 @@ export const useChessGame = (): ChessGameHook => {
   const [difficulty, setDifficulty] = useState<Difficulty>('intermediate');
   const [isComputerThinking, setIsComputerThinking] = useState(false);
   const [isEngineReady, setIsEngineReady] = useState(false);
+  const [pendingPromotion, setPendingPromotion] = useState<{ from: Position; to: Position } | null>(null);
 
   // Initialize Stockfish engine
   useEffect(() => {
@@ -140,12 +144,24 @@ export const useChessGame = (): ChessGameHook => {
     }
   }, [gameState, selectedSquare, validMoves]);
 
-  const makeMove = useCallback((from: Position, to: Position): boolean => {
-    const newGameState = executeMove(gameState, from, to);
+  const makeMove = useCallback((from: Position, to: Position, promotionPiece?: PieceType): boolean => {
+    // Check if this move would result in promotion
+    const piece = gameState.board[from.row][from.col];
+    if (piece && isPromotionMove({ from, to, piece })) {
+      if (!promotionPiece) {
+        // Set pending promotion and wait for user selection
+        setPendingPromotion({ from, to });
+        return false; // Don't execute the move yet
+      }
+    }
+
+    // Execute the move with promotion piece if provided
+    const newGameState = executeMove(gameState, from, to, promotionPiece);
     if (newGameState) {
       setGameState(newGameState);
       setSelectedSquare(null);
       setValidMoves([]);
+      setPendingPromotion(null);
 
       // Play move sound (simple beep using Web Audio API)
       try {
@@ -196,6 +212,20 @@ export const useChessGame = (): ChessGameHook => {
     }
   }, [isEngineReady]);
 
+  // Handle promotion selection
+  const handlePromotion = useCallback((pieceType: PieceType) => {
+    if (pendingPromotion) {
+      makeMove(pendingPromotion.from, pendingPromotion.to, pieceType);
+    }
+  }, [pendingPromotion, makeMove]);
+
+  // Cancel promotion
+  const cancelPromotion = useCallback(() => {
+    setPendingPromotion(null);
+    setSelectedSquare(null);
+    setValidMoves([]);
+  }, []);
+
   return {
     gameState,
     selectedSquare,
@@ -207,6 +237,9 @@ export const useChessGame = (): ChessGameHook => {
     isValidMoveTarget,
     setDifficulty: handleSetDifficulty,
     isComputerThinking,
-    isEngineReady
+    isEngineReady,
+    pendingPromotion,
+    handlePromotion,
+    cancelPromotion
   };
 };

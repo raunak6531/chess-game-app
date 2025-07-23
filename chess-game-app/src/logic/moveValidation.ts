@@ -3,7 +3,8 @@ import type {
   GameState,
   Move,
   Position,
-  PieceColor
+  PieceColor,
+  PieceType
 } from '../types/chess';
 import {
   isValidPosition,
@@ -25,6 +26,14 @@ export const copyBoard = (board: Board): Board => {
 // Check if a move is castling
 export const isCastlingMove = (move: Move): boolean => {
   return move.piece.type === 'king' && Math.abs(move.to.col - move.from.col) === 2;
+};
+
+// Check if a move results in pawn promotion
+export const isPromotionMove = (move: Move): boolean => {
+  if (move.piece.type !== 'pawn') return false;
+
+  const promotionRank = move.piece.color === 'white' ? 7 : 0;
+  return move.to.row === promotionRank;
 };
 
 // Make a move on the board (returns new board, doesn't modify original)
@@ -52,8 +61,18 @@ export const makeMove = (board: Board, move: Move): Board => {
     // Remove piece from source
     newBoard[move.from.row][move.from.col] = null;
 
-    // Place piece at destination
-    newBoard[move.to.row][move.to.col] = { ...move.piece, hasMoved: true };
+    // Handle pawn promotion
+    if (isPromotionMove(move)) {
+      const promotionPiece = move.promotionPiece || 'queen'; // Default to queen
+      newBoard[move.to.row][move.to.col] = {
+        type: promotionPiece,
+        color: move.piece.color,
+        hasMoved: true
+      };
+    } else {
+      // Place piece at destination
+      newBoard[move.to.row][move.to.col] = { ...move.piece, hasMoved: true };
+    }
   }
 
   return newBoard;
@@ -272,7 +291,7 @@ export const updateCastlingRights = (currentRights: GameState['canCastle'], move
 };
 
 // Execute a move and return new game state
-export const executeMove = (gameState: GameState, from: Position, to: Position): GameState | null => {
+export const executeMove = (gameState: GameState, from: Position, to: Position, promotionPiece?: PieceType): GameState | null => {
   if (!isValidMove(gameState, from, to)) {
     return null; // Invalid move
   }
@@ -285,7 +304,8 @@ export const executeMove = (gameState: GameState, from: Position, to: Position):
     to,
     piece,
     capturedPiece: capturedPiece || undefined,
-    isCastling: isCastlingMove({ from, to, piece, capturedPiece })
+    isCastling: isCastlingMove({ from, to, piece, capturedPiece }),
+    promotionPiece
   };
 
   const newBoard = makeMove(gameState.board, move);

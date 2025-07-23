@@ -1,0 +1,186 @@
+.promotion-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fade-in 0.3s ease-out;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.promotion-dialog {
+  background: linear-gradient(135deg, #2a2a3e 0%, #1e1e2e 100%);
+  border: 2px solid #d4af37;
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(212, 175, 55, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  animation: slide-up 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  max-width: 400px;
+  width: 90%;
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.promotion-title {
+  color: #d4af37;
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-align: center;
+  margin: 0 0 1.5rem 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  font-family: 'Georgia', serif;
+}
+
+.promotion-pieces {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.promotion-piece-btn {
+  background: linear-gradient(135deg, #3a3a4e 0%, #2a2a3e 100%);
+  border: 2px solid #4a4a5e;
+  border-radius: 15px;
+  padding: 1.5rem 1rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.promotion-piece-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.promotion-piece-btn:hover::before {
+  left: 100%;
+}
+
+.promotion-piece-btn:hover {
+  border-color: #d4af37;
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 
+    0 10px 20px rgba(0, 0, 0, 0.3),
+    0 0 20px rgba(212, 175, 55, 0.3);
+}
+
+.promotion-piece-btn:active {
+  transform: translateY(-1px) scale(1.02);
+}
+
+.promotion-piece-symbol {
+  font-size: 3rem;
+  line-height: 1;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  transition: transform 0.3s ease;
+}
+
+.promotion-piece-btn:hover .promotion-piece-symbol {
+  transform: scale(1.1) rotateY(10deg);
+}
+
+.promotion-piece-name {
+  color: #e0e0e0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: color 0.3s ease;
+}
+
+.promotion-piece-btn:hover .promotion-piece-name {
+  color: #d4af37;
+}
+
+.promotion-cancel-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #4a4a5e 0%, #3a3a4e 100%);
+  border: 2px solid #5a5a6e;
+  border-radius: 12px;
+  padding: 0.8rem 1.5rem;
+  color: #e0e0e0;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.promotion-cancel-btn:hover {
+  border-color: #8a8a9e;
+  background: linear-gradient(135deg, #5a5a6e 0%, #4a4a5e 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.promotion-cancel-btn:active {
+  transform: translateY(0);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 480px) {
+  .promotion-dialog {
+    padding: 1.5rem;
+    margin: 1rem;
+  }
+  
+  .promotion-title {
+    font-size: 1.3rem;
+  }
+  
+  .promotion-pieces {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.8rem;
+  }
+  
+  .promotion-piece-btn {
+    padding: 1rem 0.5rem;
+  }
+  
+  .promotion-piece-symbol {
+    font-size: 2.5rem;
+  }
+  
+  .promotion-piece-name {
+    font-size: 0.8rem;
+  }
+}

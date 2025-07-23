@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import type { Position, ChessPiece } from '../types/chess';
 import type { ChessGameHook } from '../hooks/useChessGame';
+import PromotionDialog from './PromotionDialog';
 import { soundSystem } from '../utils/soundSystem';
 import './ChessBoard.css';
 
@@ -12,7 +13,17 @@ interface ChessBoardProps {
 }
 
 const ChessBoard: React.FC<ChessBoardProps> = ({ game, rotated = false, soundEnabled = true, boardTheme = 'classic' }) => {
-  const { gameState, selectSquare, isSquareSelected, isValidMoveTarget, isComputerThinking, isEngineReady } = game;
+  const {
+    gameState,
+    selectSquare,
+    isSquareSelected,
+    isValidMoveTarget,
+    isComputerThinking,
+    isEngineReady,
+    pendingPromotion,
+    handlePromotion,
+    cancelPromotion
+  } = game;
   const [lastMoveCount, setLastMoveCount] = useState(0);
   const [particles, setParticles] = useState<Array<{id: number, type: string, x: number, y: number}>>([]);
 
@@ -183,6 +194,15 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ game, rotated = false, soundEna
           </div>
         </div>
       </div>
+
+      {/* Promotion dialog */}
+      {pendingPromotion && (
+        <PromotionDialog
+          color={gameState.currentPlayer}
+          onSelect={handlePromotion}
+          onCancel={cancelPromotion}
+        />
+      )}
     </div>
   );
 };

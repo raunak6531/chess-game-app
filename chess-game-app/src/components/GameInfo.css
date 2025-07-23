@@ -79,27 +79,43 @@
   border-radius: 1px;
 }
 
-/* Professional Button Styling - Gold Accent */
+/* Sophisticated Button Styling - Matching "START PLAYING CHESS" */
 .reset-button {
-  background: linear-gradient(145deg, #d4af37 0%, #b8860b 50%, #9a7209 100%);
-  color: #2c2a28;
-  border: none;
-  padding: 14px 28px;
-  border-radius: 8px;
-  cursor: pointer;
+  background: linear-gradient(135deg, #d4af37 0%, #b8860b 50%, #d4af37 100%);
+  background-size: 200% 200%;
+  border: 3px solid rgba(212, 175, 55, 0.5);
+  border-radius: 50px;
+  padding: 1.2rem 3rem;
+  font-size: 1rem;
   font-weight: 800;
-  font-size: 15px;
-  letter-spacing: 0.8px;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow:
-    0 6px 20px rgba(212, 175, 55, 0.4),
-    0 2px 8px rgba(212, 175, 55, 0.2),
-    inset 0 2px 4px rgba(255, 255, 255, 0.2);
-  border: 2px solid rgba(212, 175, 55, 0.3);
-  position: relative;
+  color: #2c2a28;
+  cursor: pointer;
   overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  box-shadow:
+    0 15px 30px rgba(212, 175, 55, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    0 0 0 2px rgba(212, 175, 55, 0.2);
   font-family: 'Playfair Display', 'Georgia', serif;
+  letter-spacing: 0.8px;
   text-transform: uppercase;
+  position: relative;
+}
+
+.reset-button::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .reset-button::before {
@@ -109,8 +125,8 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-  transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.6s;
 }
 
 .reset-button:hover::before {
@@ -118,34 +134,59 @@
 }
 
 .reset-button:hover {
-  background: linear-gradient(145deg, #ffd700 0%, #d4af37 50%, #b8860b 100%);
-  transform: translateY(-3px) scale(1.02);
+  transform: translateY(-2px) scale(1.05);
+  background-position: 100% 0;
   box-shadow:
-    0 10px 30px rgba(212, 175, 55, 0.5),
-    0 4px 12px rgba(212, 175, 55, 0.3),
-    inset 0 2px 6px rgba(255, 255, 255, 0.3);
+    0 20px 40px rgba(212, 175, 55, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    0 0 0 2px rgba(212, 175, 55, 0.4);
+  border-color: rgba(212, 175, 55, 0.7);
+}
+
+.reset-button:hover::after {
+  opacity: 1;
+}
+
+.reset-button:active {
+  transform: translateY(-1px) scale(1.02);
 }
 
 .home-button {
-  background: linear-gradient(145deg, #d4af37 0%, #b8860b 50%, #9a7209 100%);
-  color: #2c2a28;
-  border: none;
-  padding: 14px 28px;
-  border-radius: 8px;
-  cursor: pointer;
+  background: linear-gradient(135deg, #d4af37 0%, #b8860b 50%, #d4af37 100%);
+  background-size: 200% 200%;
+  border: 3px solid rgba(212, 175, 55, 0.5);
+  border-radius: 50px;
+  padding: 1.2rem 3rem;
+  font-size: 1rem;
   font-weight: 800;
-  font-size: 15px;
-  letter-spacing: 0.8px;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow:
-    0 6px 20px rgba(212, 175, 55, 0.4),
-    0 2px 8px rgba(212, 175, 55, 0.2),
-    inset 0 2px 4px rgba(255, 255, 255, 0.2);
-  border: 2px solid rgba(212, 175, 55, 0.3);
-  position: relative;
+  color: #2c2a28;
+  cursor: pointer;
   overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  box-shadow:
+    0 15px 30px rgba(212, 175, 55, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    0 0 0 2px rgba(212, 175, 55, 0.2);
   font-family: 'Playfair Display', 'Georgia', serif;
+  letter-spacing: 0.8px;
   text-transform: uppercase;
+  position: relative;
+}
+
+.home-button::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .home-button::before {
@@ -155,8 +196,8 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-  transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.6s;
 }
 
 .home-button:hover::before {
@@ -164,12 +205,21 @@
 }
 
 .home-button:hover {
-  background: linear-gradient(145deg, #ffd700 0%, #d4af37 50%, #b8860b 100%);
-  transform: translateY(-3px) scale(1.02);
+  transform: translateY(-2px) scale(1.05);
+  background-position: 100% 0;
   box-shadow:
-    0 10px 30px rgba(212, 175, 55, 0.5),
-    0 4px 12px rgba(212, 175, 55, 0.3),
-    inset 0 2px 6px rgba(255, 255, 255, 0.3);
+    0 20px 40px rgba(212, 175, 55, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    0 0 0 2px rgba(212, 175, 55, 0.4);
+  border-color: rgba(212, 175, 55, 0.7);
+}
+
+.home-button:hover::after {
+  opacity: 1;
+}
+
+.home-button:active {
+  transform: translateY(-1px) scale(1.02);
 }
 
 /* Prominent Game Status - Primary Typography */
@@ -371,25 +421,24 @@
   text-transform: uppercase;
 }
 
+/* Subtle Player Indicator - No Background Boxes */
 .player-indicator.white {
-  background:
-    linear-gradient(145deg, #d4af37 0%, #b8860b 100%);
-  color: #2c2a28;
-  border: 1px solid rgba(212, 175, 55, 0.5);
-  box-shadow:
-    0 2px 8px rgba(212, 175, 55, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  background: transparent;
+  color: #d4af37;
+  border: none;
+  box-shadow: none;
+  font-weight: 800;
+  text-shadow: 0 0 8px rgba(212, 175, 55, 0.4);
   animation: player-white-active 0.4s ease-out;
 }
 
 .player-indicator.black {
-  background:
-    linear-gradient(145deg, #d4af37 0%, #b8860b 100%);
-  color: #2c2a28;
-  border: 1px solid rgba(212, 175, 55, 0.5);
-  box-shadow:
-    0 2px 8px rgba(212, 175, 55, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  background: transparent;
+  color: #ffffff;
+  border: none;
+  box-shadow: none;
+  font-weight: 700;
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
   animation: player-black-active 0.4s ease-out;
 }
 
@@ -593,21 +642,22 @@
   margin-bottom: 15px;
 }
 
+/* Subtle Difficulty Display - No Jarring Colors */
 .difficulty-badge {
-  background: linear-gradient(135deg, #d4af37, #b8860b);
-  color: #2c2a28;
-  padding: 8px 16px;
-  border-radius: 6px;
+  background: transparent;
+  color: #ffffff;
+  padding: 0;
+  border-radius: 0;
   font-weight: 700;
-  font-size: 14px;
-  text-transform: uppercase;
+  font-size: 18px;
+  text-transform: capitalize;
   font-family: 'Inter', 'Helvetica Neue', sans-serif;
-  letter-spacing: 0.5px;
-  box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
+  letter-spacing: 0.2px;
+  box-shadow: none;
   transition: all 0.3s ease;
 }
 
 .difficulty-badge:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.4);
+  color: #d4af37;
+  text-shadow: 0 0 8px rgba(212, 175, 55, 0.4);
 }

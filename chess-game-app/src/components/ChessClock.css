@@ -50,29 +50,21 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
+/* Clean Digital Clock Layout */
 .clocks-container {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 24px;
+  justify-content: space-between;
 }
 
 .clock {
   flex: 1;
   text-align: center;
-  padding: 16px;
-  border-radius: 8px;
-  background: rgba(15, 15, 35, 0.6);
-  border: 1px solid rgba(212, 175, 55, 0.2);
+  padding: 20px 16px;
+  background: transparent;
+  border: none;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.clock.active {
-  background: linear-gradient(145deg, rgba(212, 175, 55, 0.2) 0%, rgba(212, 175, 55, 0.1) 100%);
-  border-color: rgba(212, 175, 55, 0.3);
-  box-shadow:
-    0 0 20px rgba(212, 175, 55, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  transform: scale(1.02);
 }
 
 .player-label {
@@ -85,21 +77,20 @@
   font-family: 'Inter', 'Helvetica Neue', sans-serif;
 }
 
+/* Clean Digital Display */
 .clock-display {
-  font-size: 28px;
-  font-weight: 900;
-  font-family: 'Courier New', monospace;
-  color: #ffffff;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  font-size: 32px;
+  font-weight: 700;
+  font-family: 'Courier New', 'SF Mono', monospace;
+  color: rgba(255, 255, 255, 0.6);
   transition: all 0.3s ease;
+  letter-spacing: 2px;
 }
 
 .clock-display.active {
   color: #d4af37;
-  text-shadow:
-    0 2px 4px rgba(0, 0, 0, 0.3),
-    0 0 10px rgba(212, 175, 55, 0.5);
-  animation: clock-pulse 1s ease-in-out infinite alternate;
+  text-shadow: 0 0 12px rgba(212, 175, 55, 0.4);
+  transform: scale(1.05);
 }
 
 .clock-display.warning {
@@ -117,21 +108,20 @@
   animation: clock-critical 0.5s ease-in-out infinite alternate;
 }
 
+/* Simple Divider */
 .clock-divider {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%);
-  backdrop-filter: blur(10px);
-  border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  width: 20px;
+  height: 20px;
+  background: transparent;
+  border: none;
 }
 
 .clock-icon {
-  font-size: 20px;
-  animation: clock-tick 2s ease-in-out infinite;
+  font-size: 16px;
+  color: rgba(212, 175, 55, 0.6);
 }
 
 @keyframes clock-pulse {

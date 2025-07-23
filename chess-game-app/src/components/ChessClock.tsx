@@ -100,7 +100,7 @@ const ChessClock: React.FC<ChessClockProps> = ({
         </div>
         
         <div className="clock-divider">
-          <div className="clock-icon">⏱️</div>
+          <div className="clock-icon">vs</div>
         </div>
         
         <div className={`clock ${currentPlayer === 'white' ? 'active' : ''}`}>

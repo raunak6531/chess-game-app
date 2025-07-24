@@ -1,7 +1,6 @@
 import React from 'react';
 import type { ChessGameHook } from '../hooks/useChessGame';
 import MoveHistory from './MoveHistory';
-import ChessClock from './ChessClock';
 import './GameInfo.css';
 
 interface GameInfoProps {
@@ -18,12 +17,6 @@ const GameInfo: React.FC<GameInfoProps> = ({
   backButtonText = "← Menu"
 }) => {
   const { gameState, resetGame } = game;
-
-  const handleTimeUp = (player: 'white' | 'black') => {
-    // Handle time up - could trigger game end
-    console.log(`Time up for ${player}`);
-    // In a real implementation, this would end the game
-  };
 
   const getStatusMessage = () => {
     switch (gameState.gameStatus) {
@@ -103,13 +96,6 @@ const GameInfo: React.FC<GameInfoProps> = ({
         <span className="stat-label">Difficulty:</span>
         <span className="stat-value difficulty-badge">{difficulty}</span>
       </div>
-
-      <ChessClock
-        currentPlayer={gameState.currentPlayer}
-        gameStatus={gameState.gameStatus}
-        onTimeUp={handleTimeUp}
-        initialTime={600} // 10 minutes
-      />
 
       <MoveHistory moves={gameState.moveHistory} />
     </div>

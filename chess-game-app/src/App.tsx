@@ -10,6 +10,7 @@ import './App.css';
 type AppPage = 'home' | 'menu' | 'game';
 type BoardTheme = 'classic' | 'modern' | 'wood';
 type Difficulty = 'beginner' | 'intermediate' | 'advanced' | 'expert';
+type PlayerColor = 'white' | 'black';
 
 function App() {
   const [currentPage, setCurrentPage] = useState<AppPage>('home');
@@ -41,6 +42,11 @@ function App() {
     return saved !== 'false'; // Default to true
   });
 
+  const [playerColor, setPlayerColor] = useState<PlayerColor>(() => {
+    const saved = localStorage.getItem('chess-player-color');
+    return (saved as PlayerColor) || 'white';
+  });
+
   const game = useChessGame();
 
   // Add error boundary
@@ -57,6 +63,10 @@ function App() {
   useEffect(() => {
     game.setDifficulty(difficulty);
   }, [difficulty, game]);
+
+  useEffect(() => {
+    game.setPlayerColor(playerColor);
+  }, [playerColor, game]);
 
   // Note: We don't persist currentPage to localStorage so the app always starts from home
 
@@ -76,6 +86,10 @@ function App() {
     localStorage.setItem('chess-sound-enabled', soundEnabled.toString());
     soundSystem.setEnabled(soundEnabled);
   }, [soundEnabled]);
+
+  useEffect(() => {
+    localStorage.setItem('chess-player-color', playerColor);
+  }, [playerColor]);
 
   // Navigation handlers
   const handleStartGame = () => {
@@ -130,6 +144,17 @@ function App() {
     }
   };
 
+  const handlePlayerColorChange = (color: PlayerColor) => {
+    setPlayerColor(color);
+    // Update the game hook with the new player color
+    game.setPlayerColor(color);
+    // Reset the game when player color changes
+    game.resetGame();
+    // Rotate board if player chooses black
+    setBoardRotated(color === 'black');
+    soundSystem.playMove();
+  };
+
   // Debug logging (can be removed in production)
   // console.log('Current page:', currentPage);
   // console.log('Difficulty:', difficulty);
@@ -168,6 +193,8 @@ function App() {
               game={game}
               onBackToHome={handleBackToMenu}
               difficulty={difficulty}
+              playerColor={playerColor}
+              onPlayerColorChange={handlePlayerColorChange}
             />
           </div>
           <div className="chess-board-section">

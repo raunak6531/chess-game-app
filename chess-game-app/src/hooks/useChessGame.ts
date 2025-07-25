@@ -14,6 +14,7 @@ export interface ChessGameHook {
   isSquareSelected: (position: Position) => boolean;
   isValidMoveTarget: (position: Position) => boolean;
   setDifficulty: (difficulty: Difficulty) => void;
+  setPlayerColor: (color: 'white' | 'black') => void;
   isComputerThinking: boolean;
   isEngineReady: boolean;
   pendingPromotion: { from: Position; to: Position } | null;
@@ -26,6 +27,7 @@ export const useChessGame = (): ChessGameHook => {
   const [selectedSquare, setSelectedSquare] = useState<Position | null>(null);
   const [validMoves, setValidMoves] = useState<Position[]>([]);
   const [difficulty, setDifficulty] = useState<Difficulty>('intermediate');
+  const [playerColor, setPlayerColorState] = useState<'white' | 'black'>('white');
   const [isComputerThinking, setIsComputerThinking] = useState(false);
   const [isEngineReady, setIsEngineReady] = useState(false);
   const [pendingPromotion, setPendingPromotion] = useState<{ from: Position; to: Position } | null>(null);
@@ -59,16 +61,20 @@ export const useChessGame = (): ChessGameHook => {
 
   // Computer move effect - now using Stockfish
   useEffect(() => {
+    const computerColor = playerColor === 'white' ? 'black' : 'white';
+
     console.log('Computer move effect triggered:', {
       isEngineReady,
       currentPlayer: gameState.currentPlayer,
       gameStatus: gameState.gameStatus,
-      isComputerThinking
+      isComputerThinking,
+      playerColor,
+      computerColor
     });
 
     try {
       if (isEngineReady &&
-          gameState.currentPlayer === 'black' &&
+          gameState.currentPlayer === computerColor &&
           (gameState.gameStatus === 'playing' || gameState.gameStatus === 'check') &&
           !isComputerThinking) {
 
@@ -109,7 +115,7 @@ export const useChessGame = (): ChessGameHook => {
     } catch (error) {
       console.error('Error in computer move effect:', error);
     }
-  }, [gameState.currentPlayer, gameState.gameStatus, isEngineReady, isComputerThinking]);
+  }, [gameState.currentPlayer, gameState.gameStatus, isEngineReady, isComputerThinking, playerColor]);
 
   const selectSquare = useCallback((position: Position) => {
     const piece = gameState.board[position.row][position.col];
@@ -132,8 +138,8 @@ export const useChessGame = (): ChessGameHook => {
       return;
     }
     
-    // If clicking on a piece of the current player, select it
-    if (piece && piece.color === gameState.currentPlayer) {
+    // If clicking on a piece of the current player AND it's the player's turn, select it
+    if (piece && piece.color === gameState.currentPlayer && piece.color === playerColor) {
       setSelectedSquare(position);
       const moves = getValidMovesForPiece(gameState, position);
       setValidMoves(moves);
@@ -226,6 +232,11 @@ export const useChessGame = (): ChessGameHook => {
     setValidMoves([]);
   }, []);
 
+  // Set player color
+  const setPlayerColor = useCallback((color: 'white' | 'black') => {
+    setPlayerColorState(color);
+  }, []);
+
   return {
     gameState,
     selectedSquare,
@@ -236,6 +247,7 @@ export const useChessGame = (): ChessGameHook => {
     isSquareSelected,
     isValidMoveTarget,
     setDifficulty: handleSetDifficulty,
+    setPlayerColor,
     isComputerThinking,
     isEngineReady,
     pendingPromotion,

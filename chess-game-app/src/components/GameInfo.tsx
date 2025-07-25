@@ -1,6 +1,5 @@
 import React from 'react';
 import type { ChessGameHook } from '../hooks/useChessGame';
-import MoveHistory from './MoveHistory';
 import './GameInfo.css';
 
 interface GameInfoProps {
@@ -8,13 +7,17 @@ interface GameInfoProps {
   onBackToHome?: () => void;
   difficulty: string;
   backButtonText?: string;
+  playerColor?: 'white' | 'black';
+  onPlayerColorChange?: (color: 'white' | 'black') => void;
 }
 
 const GameInfo: React.FC<GameInfoProps> = ({
   game,
   onBackToHome,
   difficulty,
-  backButtonText = "← Menu"
+  backButtonText = "← Menu",
+  playerColor = 'white',
+  onPlayerColorChange
 }) => {
   const { gameState, resetGame } = game;
 
@@ -53,27 +56,48 @@ const GameInfo: React.FC<GameInfoProps> = ({
       <div className="game-header">
         <h1>Chess Game</h1>
         <div className="header-buttons">
-          <button className="reset-button" onClick={resetGame}>
+          <button className="compact-button reset-button" onClick={resetGame}>
             New Game
           </button>
           {onBackToHome && (
-            <button className="home-button" onClick={onBackToHome}>
+            <button className="compact-button home-button" onClick={onBackToHome}>
               {backButtonText}
             </button>
           )}
         </div>
       </div>
-      
+
       <div className={`game-status ${getStatusColor()}`}>
         {getStatusMessage()}
       </div>
-      
+
+      {/* Player Color Selection */}
+      {onPlayerColorChange && (
+        <div className="player-color-selection">
+          <span className="stat-label">You are playing:</span>
+          <div className="color-buttons">
+            <button
+              className={`color-button ${playerColor === 'white' ? 'active' : ''}`}
+              onClick={() => onPlayerColorChange('white')}
+            >
+              ♔ White
+            </button>
+            <button
+              className={`color-button ${playerColor === 'black' ? 'active' : ''}`}
+              onClick={() => onPlayerColorChange('black')}
+            >
+              ♚ Black
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="game-stats">
         <div className="stat">
           <span className="stat-label">Moves:</span>
           <span className="stat-value">{gameState.moveHistory.length}</span>
         </div>
-        
+
         <div className="current-player">
           <span className="stat-label">Current Player:</span>
           <div className={`player-indicator ${gameState.currentPlayer}`}>
@@ -82,7 +106,7 @@ const GameInfo: React.FC<GameInfoProps> = ({
           </div>
         </div>
       </div>
-      
+
       {gameState.moveHistory.length > 0 && (
         <div className="last-move">
           <span className="stat-label">Last Move:</span>
@@ -96,8 +120,6 @@ const GameInfo: React.FC<GameInfoProps> = ({
         <span className="stat-label">Difficulty:</span>
         <span className="stat-value difficulty-badge">{difficulty}</span>
       </div>
-
-      <MoveHistory moves={gameState.moveHistory} />
     </div>
   );
 

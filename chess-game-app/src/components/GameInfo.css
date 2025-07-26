@@ -2,17 +2,19 @@
 .game-info {
   background: rgba(15, 15, 35, 0.95);
   border-radius: 8px;
-  padding: 36px;
+  padding: 32px;
   box-shadow:
     0 25px 50px rgba(0, 0, 0, 0.4),
     0 10px 20px rgba(0, 0, 0, 0.2);
   border: 2px solid rgba(212, 175, 55, 0.3);
-  min-width: 350px;
-  max-width: 420px;
+  min-width: 320px;
+  max-width: 380px;
   width: 100%;
   position: relative;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
+  box-sizing: border-box;
+  align-self: center;
 }
 
 .game-info:hover {
@@ -25,20 +27,22 @@
 
 .game-header {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
-  margin-bottom: 28px;
-  padding-bottom: 20px;
+  margin-bottom: 24px;
+  padding-bottom: 18px;
   border-bottom: 3px solid rgba(212, 175, 55, 0.3);
   position: relative;
+  gap: 75px;
 }
 
 .game-header::after {
   content: '';
   position: absolute;
   bottom: -3px;
-  left: 0;
-  width: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
   height: 3px;
   background: linear-gradient(90deg, #d4af37 0%, #ffd700 50%, #d4af37 100%);
   border-radius: 2px;
@@ -48,35 +52,59 @@
 .header-buttons {
   display: flex;
   gap: 12px;
+  justify-content: center;
+  width: 100%;
 }
 
 .game-header h1 {
   margin: 0;
-  background: linear-gradient(135deg, #d4af37 0%, #ffd700 25%, #ffed4e 50%, #ffd700 75%, #d4af37 100%);
+  color: white;
+  font-size: 28px;
+  font-weight: 800;
+  font-family: 'Georgia', 'Times New Roman', serif;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
+  position: relative;
+  text-align: center;
+  white-space: nowrap;
+  background: linear-gradient(135deg, #d4af37 0%, #ffd700 25%, #f4e4bc 50%, #d4af37 75%, #b8860b 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  font-size: 36px;
-  font-weight: 900;
-  font-family: 'Playfair Display', 'Georgia', serif;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  text-shadow:
-    2px 2px 4px rgba(0, 0, 0, 0.2),
-    0 0 12px rgba(212, 175, 55, 0.3);
-  position: relative;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+/* Decorative lines above and below heading - matching home page */
+.game-header h1::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, #d4af37, transparent);
+  border-radius: 2px;
 }
 
 .game-header h1::after {
   content: '';
   position: absolute;
-  bottom: -4px;
-  left: 0;
-  width: 100%;
+  bottom: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
   height: 2px;
-  background: linear-gradient(90deg, transparent, #ffd700, transparent);
+  background: linear-gradient(90deg, transparent, #d4af37, transparent);
   border-radius: 1px;
+}
+
+/* Fallback for browsers that don't support gradient text */
+@supports not (-webkit-background-clip: text) {
+  .game-header h1 {
+    color: #ffd700 !important;
+    -webkit-text-fill-color: #ffd700 !important;
+  }
 }
 
 /* Compact Button Styling - Smaller and Sleeker */

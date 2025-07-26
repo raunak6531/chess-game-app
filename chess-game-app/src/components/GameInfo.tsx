@@ -8,7 +8,6 @@ interface GameInfoProps {
   difficulty: string;
   backButtonText?: string;
   playerColor?: 'white' | 'black';
-  onPlayerColorChange?: (color: 'white' | 'black') => void;
 }
 
 const GameInfo: React.FC<GameInfoProps> = ({
@@ -16,8 +15,7 @@ const GameInfo: React.FC<GameInfoProps> = ({
   onBackToHome,
   difficulty,
   backButtonText = "← Menu",
-  playerColor = 'white',
-  onPlayerColorChange
+  playerColor = 'white'
 }) => {
   const { gameState, resetGame } = game;
 
@@ -54,7 +52,7 @@ const GameInfo: React.FC<GameInfoProps> = ({
   return (
     <div className="game-info">
       <div className="game-header">
-        <h1>Chess Game</h1>
+        <h1>LET'S MATE</h1>
         <div className="header-buttons">
           <button className="compact-button reset-button" onClick={resetGame}>
             New Game
@@ -71,26 +69,7 @@ const GameInfo: React.FC<GameInfoProps> = ({
         {getStatusMessage()}
       </div>
 
-      {/* Player Color Selection */}
-      {onPlayerColorChange && (
-        <div className="player-color-selection">
-          <span className="stat-label">You are playing:</span>
-          <div className="color-buttons">
-            <button
-              className={`color-button ${playerColor === 'white' ? 'active' : ''}`}
-              onClick={() => onPlayerColorChange('white')}
-            >
-              ♔ White
-            </button>
-            <button
-              className={`color-button ${playerColor === 'black' ? 'active' : ''}`}
-              onClick={() => onPlayerColorChange('black')}
-            >
-              ♚ Black
-            </button>
-          </div>
-        </div>
-      )}
+
 
       <div className="game-stats">
         <div className="stat">

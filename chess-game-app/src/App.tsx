@@ -3,6 +3,7 @@ import HomePage from './components/HomePage';
 import GameMenu from './components/GameMenu';
 import ChessBoard from './components/ChessBoard';
 import GameInfo from './components/GameInfo';
+import ColorSelectionModal from './components/ColorSelectionModal';
 import { useChessGame } from './hooks/useChessGame';
 import { soundSystem } from './utils/soundSystem';
 import './App.css';
@@ -13,7 +14,10 @@ type Difficulty = 'beginner' | 'intermediate' | 'advanced' | 'expert';
 type PlayerColor = 'white' | 'black';
 
 function App() {
-  const [currentPage, setCurrentPage] = useState<AppPage>('home');
+  const [currentPage, setCurrentPage] = useState<AppPage>(() => {
+    const saved = localStorage.getItem('chess-current-page');
+    return (saved as AppPage) || 'home';
+  });
 
   const [boardTheme, setBoardTheme] = useState<BoardTheme>(() => {
     const saved = localStorage.getItem('chess-board-theme');
@@ -47,6 +51,8 @@ function App() {
     return (saved as PlayerColor) || 'white';
   });
 
+  const [showColorModal, setShowColorModal] = useState(false);
+
   const game = useChessGame();
 
   // Add error boundary
@@ -68,7 +74,10 @@ function App() {
     game.setPlayerColor(playerColor);
   }, [playerColor, game]);
 
-  // Note: We don't persist currentPage to localStorage so the app always starts from home
+  // Persist current page to localStorage
+  useEffect(() => {
+    localStorage.setItem('chess-current-page', currentPage);
+  }, [currentPage]);
 
   useEffect(() => {
     localStorage.setItem('chess-board-theme', boardTheme);
@@ -108,8 +117,21 @@ function App() {
 
   // Game mode handlers
   const handlePlayVsComputer = () => {
+    setShowColorModal(true);
+    soundSystem.playMove();
+  };
+
+  const handleColorSelection = (color: PlayerColor) => {
+    setPlayerColor(color);
+    game.setPlayerColor(color);
+    game.resetGame();
+    setBoardRotated(color === 'black');
     setCurrentPage('game');
     soundSystem.playGameStart();
+  };
+
+  const handleCloseColorModal = () => {
+    setShowColorModal(false);
   };
 
   const handleBoardTheme = () => {
@@ -164,20 +186,36 @@ function App() {
   // Render different pages based on current page
   if (currentPage === 'home') {
     console.log('Rendering HomePage');
-    return <HomePage onStartGame={handleStartGame} />;
+    return (
+      <>
+        <HomePage onStartGame={handleStartGame} />
+        <ColorSelectionModal
+          isOpen={showColorModal}
+          onSelectColor={handleColorSelection}
+          onClose={handleCloseColorModal}
+        />
+      </>
+    );
   }
 
   if (currentPage === 'menu') {
     console.log('Rendering GameMenu');
     return (
-      <GameMenu
-        onPlayVsComputer={handlePlayVsComputer}
-        onBoardTheme={handleBoardTheme}
-        onDifficulty={handleDifficulty}
-        onBackToHome={handleBackToHome}
-        difficulty={difficulty}
-        boardTheme={boardTheme}
-      />
+      <>
+        <GameMenu
+          onPlayVsComputer={handlePlayVsComputer}
+          onBoardTheme={handleBoardTheme}
+          onDifficulty={handleDifficulty}
+          onBackToHome={handleBackToHome}
+          difficulty={difficulty}
+          boardTheme={boardTheme}
+        />
+        <ColorSelectionModal
+          isOpen={showColorModal}
+          onSelectColor={handleColorSelection}
+          onClose={handleCloseColorModal}
+        />
+      </>
     );
   }
 
@@ -194,7 +232,6 @@ function App() {
               onBackToHome={handleBackToMenu}
               difficulty={difficulty}
               playerColor={playerColor}
-              onPlayerColorChange={handlePlayerColorChange}
             />
           </div>
           <div className="chess-board-section">

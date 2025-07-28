@@ -9,7 +9,7 @@ import { soundSystem } from './utils/soundSystem';
 import './App.css';
 
 type AppPage = 'home' | 'menu' | 'game';
-type BoardTheme = 'classic' | 'modern' | 'wood';
+type BoardTheme = 'classic' | 'green' | 'brown' | 'marble' | 'roman';
 type Difficulty = 'beginner' | 'intermediate' | 'advanced' | 'expert';
 type PlayerColor = 'white' | 'black';
 
@@ -136,7 +136,7 @@ function App() {
 
   const handleBoardTheme = () => {
     // Cycle through themes
-    const themes: BoardTheme[] = ['classic', 'modern', 'wood'];
+    const themes: BoardTheme[] = ['classic', 'green', 'brown', 'marble', 'roman'];
     const currentIndex = themes.indexOf(boardTheme);
     const nextIndex = (currentIndex + 1) % themes.length;
     setBoardTheme(themes[nextIndex]);

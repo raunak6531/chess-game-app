@@ -136,9 +136,9 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ game, rotated = false, soundEna
   };
 
   return (
-    <div className="chess-board-container">
+    <div className={`chess-board-container theme-${boardTheme}`}>
       <div className="board-with-coordinates">
-        <div className={`chess-board ${rotated ? 'rotated' : ''}`}>
+        <div className={`chess-board ${rotated ? 'rotated' : ''} theme-${boardTheme}`}>
           {renderBoard()}
 
           {/* Particle effects */}

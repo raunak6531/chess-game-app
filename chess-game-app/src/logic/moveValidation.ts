@@ -1,5 +1,6 @@
 import type {
   Board,
+  ChessPiece,
   GameState,
   Move,
   Position,
@@ -14,7 +15,7 @@ import {
   getPieceAt,
   canPieceMoveTo,
   isInCheck,
-  findKing,
+
   isSquareAttacked
 } from './chessGame';
 
@@ -303,8 +304,8 @@ export const executeMove = (gameState: GameState, from: Position, to: Position, 
     from,
     to,
     piece,
-    capturedPiece: capturedPiece || undefined,
-    isCastling: isCastlingMove({ from, to, piece, capturedPiece }),
+    capturedPiece: capturedPiece ?? undefined,
+    isCastling: isCastlingMove({ from, to, piece, capturedPiece: capturedPiece ?? undefined }),
     promotionPiece
   };
 

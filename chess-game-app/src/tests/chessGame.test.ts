@@ -4,15 +4,13 @@ import {
   initializeGameState, 
   getPieceAt, 
   isInCheck, 
-  findKing,
-  canPieceMoveTo
+  findKing
 } from '../logic/chessGame';
 import { 
   isValidMove, 
-  executeMove, 
-  getGameStatus 
+  executeMove
 } from '../logic/moveValidation';
-import { Position, PieceColor } from '../types/chess';
+
 
 describe('Chess Game Logic', () => {
   describe('Board Initialization', () => {

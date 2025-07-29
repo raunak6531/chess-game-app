@@ -14,8 +14,7 @@ const GameInfo: React.FC<GameInfoProps> = ({
   game,
   onBackToHome,
   difficulty,
-  backButtonText = "← Menu",
-  playerColor = 'white'
+  backButtonText = "← Menu"
 }) => {
   const { gameState, resetGame } = game;
 

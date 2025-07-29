@@ -70,7 +70,7 @@ describe('Stockfish Integration', () => {
       
       await new Promise<void>((resolve) => {
         stockfishService.requestMove(
-          (move) => {
+          (_move) => {
             const endTime = Date.now();
             const duration = endTime - startTime;
             

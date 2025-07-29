@@ -26,7 +26,7 @@ const PromotionDialog: React.FC<PromotionDialogProps> = ({ color, onSelect, onCa
         knight: '♞'
       }
     };
-    return pieces[color][type];
+    return pieces[color][type as keyof typeof pieces[typeof color]];
   };
 
   const getPieceName = (type: PieceType): string => {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import HomePage from './components/HomePage';
 import GameMenu from './components/GameMenu';
 import ChessBoard from './components/ChessBoard';
@@ -166,16 +166,7 @@ function App() {
     }
   };
 
-  const handlePlayerColorChange = (color: PlayerColor) => {
-    setPlayerColor(color);
-    // Update the game hook with the new player color
-    game.setPlayerColor(color);
-    // Reset the game when player color changes
-    game.resetGame();
-    // Rotate board if player chooses black
-    setBoardRotated(color === 'black');
-    soundSystem.playMove();
-  };
+
 
   // Debug logging (can be removed in production)
   // console.log('Current page:', currentPage);

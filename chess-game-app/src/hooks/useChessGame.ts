@@ -26,7 +26,7 @@ export const useChessGame = (): ChessGameHook => {
   const [gameState, setGameState] = useState<GameState>(initializeGameState());
   const [selectedSquare, setSelectedSquare] = useState<Position | null>(null);
   const [validMoves, setValidMoves] = useState<Position[]>([]);
-  const [difficulty, setDifficulty] = useState<Difficulty>('intermediate');
+  const [, setDifficulty] = useState<Difficulty>('intermediate');
   const [playerColor, setPlayerColorState] = useState<'white' | 'black'>('white');
   const [isComputerThinking, setIsComputerThinking] = useState(false);
   const [isEngineReady, setIsEngineReady] = useState(false);

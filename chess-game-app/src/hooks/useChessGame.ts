@@ -42,6 +42,15 @@ export const useChessGame = (): ChessGameHook => {
         console.log('Stockfish engine initialized successfully');
       } catch (error) {
         console.error('Failed to initialize Stockfish:', error);
+        
+        // Check if it's a SharedArrayBuffer issue
+        if (error instanceof Error && error.message.includes('SharedArrayBuffer')) {
+          console.error('SharedArrayBuffer is not available. This is likely due to missing security headers.');
+          console.error('The site needs to be served with:');
+          console.error('- Cross-Origin-Embedder-Policy: require-corp');
+          console.error('- Cross-Origin-Opener-Policy: same-origin');
+        }
+        
         // Don't block the UI if Stockfish fails to initialize
         setIsEngineReady(false);
       }

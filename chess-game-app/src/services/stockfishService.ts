@@ -58,6 +58,14 @@ class StockfishService {
       }, 30000); // Increased to 30 seconds
 
       try {
+        // Check if SharedArrayBuffer is available
+        if (typeof SharedArrayBuffer === 'undefined') {
+          console.warn('SharedArrayBuffer is not available. This may be due to missing security headers.');
+          console.warn('Stockfish WASM requires SharedArrayBuffer for optimal performance.');
+          reject(new Error('SharedArrayBuffer is not available. Please ensure the site is served with proper security headers (Cross-Origin-Embedder-Policy: require-corp and Cross-Origin-Opener-Policy: same-origin).'));
+          return;
+        }
+
         console.log('Initializing Stockfish WASM engine from public files...');
 
         // Load Stockfish from the public directory using the global Stockfish function

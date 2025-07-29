@@ -100,7 +100,7 @@
 
 .back-button {
   position: absolute;
-  top: 2rem;
+  top: 4rem;
   left: 2rem;
   padding: 0.875rem 2rem;
   background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(184, 134, 11, 0.3));

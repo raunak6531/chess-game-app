@@ -14,10 +14,7 @@ type Difficulty = 'beginner' | 'intermediate' | 'advanced' | 'expert';
 type PlayerColor = 'white' | 'black';
 
 function App() {
-  const [currentPage, setCurrentPage] = useState<AppPage>(() => {
-    const saved = localStorage.getItem('chess-current-page');
-    return (saved as AppPage) || 'home';
-  });
+  const [currentPage, setCurrentPage] = useState<AppPage>('home');
 
   const [boardTheme, setBoardTheme] = useState<BoardTheme>(() => {
     const saved = localStorage.getItem('chess-board-theme');
@@ -74,10 +71,7 @@ function App() {
     game.setPlayerColor(playerColor);
   }, [playerColor, game]);
 
-  // Persist current page to localStorage
-  useEffect(() => {
-    localStorage.setItem('chess-current-page', currentPage);
-  }, [currentPage]);
+  // Note: We don't persist current page to localStorage to ensure home page always loads first
 
   useEffect(() => {
     localStorage.setItem('chess-board-theme', boardTheme);

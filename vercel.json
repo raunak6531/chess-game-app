@@ -1,0 +1,5 @@
+{
+  "buildCommand": "cd chess-game-app && npm ci && npm run build",
+  "outputDirectory": "chess-game-app/dist",
+  "installCommand": "cd chess-game-app && npm ci"
+}

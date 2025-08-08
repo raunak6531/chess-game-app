@@ -345,13 +345,19 @@
     height: 56px;
     font-size: 24px;
   }
+
+  /* Improve touch targets for mobile */
+  button, [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
 }
 
 @media (max-width: 480px) {
   .game-container {
-    padding: 16px;
-    gap: 16px;
-    border-radius: 20px;
+    padding: 12px;
+    gap: 12px;
+    border-radius: 16px;
     margin: 0;
     max-width: 100vw;
     box-sizing: border-box;
@@ -367,5 +373,35 @@
     width: 52px;
     height: 52px;
     font-size: 22px;
+  }
+
+  /* Prevent text from being too small */
+  body {
+    font-size: 16px;
+  }
+
+  /* Ensure inputs are easily tappable */
+  input, select, textarea {
+    font-size: 16px; /* Prevents iOS zoom on focus */
+  }
+}
+
+/* Handle very small screens and orientation changes */
+@media (max-width: 380px), (max-height: 480px) {
+  .game-container {
+    padding: 8px;
+    gap: 8px;
+  }
+
+  .floating-actions {
+    bottom: 12px;
+    right: 12px;
+    gap: 12px;
+  }
+
+  .fab-item {
+    width: 48px;
+    height: 48px;
+    font-size: 20px;
   }
 }

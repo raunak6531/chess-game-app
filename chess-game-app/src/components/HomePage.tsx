@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './HomePage.css';
 
 interface HomePageProps {
@@ -9,9 +9,19 @@ const HomePage: React.FC<HomePageProps> = ({ onStartGame }) => {
   const pieceRef = useRef<HTMLDivElement>(null);
   const h1Ref = useRef<HTMLHeadingElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
   const pieces = ["pawn", "bishop", "rook", "queen", "king", "knight"];
   const selectedIndexRef = useRef(0);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     const handlePieceClick = () => {
@@ -25,8 +35,8 @@ const HomePage: React.FC<HomePageProps> = ({ onStartGame }) => {
           const startBtn = document.querySelector('.start-game-btn');
           if (startBtn) {
             (startBtn as HTMLElement).style.opacity = '1';
-            // Check if mobile
-            if (window.innerWidth <= 768) {
+            // Apply different transform based on device type
+            if (isMobile) {
               (startBtn as HTMLElement).style.transform = 'translateX(-50%) translateY(0)';
             } else {
               (startBtn as HTMLElement).style.transform = 'translateY(-50%) translateX(0)';
@@ -39,14 +49,20 @@ const HomePage: React.FC<HomePageProps> = ({ onStartGame }) => {
     const pieceElement = pieceRef.current;
     if (pieceElement) {
       pieceElement.addEventListener("click", handlePieceClick);
+      // Add touch event for mobile devices
+      pieceElement.addEventListener("touchend", (e) => {
+        e.preventDefault(); // Prevent default touch behavior
+        handlePieceClick();
+      });
     }
 
     return () => {
       if (pieceElement) {
         pieceElement.removeEventListener("click", handlePieceClick);
+        pieceElement.removeEventListener("touchend", handlePieceClick);
       }
     };
-  }, [pieces]);
+  }, [pieces, isMobile]);
 
   return (
     <div className="home-page">

@@ -950,14 +950,18 @@ h1::after {
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
     .home-page {
-        font-size: 0.8vmin;
+        font-size: 0.9vmin;
     }
 
     h1 {
-        font-size: 4em;
+        font-size: 5em;
         top: 5vh;
+    }
+
+    .subtitle {
+        top: 12vh;
     }
 
     .piece {
@@ -970,12 +974,12 @@ h1::after {
     .start-game-btn {
         position: fixed;
         top: auto;
-        bottom: 8vh;
+        bottom: 12vh;
         right: auto;
         left: 50%;
         transform: translateX(-50%) translateY(50px);
-        padding: 1.2rem 2.5rem;
-        font-size: 1.1rem;
+        padding: 1.5rem 3rem;
+        font-size: 1.2rem;
         border-radius: 50px;
     }
 
@@ -988,23 +992,161 @@ h1::after {
     }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 768px) {
     .home-page {
-        font-size: 0.6vmin;
+        font-size: 1vmin; /* Increased from 0.9vmin */
     }
 
     h1 {
-        font-size: 3em;
+        font-size: 7em; /* Increased from 5.5em */
+        top: 7vh; /* Moved down from 5vh */
+        letter-spacing: 0.1em;
+    }
+
+    .subtitle {
+        top: 15vh; /* Moved down from 12vh */
+        font-size: 2em; /* Increased from 1.8em */
     }
 
     .piece {
-        left: calc(50% - 12em);
-        width: 24em;
-        height: 48em;
+        left: calc(50% - 17em); /* Adjusted for larger piece */
+        width: 34em; /* Increased from 30em */
+        height: 68em; /* Increased from 60em */
+        bottom: 15vh;
     }
 
     .start-game-btn {
-        padding: 1rem 2rem;
-        font-size: 1rem;
+        position: fixed;
+        top: auto;
+        bottom: 8vh;
+        right: auto;
+        left: 50%;
+        transform: translateX(-50%) translateY(50px);
+        padding: 1rem 2rem; /* Reduced from 1.2rem 2.5rem */
+        font-size: 1rem; /* Reduced from 1.1rem */
+        border-radius: 50px;
+        width: 70%; /* Reduced from 80% */
+        max-width: 280px; /* Reduced from 300px */
+        justify-content: center;
+    }
+
+    .start-game-btn:hover {
+        transform: translateX(-50%) translateY(-6px) scale(1.05);
+    }
+
+    .start-game-btn:active {
+        transform: translateX(-50%) translateY(-3px) scale(1.02);
+    }
+
+    .floating-crown {
+        font-size: 2em;
+    }
+}
+
+@media (max-width: 480px) {
+    .home-page {
+        font-size: 1vmin; /* Increased from 0.9vmin */
+    }
+
+    h1 {
+        font-size: 6.5em; /* Increased from 5em */
+        letter-spacing: 0.05em;
+        top: 8vh; /* Moved down from 4vh */
+    }
+
+    .subtitle {
+        top: 16vh; /* Moved down from 10vh */
+        font-size: 2em; /* Increased from 1.8em */
+    }
+
+    .piece {
+        left: calc(50% - 18em); /* Adjusted for larger piece */
+        width: 36em; /* Increased from 30em */
+        height: 65em; /* Increased from 60em */
+        bottom: 20vh;
+    }
+
+    .start-game-btn {
+        padding: 0.8rem 1.6rem; /* Reduced from 1rem 2rem */
+        font-size: 0.8rem; /* Reduced from 0.9rem */
+        bottom: 6vh;
+        width: 65%; /* Reduced from 70% */
+        max-width: 220px; /* Reduced from 250px */
+    }
+
+    .bg {
+        height: 30vh;
+    }
+
+    .floating-crown {
+        font-size: 1.8em;
+    }
+}
+
+/* Portrait orientation specific adjustments */
+@media (max-width: 480px) and (orientation: portrait) {
+    .home-page {
+        font-size: 1.2vmin; /* Increased from 1.1vmin */
+    }
+
+    h1 {
+        font-size: 7.5em; /* Increased from 6.5em */
+        top: 10vh; /* Moved down from 3vh */
+    }
+
+    .subtitle {
+        top: 18vh; /* Moved down from 8vh */
+        font-size: 2.6em; /* Increased from 2.4em */
+    }
+
+    .piece {
+        bottom: 22vh;
+        height: 75em; /* Increased from 52em */
+        width: 42em; /* Increased from 26em */
+        left: calc(50% - 21em); /* Adjusted for new width */
+    }
+
+    .start-game-btn {
+        bottom: 5vh;
+        width: 60%; /* Reduced from 65% */
+        max-width: 200px; /* Reduced from 220px */
+        padding: 0.6rem 1.2rem; /* Reduced from 0.7rem 1.4rem */
+        font-size: 0.75rem; /* Added smaller font size */
+    }
+}
+
+/* Landscape orientation specific adjustments */
+@media (max-height: 500px) and (orientation: landscape) {
+    .home-page {
+        font-size: 0.8vmin; /* Increased from 0.7vmin */
+    }
+    
+    h1 {
+        font-size: 5em; /* Increased from 4.2em */
+        top: 4vh; /* Moved down from 2vh */
+    }
+
+    .subtitle {
+        top: 12vh; /* Moved down from 8vh */
+        font-size: 1.8em; /* Increased from 1.6em */
+    }
+
+    .piece {
+        bottom: 10vh;
+        height: 45em; /* Increased from 40em */
+        width: 25em; /* Added width */
+        left: calc(50% - 12.5em); /* Added positioning */
+    }
+
+    .start-game-btn {
+        bottom: 3vh;
+        padding: 0.6rem 1.2rem; /* Reduced from 0.8rem 1.5rem */
+        width: 60%; /* Added width */
+        max-width: 200px; /* Added max-width */
+        font-size: 0.8rem; /* Added font size */
+    }
+
+    .bg {
+        height: 25vh;
     }
 }

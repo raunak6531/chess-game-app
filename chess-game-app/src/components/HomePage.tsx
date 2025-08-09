@@ -46,19 +46,34 @@ const HomePage: React.FC<HomePageProps> = ({ onStartGame }) => {
       }
     };
 
+    // Handle touch start to improve mobile responsiveness
+    const handleTouchStart = (e: TouchEvent) => {
+      // Prevent default to avoid double-firing with click events
+      e.preventDefault();
+    };
+
     const pieceElement = pieceRef.current;
     if (pieceElement) {
+      // For desktop
       pieceElement.addEventListener("click", handlePieceClick);
-      // Add touch event for mobile devices
+      
+      // Enhanced touch handling for mobile devices
+      pieceElement.addEventListener("touchstart", handleTouchStart, { passive: false });
       pieceElement.addEventListener("touchend", (e) => {
         e.preventDefault(); // Prevent default touch behavior
-        handlePieceClick();
-      });
+        // Only trigger if the touch ended on the element (didn't move away)
+        const touch = e.changedTouches[0];
+        const target = document.elementFromPoint(touch.clientX, touch.clientY);
+        if (pieceElement.contains(target as Node) || pieceElement === target) {
+          handlePieceClick();
+        }
+      }, { passive: false });
     }
 
     return () => {
       if (pieceElement) {
         pieceElement.removeEventListener("click", handlePieceClick);
+        pieceElement.removeEventListener("touchstart", handleTouchStart);
         pieceElement.removeEventListener("touchend", handlePieceClick);
       }
     };

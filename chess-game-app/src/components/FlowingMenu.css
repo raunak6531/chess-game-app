@@ -37,9 +37,12 @@
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   letter-spacing: 0.05em;
   font-family: 'Georgia', 'Times New Roman', serif;
+  -webkit-tap-highlight-color: rgba(212, 175, 55, 0.2);
+  touch-action: manipulation;
 }
 
-.menu-item-link:hover {
+.menu-item-link:hover,
+.menu-item-link:active {
   color: #0f0f23;
   text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
 }
@@ -129,6 +132,8 @@
 @media (max-width: 480px) {
   .menu-item-link {
     font-size: 2.5vh;
+    /* Improve touch feedback */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
   .menu-marquee-text {
@@ -138,5 +143,26 @@
   .menu-marquee-icon {
     width: 120px;
     height: 4vh;
+  }
+  
+  /* Optimize animations for mobile */
+  .menu-marquee-content {
+    animation-duration: 10s; /* Faster animation for mobile */
+  }
+  
+  /* Add active state for better touch feedback */
+  .menu-item-link:active {
+    transform: scale(0.98);
+    opacity: 0.9;
+  }
+  
+  /* Improve spacing between menu items */
+  .menu-item {
+    border-bottom: 2px solid rgba(212, 175, 55, 0.3);
+  }
+  
+  /* Ensure menu items have sufficient height for touch */
+  .flowing-menu-nav {
+    gap: 5px;
   }
 }

@@ -29,6 +29,17 @@ const MenuItem: React.FC<MenuItemProps> = ({ link, text, image, onClick }) => {
   const itemRef = React.useRef<HTMLDivElement>(null);
   const marqueeRef = React.useRef<HTMLDivElement>(null);
   const marqueeInnerRef = React.useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = React.useState(window.innerWidth <= 768);
+
+  // Check for mobile device on mount and when window resizes
+  React.useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const animationDefaults = { duration: 0.6, ease: "expo" };
 
@@ -44,13 +55,15 @@ const MenuItem: React.FC<MenuItemProps> = ({ link, text, image, onClick }) => {
     return topEdgeDist < bottomEdgeDist ? "top" : "bottom";
   };
 
-  const handleMouseEnter = (ev: React.MouseEvent<HTMLAnchorElement>) => {
+  // Show animation on hover or touch
+  const showAnimation = (clientX: number, clientY: number) => {
     if (!itemRef.current || !marqueeRef.current || !marqueeInnerRef.current)
       return;
+    
     const rect = itemRef.current.getBoundingClientRect();
     const edge = findClosestEdge(
-      ev.clientX - rect.left,
-      ev.clientY - rect.top,
+      clientX - rect.left,
+      clientY - rect.top,
       rect.width,
       rect.height
     );
@@ -61,13 +74,15 @@ const MenuItem: React.FC<MenuItemProps> = ({ link, text, image, onClick }) => {
       .to([marqueeRef.current, marqueeInnerRef.current], { y: "0%" });
   };
 
-  const handleMouseLeave = (ev: React.MouseEvent<HTMLAnchorElement>) => {
+  // Hide animation on mouse leave or touch end
+  const hideAnimation = (clientX: number, clientY: number) => {
     if (!itemRef.current || !marqueeRef.current || !marqueeInnerRef.current)
       return;
+    
     const rect = itemRef.current.getBoundingClientRect();
     const edge = findClosestEdge(
-      ev.clientX - rect.left,
-      ev.clientY - rect.top,
+      clientX - rect.left,
+      clientY - rect.top,
       rect.width,
       rect.height
     );
@@ -80,8 +95,41 @@ const MenuItem: React.FC<MenuItemProps> = ({ link, text, image, onClick }) => {
     );
   };
 
+  const handleMouseEnter = (ev: React.MouseEvent<HTMLAnchorElement>) => {
+    if (!isMobile) {
+      showAnimation(ev.clientX, ev.clientY);
+    }
+  };
+
+  const handleMouseLeave = (ev: React.MouseEvent<HTMLAnchorElement>) => {
+    if (!isMobile) {
+      hideAnimation(ev.clientX, ev.clientY);
+    }
+  };
+
+  // Handle touch events for mobile
+  const handleTouchStart = (ev: React.TouchEvent<HTMLAnchorElement>) => {
+    if (isMobile) {
+      const touch = ev.touches[0];
+      showAnimation(touch.clientX, touch.clientY);
+    }
+  };
+
+  const handleTouchEnd = (ev: React.TouchEvent<HTMLAnchorElement>) => {
+    if (isMobile) {
+      const touch = ev.changedTouches[0];
+      hideAnimation(touch.clientX, touch.clientY);
+      
+      // Handle click on touch end
+      if (onClick) {
+        ev.preventDefault();
+        onClick();
+      }
+    }
+  };
+
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    if (onClick) {
+    if (onClick && !isMobile) {
       e.preventDefault();
       onClick();
     }
@@ -112,6 +160,9 @@ const MenuItem: React.FC<MenuItemProps> = ({ link, text, image, onClick }) => {
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         onClick={handleClick}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+        aria-label={text}
       >
         {text}
       </a>

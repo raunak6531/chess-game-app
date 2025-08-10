@@ -105,7 +105,7 @@ const MenuItem: React.FC<MenuItemProps> = ({ link, text, image, onClick, isActiv
     }
   };
 
-  const handlePointerDown = (ev: React.PointerEvent<HTMLAnchorElement>) => {
+  const handlePointerDown = (_ev: React.PointerEvent<HTMLAnchorElement>) => {
     // Instantly reveal the marquee fully filled on press/touch and keep it
     if (marqueeRef.current && marqueeInnerRef.current) {
       gsap.killTweensOf([marqueeRef.current, marqueeInnerRef.current]);
@@ -123,7 +123,7 @@ const MenuItem: React.FC<MenuItemProps> = ({ link, text, image, onClick, isActiv
     }
   };
 
-  const handlePointerCancel = (ev: React.PointerEvent<HTMLAnchorElement>) => {
+  const handlePointerCancel = (_ev: React.PointerEvent<HTMLAnchorElement>) => {
     // Do not hide on cancel either; we want it to persist until another item is activated
   };
 

@@ -24,60 +24,44 @@ const HomePage: React.FC<HomePageProps> = ({ onStartGame }) => {
   }, []);
 
   useEffect(() => {
-    const handlePieceClick = () => {
+    const pieceElement = pieceRef.current;
+    if (!pieceElement) return;
+
+    const handleActivate = (e: PointerEvent) => {
+      // Prevent ghost clicks and unify pointer/touch/mouse
+      e.preventDefault();
+
       if (pieceRef.current && subtitleRef.current) {
-        selectedIndexRef.current = selectedIndexRef.current + 1 === pieces.length ? 0 : selectedIndexRef.current + 1;
+        // Advance to next piece
+        selectedIndexRef.current =
+          selectedIndexRef.current + 1 === pieces.length ? 0 : selectedIndexRef.current + 1;
         pieceRef.current.setAttribute("data-type", pieces[selectedIndexRef.current]);
+
+        // Hide subtitle after first interaction
         subtitleRef.current.classList.add("hide");
 
-        // Show start game button after first click
+        // Reveal start button with correct placement for current viewport
         setTimeout(() => {
-          const startBtn = document.querySelector('.start-game-btn');
+          const startBtn = document.querySelector('.start-game-btn') as HTMLElement | null;
           if (startBtn) {
-            (startBtn as HTMLElement).style.opacity = '1';
-            // Apply different transform based on device type
-            if (isMobile) {
-              (startBtn as HTMLElement).style.transform = 'translateX(-50%) translateY(0)';
+            startBtn.style.opacity = '1';
+            const mobile = window.innerWidth <= 768; // use current viewport instead of state
+            if (mobile) {
+              startBtn.style.transform = 'translateX(-50%) translateY(0)';
             } else {
-              (startBtn as HTMLElement).style.transform = 'translateY(-50%) translateX(0)';
+              startBtn.style.transform = 'translateY(-50%) translateX(0)';
             }
           }
         }, 1000);
       }
     };
 
-    // Handle touch start to improve mobile responsiveness
-    const handleTouchStart = (e: TouchEvent) => {
-      // Prevent default to avoid double-firing with click events
-      e.preventDefault();
-    };
-
-    const pieceElement = pieceRef.current;
-    if (pieceElement) {
-      // For desktop
-      pieceElement.addEventListener("click", handlePieceClick);
-      
-      // Enhanced touch handling for mobile devices
-      pieceElement.addEventListener("touchstart", handleTouchStart, { passive: false });
-      pieceElement.addEventListener("touchend", (e) => {
-        e.preventDefault(); // Prevent default touch behavior
-        // Only trigger if the touch ended on the element (didn't move away)
-        const touch = e.changedTouches[0];
-        const target = document.elementFromPoint(touch.clientX, touch.clientY);
-        if (pieceElement.contains(target as Node) || pieceElement === target) {
-          handlePieceClick();
-        }
-      }, { passive: false });
-    }
+    pieceElement.addEventListener('pointerup', handleActivate);
 
     return () => {
-      if (pieceElement) {
-        pieceElement.removeEventListener("click", handlePieceClick);
-        pieceElement.removeEventListener("touchstart", handleTouchStart);
-        pieceElement.removeEventListener("touchend", handlePieceClick);
-      }
+      pieceElement.removeEventListener('pointerup', handleActivate);
     };
-  }, [pieces, isMobile]);
+  }, []);
 
   return (
     <div className="home-page">

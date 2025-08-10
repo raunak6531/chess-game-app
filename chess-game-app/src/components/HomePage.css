@@ -25,6 +25,7 @@ html, body {
     padding: 0;
     background: var(--bg);
     overflow: hidden;
+    -webkit-tap-highlight-color: transparent; /* remove Android/iOS tap highlight */
 }
 
 .home-page {
@@ -525,10 +526,16 @@ h1::after {
     transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     filter: var(--piece-shadow);
     animation: pieceGlow 4s ease-in-out infinite alternate;
-    /* Add tap highlight for better mobile feedback */
-    -webkit-tap-highlight-color: rgba(212, 175, 55, 0.2);
+    /* Remove tap highlight on mobile */
+    -webkit-tap-highlight-color: transparent;
+    outline: none; /* avoid focus outline on tap */
     /* Add touch-action for better mobile handling */
     touch-action: manipulation;
+    /* Prevent text/image selection or callouts on long-press */
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    caret-color: transparent;
     /* Add a larger tap target for mobile */
     z-index: 10;
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import './HomePage.css';
 
 interface HomePageProps {
@@ -9,19 +9,12 @@ const HomePage: React.FC<HomePageProps> = ({ onStartGame }) => {
   const pieceRef = useRef<HTMLDivElement>(null);
   const h1Ref = useRef<HTMLHeadingElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
 
   const pieces = ["pawn", "bishop", "rook", "queen", "king", "knight"];
   const selectedIndexRef = useRef(0);
 
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
 
   useEffect(() => {
     const pieceElement = pieceRef.current;

@@ -72,6 +72,11 @@
   transform: translateY(101%);
 }
 
+/* Keep marquee visible when the item is active */
+.menu-item.is-active .menu-marquee {
+  transform: translateY(0%);
+}
+
 .menu-marquee-inner {
   height: 100%;
   width: 200%;
@@ -85,7 +90,7 @@
   height: 100%;
   width: 200%;
   will-change: transform;
-  animation: marquee 15s linear infinite;
+  animation: marquee 10s linear infinite; /* faster for snappier feel */
 }
 
 .menu-marquee-text {

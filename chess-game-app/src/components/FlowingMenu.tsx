@@ -7,6 +7,8 @@ interface MenuItemProps {
   text: string;
   image: string;
   onClick?: () => void;
+  isActive?: boolean;
+  onActivate?: () => void;
 }
 
 interface FlowingMenuProps {
@@ -14,18 +16,25 @@ interface FlowingMenuProps {
 }
 
 const FlowingMenu: React.FC<FlowingMenuProps> = ({ items = [] }) => {
+  const [activeIndex, setActiveIndex] = React.useState<number | null>(null);
+  
   return (
     <div className="flowing-menu-container">
       <nav className="flowing-menu-nav">
         {items.map((item, idx) => (
-          <MenuItem key={idx} {...item} />
+          <MenuItem
+            key={idx}
+            {...item}
+            isActive={activeIndex === idx}
+            onActivate={() => setActiveIndex(idx)}
+          />
         ))}
       </nav>
     </div>
   );
 };
 
-const MenuItem: React.FC<MenuItemProps> = ({ link, text, image, onClick }) => {
+const MenuItem: React.FC<MenuItemProps> = ({ link, text, image, onClick, isActive, onActivate }) => {
   const itemRef = React.useRef<HTMLDivElement>(null);
   const marqueeRef = React.useRef<HTMLDivElement>(null);
   const marqueeInnerRef = React.useRef<HTMLDivElement>(null);
@@ -85,23 +94,29 @@ const MenuItem: React.FC<MenuItemProps> = ({ link, text, image, onClick }) => {
 
   // Pointer-based handlers unify mouse/touch/pen
   const handlePointerEnter = (ev: React.PointerEvent<HTMLAnchorElement>) => {
-    if (ev.pointerType === 'mouse') {
+    if (ev.pointerType === 'mouse' && !isActive) {
       showAnimation(ev.clientX, ev.clientY);
     }
   };
 
   const handlePointerLeave = (ev: React.PointerEvent<HTMLAnchorElement>) => {
-    if (ev.pointerType === 'mouse') {
+    if (ev.pointerType === 'mouse' && !isActive) {
       hideAnimation(ev.clientX, ev.clientY);
     }
   };
 
   const handlePointerDown = (ev: React.PointerEvent<HTMLAnchorElement>) => {
-    showAnimation(ev.clientX, ev.clientY);
+    // Instantly reveal the marquee fully filled on press/touch and keep it
+    if (marqueeRef.current && marqueeInnerRef.current) {
+      gsap.killTweensOf([marqueeRef.current, marqueeInnerRef.current]);
+      gsap.set(marqueeRef.current, { y: "0%" });
+      gsap.set(marqueeInnerRef.current, { y: "0%" });
+    }
   };
 
   const handlePointerUp = (ev: React.PointerEvent<HTMLAnchorElement>) => {
-    hideAnimation(ev.clientX, ev.clientY);
+    // Keep marquee filled; do not hide on release
+    if (onActivate) onActivate();
     if (onClick) {
       ev.preventDefault();
       onClick();
@@ -109,7 +124,7 @@ const MenuItem: React.FC<MenuItemProps> = ({ link, text, image, onClick }) => {
   };
 
   const handlePointerCancel = (ev: React.PointerEvent<HTMLAnchorElement>) => {
-    hideAnimation(ev.clientX, ev.clientY);
+    // Do not hide on cancel either; we want it to persist until another item is activated
   };
 
   const handleKeyDown = (ev: React.KeyboardEvent<HTMLAnchorElement>) => {
@@ -118,6 +133,21 @@ const MenuItem: React.FC<MenuItemProps> = ({ link, text, image, onClick }) => {
       onClick();
     }
   };
+
+  // When active state changes, keep active visible and slide inactive out
+  React.useEffect(() => {
+    if (!marqueeRef.current || !marqueeInnerRef.current) return;
+    gsap.killTweensOf([marqueeRef.current, marqueeInnerRef.current]);
+    if (isActive) {
+      gsap.set(marqueeRef.current, { y: '0%' });
+      gsap.set(marqueeInnerRef.current, { y: '0%' });
+    } else {
+      // slide out upwards by default
+      const tl = gsap.timeline({ defaults: { duration: 0.5, ease: 'expo.out' } });
+      tl.to(marqueeRef.current, { y: '-101%' })
+        .to(marqueeInnerRef.current, { y: '101%' }, '<');
+    }
+  }, [isActive]);
 
   const repeatedMarqueeContent = React.useMemo(() => {
     return Array.from({ length: 4 }).map((_, idx) => (
@@ -135,7 +165,7 @@ const MenuItem: React.FC<MenuItemProps> = ({ link, text, image, onClick }) => {
 
   return (
     <div
-      className="menu-item"
+      className={`menu-item${isActive ? ' is-active' : ''}`}
       ref={itemRef}
     >
       <a

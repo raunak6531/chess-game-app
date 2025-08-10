@@ -75,7 +75,7 @@
 }
 
 .game-menu-title {
-  font-size: 4rem;
+  font-size: clamp(2rem, 6vw, 4rem);
   font-weight: 800;
   color: white;
   margin-bottom: 1rem;
@@ -116,8 +116,11 @@
   opacity: 0.8;
   z-index: 9999;
   pointer-events: auto;
-  -webkit-tap-highlight-color: rgba(212, 175, 55, 0.2);
+  -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
   min-height: 44px; /* Minimum touch target size */
   min-width: 44px; /* Minimum touch target size */
   display: flex;
@@ -138,7 +141,7 @@
 .game-menu-content {
   position: relative;
   z-index: 10;
-  height: calc(100vh - 200px);
+  height: calc(100dvh - 200px);
 }
 
 @keyframes elegantFloat {
@@ -181,7 +184,7 @@
   }
   
   .game-menu-content {
-    height: calc(100vh - 180px);
+    height: calc(100dvh - 180px);
   }
   
   /* Improve touch targets for tablet */
@@ -207,7 +210,7 @@
   }
   
   .game-menu-content {
-    height: calc(100vh - 150px);
+    height: calc(100dvh - 150px);
   }
   
   .back-button {
@@ -237,7 +240,7 @@
 /* Portrait orientation on mobile */
 @media (max-width: 480px) and (orientation: portrait) {
   .game-menu-content {
-    height: calc(100vh - 140px);
+    height: calc(100dvh - 140px);
   }
   
   .menu-item-link {

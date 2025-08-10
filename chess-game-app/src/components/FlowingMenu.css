@@ -37,8 +37,12 @@
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   letter-spacing: 0.05em;
   font-family: 'Georgia', 'Times New Roman', serif;
-  -webkit-tap-highlight-color: rgba(212, 175, 55, 0.2);
+  -webkit-tap-highlight-color: transparent; /* Remove mobile tap highlight */
   touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  outline: none;
 }
 
 .menu-item-link:hover,

@@ -29,18 +29,6 @@ const MenuItem: React.FC<MenuItemProps> = ({ link, text, image, onClick }) => {
   const itemRef = React.useRef<HTMLDivElement>(null);
   const marqueeRef = React.useRef<HTMLDivElement>(null);
   const marqueeInnerRef = React.useRef<HTMLDivElement>(null);
-  const [isMobile, setIsMobile] = React.useState(window.innerWidth <= 768);
-
-  // Check for mobile device on mount and when window resizes
-  React.useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
   const animationDefaults = { duration: 0.6, ease: "expo" };
 
   const findClosestEdge = (
@@ -55,11 +43,11 @@ const MenuItem: React.FC<MenuItemProps> = ({ link, text, image, onClick }) => {
     return topEdgeDist < bottomEdgeDist ? "top" : "bottom";
   };
 
-  // Show animation on hover or touch
+  // Show animation at a given client position
   const showAnimation = (clientX: number, clientY: number) => {
     if (!itemRef.current || !marqueeRef.current || !marqueeInnerRef.current)
       return;
-    
+
     const rect = itemRef.current.getBoundingClientRect();
     const edge = findClosestEdge(
       clientX - rect.left,
@@ -74,11 +62,11 @@ const MenuItem: React.FC<MenuItemProps> = ({ link, text, image, onClick }) => {
       .to([marqueeRef.current, marqueeInnerRef.current], { y: "0%" });
   };
 
-  // Hide animation on mouse leave or touch end
+  // Hide animation, sliding back toward the nearest edge
   const hideAnimation = (clientX: number, clientY: number) => {
     if (!itemRef.current || !marqueeRef.current || !marqueeInnerRef.current)
       return;
-    
+
     const rect = itemRef.current.getBoundingClientRect();
     const edge = findClosestEdge(
       clientX - rect.left,
@@ -95,42 +83,38 @@ const MenuItem: React.FC<MenuItemProps> = ({ link, text, image, onClick }) => {
     );
   };
 
-  const handleMouseEnter = (ev: React.MouseEvent<HTMLAnchorElement>) => {
-    if (!isMobile) {
+  // Pointer-based handlers unify mouse/touch/pen
+  const handlePointerEnter = (ev: React.PointerEvent<HTMLAnchorElement>) => {
+    if (ev.pointerType === 'mouse') {
       showAnimation(ev.clientX, ev.clientY);
     }
   };
 
-  const handleMouseLeave = (ev: React.MouseEvent<HTMLAnchorElement>) => {
-    if (!isMobile) {
+  const handlePointerLeave = (ev: React.PointerEvent<HTMLAnchorElement>) => {
+    if (ev.pointerType === 'mouse') {
       hideAnimation(ev.clientX, ev.clientY);
     }
   };
 
-  // Handle touch events for mobile
-  const handleTouchStart = (ev: React.TouchEvent<HTMLAnchorElement>) => {
-    if (isMobile) {
-      const touch = ev.touches[0];
-      showAnimation(touch.clientX, touch.clientY);
+  const handlePointerDown = (ev: React.PointerEvent<HTMLAnchorElement>) => {
+    showAnimation(ev.clientX, ev.clientY);
+  };
+
+  const handlePointerUp = (ev: React.PointerEvent<HTMLAnchorElement>) => {
+    hideAnimation(ev.clientX, ev.clientY);
+    if (onClick) {
+      ev.preventDefault();
+      onClick();
     }
   };
 
-  const handleTouchEnd = (ev: React.TouchEvent<HTMLAnchorElement>) => {
-    if (isMobile) {
-      const touch = ev.changedTouches[0];
-      hideAnimation(touch.clientX, touch.clientY);
-      
-      // Handle click on touch end
-      if (onClick) {
-        ev.preventDefault();
-        onClick();
-      }
-    }
+  const handlePointerCancel = (ev: React.PointerEvent<HTMLAnchorElement>) => {
+    hideAnimation(ev.clientX, ev.clientY);
   };
 
-  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    if (onClick && !isMobile) {
-      e.preventDefault();
+  const handleKeyDown = (ev: React.KeyboardEvent<HTMLAnchorElement>) => {
+    if (onClick && (ev.key === 'Enter' || ev.key === ' ')) {
+      ev.preventDefault();
       onClick();
     }
   };
@@ -157,11 +141,12 @@ const MenuItem: React.FC<MenuItemProps> = ({ link, text, image, onClick }) => {
       <a
         className="menu-item-link"
         href={link}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        onClick={handleClick}
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
+        onPointerEnter={handlePointerEnter}
+        onPointerLeave={handlePointerLeave}
+        onPointerDown={handlePointerDown}
+        onPointerUp={handlePointerUp}
+        onPointerCancel={handlePointerCancel}
+        onKeyDown={handleKeyDown}
         aria-label={text}
       >
         {text}

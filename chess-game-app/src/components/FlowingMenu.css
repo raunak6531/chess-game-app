@@ -1,41 +1,48 @@
 /* FlowingMenu Styles - Elegant & Classy Theme for "Let's Mate" */
 .flowing-menu-container {
   width: 100%;
-  height: 100%;
-  overflow: hidden;
+  max-width: 1080px; /* widen menu for desktop */
+  height: auto;
+  overflow: visible;
 }
 
 .flowing-menu-nav {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  width: 100%;
   margin: 0;
   padding: 0;
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  border-radius: 16px;
+  backdrop-filter: blur(4px);
+  overflow: hidden; /* round marquee corners */
 }
 
 .menu-item {
-  flex: 1;
   position: relative;
   overflow: hidden;
   text-align: center;
-  box-shadow: 0 -1px 0 0 rgba(212, 175, 55, 0.3);
-  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.18);
+}
+.menu-item:last-child {
+  border-bottom: none;
 }
 
 .menu-item-link {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100%;
+  min-height: 84px; /* consistent row height */
+  padding: 16px 12px;
   position: relative;
   cursor: pointer;
   text-transform: uppercase;
   text-decoration: none;
-  font-weight: 500;
+  font-weight: 600;
   color: #f4e4bc;
-  font-size: 4vh;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  letter-spacing: 0.05em;
+  font-size: clamp(16px, 2.4vh, 28px);
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  letter-spacing: 0.06em;
   font-family: 'Georgia', 'Times New Roman', serif;
   -webkit-tap-highlight-color: transparent; /* Remove mobile tap highlight */
   touch-action: manipulation;
@@ -45,10 +52,20 @@
   outline: none;
 }
 
-.menu-item-link:hover,
-.menu-item-link:active {
-  color: #0f0f23;
-  text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+/* Desktop (fine pointer): reveal on hover only, no click persist */
+@media (pointer: fine) {
+  .menu-item-link:hover {
+    color: #0f0f23;
+    text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+  }
+}
+
+/* Touch devices keep :active for feedback */
+@media (pointer: coarse) {
+  .menu-item-link:active {
+    color: #0f0f23;
+    text-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+  }
 }
 
 .menu-item-link:focus {
@@ -70,11 +87,14 @@
   pointer-events: none;
   background: linear-gradient(135deg, #d4af37 0%, #ffd700 50%, #f4e4bc 100%);
   transform: translateY(101%);
+  box-shadow: inset 0 0 0 1px rgba(15, 15, 35, 0.05);
 }
 
-/* Keep marquee visible when the item is active */
-.menu-item.is-active .menu-marquee {
-  transform: translateY(0%);
+/* Keep marquee visible when the item is active on touch devices only */
+@media (pointer: coarse) {
+  .menu-item.is-active .menu-marquee {
+    transform: translateY(0%);
+  }
 }
 
 .menu-marquee-inner {
@@ -90,7 +110,14 @@
   height: 100%;
   width: 200%;
   will-change: transform;
-  animation: marquee 10s linear infinite; /* faster for snappier feel */
+  animation: marquee 12s linear infinite; /* smooth pace */
+}
+
+/* Keep marquee animating while hovered on desktop */
+@media (pointer: fine) {
+  .menu-item-link:hover + .menu-marquee .menu-marquee-content {
+    animation-play-state: running;
+  }
 }
 
 .menu-marquee-text {

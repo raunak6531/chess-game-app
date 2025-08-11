@@ -49,22 +49,13 @@ const GameMenu: React.FC<GameMenuProps> = ({
         <div className="bg-effect-3"></div>
       </div>
 
-      {/* Header */}
-      <div className="game-menu-header">
-        <div>
-          <h1 className="game-menu-title">
-            LET'S MATE
-          </h1>
-        </div>
-
-        {/* Back button */}
-        <button
-          onClick={onBackToHome}
-          className="back-button"
-        >
-          ← Back to Home
-        </button>
-      </div>
+      {/* Back button */}
+      <button
+        onClick={onBackToHome}
+        className="back-button"
+      >
+        ← Back to Home
+      </button>
 
       {/* Menu */}
       <div className="game-menu-content">

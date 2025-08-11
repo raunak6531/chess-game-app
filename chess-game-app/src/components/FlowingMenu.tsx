@@ -17,6 +17,12 @@ interface FlowingMenuProps {
 
 const FlowingMenu: React.FC<FlowingMenuProps> = ({ items = [] }) => {
   const [activeIndex, setActiveIndex] = React.useState<number | null>(null);
+
+  // Track if device is touch-capable to decide behavior
+  const isTouchDevice = React.useMemo(() => {
+    if (typeof window === 'undefined') return false;
+    return matchMedia('(pointer: coarse)').matches;
+  }, []);
   
   return (
     <div className="flowing-menu-container">
@@ -27,6 +33,8 @@ const FlowingMenu: React.FC<FlowingMenuProps> = ({ items = [] }) => {
             {...item}
             isActive={activeIndex === idx}
             onActivate={() => setActiveIndex(idx)}
+            // Only persist on click/tap for touch devices
+            // For desktop (hover), clear active on mouseleave from item
           />
         ))}
       </nav>
@@ -39,6 +47,7 @@ const MenuItem: React.FC<MenuItemProps> = ({ link, text, image, onClick, isActiv
   const marqueeRef = React.useRef<HTMLDivElement>(null);
   const marqueeInnerRef = React.useRef<HTMLDivElement>(null);
   const animationDefaults = { duration: 0.6, ease: "expo" };
+  const isTouchDevice = React.useMemo(() => (typeof window !== 'undefined') && matchMedia('(pointer: coarse)').matches, []);
 
   const findClosestEdge = (
     mouseX: number,
@@ -94,37 +103,45 @@ const MenuItem: React.FC<MenuItemProps> = ({ link, text, image, onClick, isActiv
 
   // Pointer-based handlers unify mouse/touch/pen
   const handlePointerEnter = (ev: React.PointerEvent<HTMLAnchorElement>) => {
-    if (ev.pointerType === 'mouse' && !isActive) {
+    if (!isTouchDevice && ev.pointerType === 'mouse') {
       showAnimation(ev.clientX, ev.clientY);
     }
   };
 
   const handlePointerLeave = (ev: React.PointerEvent<HTMLAnchorElement>) => {
-    if (ev.pointerType === 'mouse' && !isActive) {
+    if (!isTouchDevice && ev.pointerType === 'mouse') {
       hideAnimation(ev.clientX, ev.clientY);
     }
   };
 
-  const handlePointerDown = (_ev: React.PointerEvent<HTMLAnchorElement>) => {
-    // Instantly reveal the marquee fully filled on press/touch and keep it
+  const handlePointerDown = (ev: React.PointerEvent<HTMLAnchorElement>) => {
+    // On touch: instantly reveal and persist; on desktop: no persist on click
     if (marqueeRef.current && marqueeInnerRef.current) {
       gsap.killTweensOf([marqueeRef.current, marqueeInnerRef.current]);
-      gsap.set(marqueeRef.current, { y: "0%" });
-      gsap.set(marqueeInnerRef.current, { y: "0%" });
+      if (isTouchDevice || ev.pointerType !== 'mouse') {
+        gsap.set(marqueeRef.current, { y: "0%" });
+        gsap.set(marqueeInnerRef.current, { y: "0%" });
+        if (onActivate) onActivate(); // set active immediately on touch
+      }
     }
   };
 
   const handlePointerUp = (ev: React.PointerEvent<HTMLAnchorElement>) => {
-    // Keep marquee filled; do not hide on release
-    if (onActivate) onActivate();
     if (onClick) {
       ev.preventDefault();
       onClick();
     }
+
+    if (isTouchDevice || ev.pointerType !== 'mouse') {
+      // Already activated on pointerdown to avoid the first-tap delay on mobile
+    }
+    // Desktop: do nothing here so marquee keeps moving while hovered
   };
 
-  const handlePointerCancel = (_ev: React.PointerEvent<HTMLAnchorElement>) => {
-    // Do not hide on cancel either; we want it to persist until another item is activated
+  const handlePointerCancel = (ev: React.PointerEvent<HTMLAnchorElement>) => {
+    if (!isTouchDevice && ev.pointerType === 'mouse') {
+      hideAnimation(ev.clientX, ev.clientY);
+    }
   };
 
   const handleKeyDown = (ev: React.KeyboardEvent<HTMLAnchorElement>) => {
@@ -134,11 +151,11 @@ const MenuItem: React.FC<MenuItemProps> = ({ link, text, image, onClick, isActiv
     }
   };
 
-  // When active state changes, keep active visible and slide inactive out
+  // When active state changes, keep active visible on touch devices only
   React.useEffect(() => {
     if (!marqueeRef.current || !marqueeInnerRef.current) return;
     gsap.killTweensOf([marqueeRef.current, marqueeInnerRef.current]);
-    if (isActive) {
+    if (isActive && isTouchDevice) {
       gsap.set(marqueeRef.current, { y: '0%' });
       gsap.set(marqueeInnerRef.current, { y: '0%' });
     } else {
@@ -147,7 +164,7 @@ const MenuItem: React.FC<MenuItemProps> = ({ link, text, image, onClick, isActiv
       tl.to(marqueeRef.current, { y: '-101%' })
         .to(marqueeInnerRef.current, { y: '101%' }, '<');
     }
-  }, [isActive]);
+  }, [isActive, isTouchDevice]);
 
   const repeatedMarqueeContent = React.useMemo(() => {
     return Array.from({ length: 4 }).map((_, idx) => (

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import './ColorSelectionModal.css';
 
 interface ColorSelectionModalProps {
@@ -12,6 +12,15 @@ const ColorSelectionModal: React.FC<ColorSelectionModalProps> = ({
   onSelectColor,
   onClose
 }) => {
+  // Track when the modal was opened to avoid immediately closing from the opening tap on mobile
+  const openTimeRef = useRef<number>(0);
+
+  useEffect(() => {
+    if (isOpen) {
+      openTimeRef.current = Date.now();
+    }
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   const handleColorSelect = (color: 'white' | 'black') => {
@@ -19,15 +28,25 @@ const ColorSelectionModal: React.FC<ColorSelectionModalProps> = ({
     onClose();
   };
 
-  const handleBackdropClick = (e: React.MouseEvent) => {
+  const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    // Guard: ignore the first click that happens immediately after opening (common on mobile)
+    if (Date.now() - openTimeRef.current < 300) {
+      return;
+    }
     if (e.target === e.currentTarget) {
       onClose();
     }
   };
 
   return (
-    <div className="color-modal-backdrop" onClick={handleBackdropClick}>
-      <div className="color-modal">
+    <div
+      className="color-modal-backdrop"
+      onClick={handleBackdropClick}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Choose your color"
+    >
+      <div className="color-modal" onClick={(e) => e.stopPropagation()}>
         <div className="color-modal-header">
           <h2>Choose Your Color</h2>
           <p>Select which pieces you'd like to play as</p>

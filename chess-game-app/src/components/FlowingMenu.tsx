@@ -18,12 +18,6 @@ interface FlowingMenuProps {
 const FlowingMenu: React.FC<FlowingMenuProps> = ({ items = [] }) => {
   const [activeIndex, setActiveIndex] = React.useState<number | null>(null);
 
-  // Track if device is touch-capable to decide behavior
-  const isTouchDevice = React.useMemo(() => {
-    if (typeof window === 'undefined') return false;
-    return matchMedia('(pointer: coarse)').matches;
-  }, []);
-  
   return (
     <div className="flowing-menu-container">
       <nav className="flowing-menu-nav">

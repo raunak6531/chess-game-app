@@ -6,6 +6,13 @@
   overflow: visible;
 }
 
+/* Desktop-only: widen menu container */
+@media (min-width: 1024px) {
+  .flowing-menu-container {
+    max-width: 1400px; /* make container wider on large screens */
+  }
+}
+
 .flowing-menu-nav {
   display: flex;
   flex-direction: column;

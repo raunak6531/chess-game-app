@@ -121,6 +121,13 @@
   justify-content: center; /* center horizontally */
 }
 
+/* Desktop-only height increase */
+@media (min-width: 769px) {
+  .game-menu-content {
+    min-height: 88vh; /* taller on desktops only */
+  }
+}
+
 @media (max-width: 768px) {
   .game-menu-content {
     min-height: 68vh; /* keep mobile comfortable */

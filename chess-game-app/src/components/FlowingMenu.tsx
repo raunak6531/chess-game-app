@@ -123,7 +123,14 @@ const MenuItem: React.FC<MenuItemProps> = ({ link, text, image, onClick, isActiv
   const handlePointerUp = (ev: React.PointerEvent<HTMLAnchorElement>) => {
     if (onClick) {
       ev.preventDefault();
-      onClick();
+      // Add a small delay for mobile devices to ensure proper event handling
+      if (isTouchDevice || ev.pointerType !== 'mouse') {
+        setTimeout(() => {
+          onClick();
+        }, 50);
+      } else {
+        onClick();
+      }
     }
 
     if (isTouchDevice || ev.pointerType !== 'mouse') {

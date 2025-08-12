@@ -12,6 +12,9 @@
   justify-content: center;
   z-index: 10000;
   animation: modal-fade-in 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Ensure modal is above all other content on mobile */
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 
 @keyframes modal-fade-in {
@@ -113,6 +116,11 @@
   position: relative;
   overflow: hidden;
   text-align: left;
+  /* Improve mobile touch handling */
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .color-option::before {
@@ -275,9 +283,30 @@
     flex-direction: column;
     text-align: center;
     gap: 12px;
+    /* Enhanced mobile touch feedback */
+    min-height: 120px;
+  }
+  
+  .color-option:active {
+    transform: scale(0.98);
+    border-color: rgba(212, 175, 55, 0.6);
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
   }
   
   .selection-arrow {
     display: none;
+  }
+}
+
+/* Mobile-specific touch improvements */
+@media (pointer: coarse) {
+  .color-option:active {
+    transform: scale(0.98);
+    border-color: rgba(212, 175, 55, 0.6);
+  }
+  
+  .cancel-button:active {
+    transform: scale(0.95);
+    background: rgba(156, 163, 175, 0.2);
   }
 }

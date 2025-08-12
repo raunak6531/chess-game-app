@@ -17,23 +17,36 @@ const ColorSelectionModal: React.FC<ColorSelectionModalProps> = ({
 
   useEffect(() => {
     if (isOpen) {
+      console.log('ColorSelectionModal opened');
       openTimeRef.current = Date.now();
+    } else {
+      console.log('ColorSelectionModal closed');
     }
   }, [isOpen]);
 
   if (!isOpen) return null;
 
   const handleColorSelect = (color: 'white' | 'black') => {
+    console.log('Color selected:', color);
     onSelectColor(color);
     onClose();
   };
 
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
     // Guard: ignore the first click that happens immediately after opening (common on mobile)
-    if (Date.now() - openTimeRef.current < 300) {
+    // Increased delay for mobile devices to prevent accidental dismissal
+    const isMobile = window.matchMedia('(pointer: coarse)').matches;
+    const guardTime = isMobile ? 500 : 300;
+    const timeSinceOpen = Date.now() - openTimeRef.current;
+    
+    console.log('Backdrop clicked, time since open:', timeSinceOpen, 'guard time:', guardTime, 'is mobile:', isMobile);
+    
+    if (timeSinceOpen < guardTime) {
+      console.log('Backdrop click ignored due to guard time');
       return;
     }
     if (e.target === e.currentTarget) {
+      console.log('Closing modal via backdrop click');
       onClose();
     }
   };

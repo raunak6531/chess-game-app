@@ -111,11 +111,13 @@ function App() {
 
   // Game mode handlers
   const handlePlayVsComputer = () => {
+    console.log('handlePlayVsComputer called, setting showColorModal to true');
     setShowColorModal(true);
     soundSystem.playMove();
   };
 
   const handleColorSelection = (color: PlayerColor) => {
+    console.log('handleColorSelection called with color:', color);
     setPlayerColor(color);
     game.setPlayerColor(color);
     game.resetGame();
@@ -125,6 +127,7 @@ function App() {
   };
 
   const handleCloseColorModal = () => {
+    console.log('handleCloseColorModal called, setting showColorModal to false');
     setShowColorModal(false);
   };
 

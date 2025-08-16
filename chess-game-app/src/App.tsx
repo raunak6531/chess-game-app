@@ -1,14 +1,17 @@
 import { useState, useEffect } from 'react';
+import { Socket } from 'socket.io-client';
 import HomePage from './components/HomePage';
 import GameMenu from './components/GameMenu';
 import ChessBoard from './components/ChessBoard';
 import GameInfo from './components/GameInfo';
 import ColorSelectionModal from './components/ColorSelectionModal';
+import MultiplayerMenu from './components/MultiplayerMenu';
+import MultiplayerChessBoard from './components/MultiplayerChessBoard';
 import { useChessGame } from './hooks/useChessGame';
 import { soundSystem } from './utils/soundSystem';
 import './App.css';
 
-type AppPage = 'home' | 'menu' | 'game';
+type AppPage = 'home' | 'menu' | 'game' | 'multiplayer' | 'multiplayer-game';
 type BoardTheme = 'classic' | 'green' | 'brown' | 'marble' | 'roman';
 type Difficulty = 'beginner' | 'intermediate' | 'advanced' | 'expert';
 type PlayerColor = 'white' | 'black';
@@ -49,6 +52,11 @@ function App() {
   });
 
   const [showColorModal, setShowColorModal] = useState(false);
+
+  // Multiplayer state
+  const [multiplayerSocket, setMultiplayerSocket] = useState<Socket | null>(null);
+  const [multiplayerRoomCode, setMultiplayerRoomCode] = useState('');
+  const [multiplayerPlayerColor, setMultiplayerPlayerColor] = useState<PlayerColor>('white');
 
   const game = useChessGame();
 
@@ -109,6 +117,16 @@ function App() {
     setCurrentPage('menu');
   };
 
+  const handleBackToMenuFromMultiplayer = () => {
+    // Clean up multiplayer connection
+    if (multiplayerSocket) {
+      multiplayerSocket.disconnect();
+      setMultiplayerSocket(null);
+    }
+    setMultiplayerRoomCode('');
+    setCurrentPage('menu');
+  };
+
   // Game mode handlers
   const handlePlayVsComputer = () => {
     console.log('handlePlayVsComputer called, setting showColorModal to true');
@@ -129,6 +147,20 @@ function App() {
   const handleCloseColorModal = () => {
     console.log('handleCloseColorModal called, setting showColorModal to false');
     setShowColorModal(false);
+  };
+
+  // Multiplayer handlers
+  const handlePlayMultiplayer = () => {
+    setCurrentPage('multiplayer');
+    soundSystem.playMove();
+  };
+
+  const handleMultiplayerGameStart = (socket: Socket, roomCode: string, playerColor: PlayerColor) => {
+    setMultiplayerSocket(socket);
+    setMultiplayerRoomCode(roomCode);
+    setMultiplayerPlayerColor(playerColor);
+    setCurrentPage('multiplayer-game');
+    soundSystem.playGameStart();
   };
 
   const handleBoardTheme = () => {
@@ -192,18 +224,51 @@ function App() {
       <>
         <GameMenu
           onPlayVsComputer={handlePlayVsComputer}
+          onPlayMultiplayer={handlePlayMultiplayer}
           onBoardTheme={handleBoardTheme}
           onDifficulty={handleDifficulty}
           onBackToHome={handleBackToHome}
           difficulty={difficulty}
           boardTheme={boardTheme}
         />
-        <ColorSelectionModal
-          isOpen={showColorModal}
-          onSelectColor={handleColorSelection}
-          onClose={handleCloseColorModal}
-        />
+        {showColorModal && (
+          <ColorSelectionModal
+            isOpen={showColorModal}
+            onSelectColor={handleColorSelection}
+            onClose={handleCloseColorModal}
+          />
+        )}
       </>
+    );
+  }
+
+  if (currentPage === 'multiplayer') {
+    console.log('Rendering MultiplayerMenu');
+    return (
+      <MultiplayerMenu
+        onBackToMenu={handleBackToMenu}
+        onGameStart={handleMultiplayerGameStart}
+      />
+    );
+  }
+
+  if (currentPage === 'multiplayer-game') {
+    console.log('Rendering MultiplayerChessBoard');
+    if (!multiplayerSocket || !multiplayerRoomCode) {
+      // Fallback to menu if multiplayer data is missing
+      setCurrentPage('menu');
+      return null;
+    }
+    
+    return (
+      <MultiplayerChessBoard
+        socket={multiplayerSocket}
+        roomCode={multiplayerRoomCode}
+        playerColor={multiplayerPlayerColor}
+        onBackToMenu={handleBackToMenuFromMultiplayer}
+        boardTheme={boardTheme}
+        soundEnabled={soundEnabled}
+      />
     );
   }
 

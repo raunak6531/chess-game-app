@@ -1,0 +1,576 @@
+/* Multiplayer Menu Styles */
+.multiplayer-menu {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+  color: #f4e4bc;
+  position: relative;
+  overflow-x: hidden;
+  padding: 20px 20px 40px 20px;
+}
+
+/* Background Effects */
+.multiplayer-bg-effects {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.multiplayer-bg-effects .bg-effect-1,
+.multiplayer-bg-effects .bg-effect-2,
+.multiplayer-bg-effects .bg-effect-3 {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+  animation: float 20s ease-in-out infinite;
+}
+
+.multiplayer-bg-effects .bg-effect-1 {
+  width: 300px;
+  height: 300px;
+  top: 10%;
+  left: -10%;
+  animation-delay: 0s;
+}
+
+.multiplayer-bg-effects .bg-effect-2 {
+  width: 200px;
+  height: 200px;
+  top: 60%;
+  right: -5%;
+  animation-delay: -7s;
+}
+
+.multiplayer-bg-effects .bg-effect-3 {
+  width: 150px;
+  height: 150px;
+  top: 30%;
+  left: 70%;
+  animation-delay: -14s;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  33% { transform: translateY(-20px) rotate(120deg); }
+  66% { transform: translateY(10px) rotate(240deg); }
+}
+
+/* Back Button */
+.back-button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: rgba(212, 175, 55, 0.1);
+  border: 2px solid rgba(212, 175, 55, 0.3);
+  border-radius: 12px;
+  padding: 12px 20px;
+  color: #d4af37;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.back-button:hover {
+  background: rgba(212, 175, 55, 0.2);
+  border-color: rgba(212, 175, 55, 0.5);
+  transform: translateX(-2px);
+}
+
+/* Main Content */
+.multiplayer-content {
+  max-width: 800px;
+  margin: 0 auto;
+  padding-top: 80px;
+  position: relative;
+  z-index: 1;
+}
+
+.multiplayer-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.multiplayer-header h1 {
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 16px;
+  background: linear-gradient(135deg, #d4af37 0%, #ffd700 25%, #f4e4bc 50%, #d4af37 75%, #b8860b 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
+}
+
+.multiplayer-header p {
+  font-size: 1.2rem;
+  opacity: 0.8;
+  color: #e5e7eb;
+}
+
+/* Connection Status */
+.connection-status {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 24px;
+  border-radius: 12px;
+  margin-bottom: 32px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.connection-status.connecting {
+  background: rgba(255, 193, 7, 0.1);
+  border: 2px solid rgba(255, 193, 7, 0.3);
+  color: #ffc107;
+}
+
+.connection-status.connected {
+  background: rgba(40, 167, 69, 0.1);
+  border: 2px solid rgba(40, 167, 69, 0.3);
+  color: #28a745;
+}
+
+.connection-status.disconnected {
+  background: rgba(220, 53, 69, 0.1);
+  border: 2px solid rgba(220, 53, 69, 0.3);
+  color: #dc3545;
+}
+
+.status-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+.connection-status.connecting .status-indicator {
+  background: #ffc107;
+}
+
+.connection-status.connected .status-indicator {
+  background: #28a745;
+}
+
+.connection-status.disconnected .status-indicator {
+  background: #dc3545;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+/* Error Message */
+.error-message {
+  background: rgba(220, 53, 69, 0.1);
+  border: 2px solid rgba(220, 53, 69, 0.3);
+  border-radius: 12px;
+  padding: 16px 24px;
+  margin-bottom: 32px;
+  color: #dc3545;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* Room Actions */
+.room-actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 32px;
+  margin-bottom: 40px;
+}
+
+.action-card {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+  border: 2px solid rgba(212, 175, 55, 0.2);
+  border-radius: 20px;
+  padding: 32px;
+  text-align: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.action-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, transparent 100%);
+  border-radius: 20px;
+  pointer-events: none;
+}
+
+.action-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(212, 175, 55, 0.4);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.action-card h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: #ffd700;
+}
+
+.action-card p {
+  font-size: 1rem;
+  opacity: 0.8;
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+/* Action Buttons */
+.action-button {
+  background: linear-gradient(135deg, #d4af37 0%, #ffd700 100%);
+  border: none;
+  border-radius: 12px;
+  padding: 16px 32px;
+  color: #0f0f23;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  width: 100%;
+}
+
+.action-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(212, 175, 55, 0.4);
+}
+
+.action-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Join Room Form */
+.join-room-form {
+  width: 100%;
+}
+
+.input-group {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.room-code-input {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(212, 175, 55, 0.3);
+  border-radius: 8px;
+  padding: 12px 16px;
+  color: #f4e4bc;
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.room-code-input::placeholder {
+  color: rgba(244, 228, 188, 0.5);
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.room-code-input:focus {
+  outline: none;
+  border-color: rgba(212, 175, 55, 0.6);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.random-button {
+  background: rgba(212, 175, 55, 0.2);
+  border: 2px solid rgba(212, 175, 55, 0.3);
+  border-radius: 8px;
+  padding: 12px;
+  color: #d4af37;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1.2rem;
+}
+
+.random-button:hover {
+  background: rgba(212, 175, 55, 0.3);
+  transform: rotate(180deg);
+}
+
+/* Room Info */
+.room-info {
+  margin-bottom: 40px;
+}
+
+.room-card {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 100%);
+  border: 2px solid rgba(212, 175, 55, 0.3);
+  border-radius: 20px;
+  padding: 32px;
+  text-align: center;
+}
+
+.room-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.room-header h3 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #ffd700;
+  margin: 0;
+}
+
+.copy-button {
+  background: rgba(212, 175, 55, 0.2);
+  border: 2px solid rgba(212, 175, 55, 0.3);
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: #d4af37;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1.2rem;
+}
+
+.copy-button:hover {
+  background: rgba(212, 175, 55, 0.3);
+  transform: scale(1.1);
+}
+
+.room-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.players-count {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.status-badge {
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.status-badge.waiting {
+  background: rgba(255, 193, 7, 0.2);
+  color: #ffc107;
+  border: 1px solid rgba(255, 193, 7, 0.3);
+}
+
+.status-badge.playing {
+  background: rgba(40, 167, 69, 0.2);
+  color: #28a745;
+  border: 1px solid rgba(40, 167, 69, 0.3);
+}
+
+.waiting-message {
+  margin-bottom: 24px;
+}
+
+.waiting-message p {
+  margin-bottom: 16px;
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+.room-code-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  background: rgba(212, 175, 55, 0.1);
+  border: 2px solid rgba(212, 175, 55, 0.3);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.room-code-display .code {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #ffd700;
+  letter-spacing: 4px;
+  font-family: 'Courier New', monospace;
+}
+
+.copy-inline {
+  background: rgba(212, 175, 55, 0.3);
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  color: #0f0f23;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.copy-inline:hover {
+  background: rgba(212, 175, 55, 0.5);
+  transform: scale(1.05);
+}
+
+.leave-button {
+  background: rgba(220, 53, 69, 0.2);
+  border: 2px solid rgba(220, 53, 69, 0.3);
+  border-radius: 12px;
+  padding: 12px 24px;
+  color: #dc3545;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.leave-button:hover {
+  background: rgba(220, 53, 69, 0.3);
+  border-color: rgba(220, 53, 69, 0.5);
+}
+
+/* Instructions */
+.instructions {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 16px;
+  padding: 24px;
+  margin: 40px 0 20px 0;
+}
+
+.instructions h4 {
+  color: #ffd700;
+  font-size: 1.3rem;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.instructions ol {
+  list-style: none;
+  counter-reset: step-counter;
+  padding: 0;
+}
+
+.instructions li {
+  counter-increment: step-counter;
+  margin-bottom: 12px;
+  padding-left: 40px;
+  position: relative;
+  line-height: 1.6;
+}
+
+.instructions li::before {
+  content: counter(step-counter);
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: linear-gradient(135deg, #d4af37 0%, #ffd700 100%);
+  color: #0f0f23;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .multiplayer-content {
+    padding-top: 100px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .multiplayer-header h1 {
+    font-size: 2.5rem;
+  }
+
+  .room-actions {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .action-card {
+    padding: 24px;
+  }
+
+  .room-status {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .room-code-display {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .room-code-display .code {
+    font-size: 1.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .multiplayer-menu {
+    padding: 10px;
+  }
+
+  .back-button {
+    top: 10px;
+    left: 10px;
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+
+  .multiplayer-header h1 {
+    font-size: 2rem;
+  }
+
+  .multiplayer-header p {
+    font-size: 1rem;
+  }
+
+  .action-card {
+    padding: 20px;
+  }
+
+
+
+  .room-card {
+    padding: 24px;
+  }
+
+  .room-header h3 {
+    font-size: 1.5rem;
+  }
+
+  .room-code-display .code {
+    font-size: 1.5rem;
+    letter-spacing: 2px;
+  }
+}

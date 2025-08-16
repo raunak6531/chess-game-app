@@ -9,7 +9,7 @@ export interface ChessGameHook {
   selectedSquare: Position | null;
   validMoves: Position[];
   selectSquare: (position: Position) => void;
-  makeMove: (from: Position, to: Position, promotionPiece?: PieceType) => boolean;
+  makeMove: (from: Position, to: Position, promotionPiece?: PieceType) => { success: boolean; capture?: boolean; piece?: string };
   resetGame: () => void;
   isSquareSelected: (position: Position) => boolean;
   isValidMoveTarget: (position: Position) => boolean;
@@ -20,6 +20,13 @@ export interface ChessGameHook {
   pendingPromotion: { from: Position; to: Position } | null;
   handlePromotion: (pieceType: PieceType) => void;
   cancelPromotion: () => void;
+  // Multiplayer support methods
+  getFEN: () => string;
+  loadFEN: (fen: string) => void;
+  getTurn: () => 'white' | 'black';
+  isGameOver: () => boolean;
+  isCheckmate: () => boolean;
+  isStalemate: () => boolean;
 }
 
 export const useChessGame = (): ChessGameHook => {
@@ -159,16 +166,20 @@ export const useChessGame = (): ChessGameHook => {
     }
   }, [gameState, selectedSquare, validMoves]);
 
-  const makeMove = useCallback((from: Position, to: Position, promotionPiece?: PieceType): boolean => {
+  const makeMove = useCallback((from: Position, to: Position, promotionPiece?: PieceType): { success: boolean; capture?: boolean; piece?: string } => {
     // Check if this move would result in promotion
     const piece = gameState.board[from.row][from.col];
     if (piece && isPromotionMove({ from, to, piece })) {
       if (!promotionPiece) {
         // Set pending promotion and wait for user selection
         setPendingPromotion({ from, to });
-        return false; // Don't execute the move yet
+        return { success: false }; // Don't execute the move yet
       }
     }
+
+    // Check if this is a capture move
+    const targetPiece = gameState.board[to.row][to.col];
+    const isCapture = targetPiece !== null;
 
     // Execute the move with promotion piece if provided
     const newGameState = executeMove(gameState, from, to, promotionPiece);
@@ -197,9 +208,13 @@ export const useChessGame = (): ChessGameHook => {
         // Ignore audio errors
       }
 
-      return true;
+      return { 
+        success: true, 
+        capture: isCapture,
+        piece: piece ? `${piece.color}${piece.type}` : undefined
+      };
     }
-    return false;
+    return { success: false };
   }, [gameState]);
 
   const resetGame = useCallback(() => {
@@ -246,6 +261,34 @@ export const useChessGame = (): ChessGameHook => {
     setPlayerColorState(color);
   }, []);
 
+  // Multiplayer support methods
+  const getFEN = useCallback(() => {
+    return gameStateToFen(gameState);
+  }, [gameState]);
+
+  const loadFEN = useCallback((fen: string) => {
+    // This is a simplified FEN loader - in a real implementation you'd parse the FEN properly
+    // For now, we'll just reset and let the multiplayer system handle the state
+    console.log('Loading FEN:', fen);
+    // You would implement proper FEN parsing here
+  }, []);
+
+  const getTurn = useCallback(() => {
+    return gameState.currentPlayer;
+  }, [gameState]);
+
+  const isGameOver = useCallback(() => {
+    return gameState.gameStatus === 'checkmate' || gameState.gameStatus === 'stalemate' || gameState.gameStatus === 'draw';
+  }, [gameState]);
+
+  const isCheckmate = useCallback(() => {
+    return gameState.gameStatus === 'checkmate';
+  }, [gameState]);
+
+  const isStalemate = useCallback(() => {
+    return gameState.gameStatus === 'stalemate';
+  }, [gameState]);
+
   return {
     gameState,
     selectedSquare,
@@ -261,6 +304,13 @@ export const useChessGame = (): ChessGameHook => {
     isEngineReady,
     pendingPromotion,
     handlePromotion,
-    cancelPromotion
+    cancelPromotion,
+    // Multiplayer methods
+    getFEN,
+    loadFEN,
+    getTurn,
+    isGameOver,
+    isCheckmate,
+    isStalemate
   };
 };

@@ -4,6 +4,7 @@ import './GameMenu.css';
 
 interface GameMenuProps {
   onPlayVsComputer: () => void;
+  onPlayMultiplayer: () => void;
   onBoardTheme: () => void;
   onDifficulty: () => void;
   onBackToHome: () => void;
@@ -13,6 +14,7 @@ interface GameMenuProps {
 
 const GameMenu: React.FC<GameMenuProps> = ({
   onPlayVsComputer,
+  onPlayMultiplayer,
   onBoardTheme,
   onDifficulty,
   onBackToHome,
@@ -25,6 +27,12 @@ const GameMenu: React.FC<GameMenuProps> = ({
       text: "Play vs Computer",
       image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🤖%3C/text%3E%3C/svg%3E",
       onClick: onPlayVsComputer
+    },
+    {
+      link: "#",
+      text: "Play with Friends",
+      image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E👥%3C/text%3E%3C/svg%3E",
+      onClick: onPlayMultiplayer
     },
     {
       link: "#",
@@ -51,8 +59,18 @@ const GameMenu: React.FC<GameMenuProps> = ({
 
       {/* Back button */}
       <button
-        onClick={onBackToHome}
+        onClick={(e) => {
+          console.log('Back button clicked!', e);
+          e.preventDefault();
+          e.stopPropagation();
+          onBackToHome();
+        }}
         className="back-button"
+        style={{
+          zIndex: 99999,
+          position: 'fixed',
+          pointerEvents: 'auto'
+        }}
       >
         ← Back to Home
       </button>

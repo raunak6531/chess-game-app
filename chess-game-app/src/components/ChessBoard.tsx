@@ -10,9 +10,18 @@ interface ChessBoardProps {
   rotated?: boolean;
   soundEnabled?: boolean;
   boardTheme?: string;
+  onMove?: (from: string, to: string) => boolean;
+  disabled?: boolean;
 }
 
-const ChessBoard: React.FC<ChessBoardProps> = ({ game, rotated = false, soundEnabled = true, boardTheme = 'classic' }) => {
+const ChessBoard: React.FC<ChessBoardProps> = ({ 
+  game, 
+  rotated = false, 
+  soundEnabled = true, 
+  boardTheme = 'classic',
+  onMove,
+  disabled = false
+}) => {
   const {
     gameState,
     selectSquare,
@@ -93,6 +102,8 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ game, rotated = false, soundEna
     ].filter(Boolean).join(' ');
 
     const handleSquareClick = () => {
+      if (disabled) return;
+
       // Add selection animation
       const squareElement = document.querySelector(`[data-square="${row}-${col}"]`);
       if (squareElement) {
@@ -102,7 +113,20 @@ const ChessBoard: React.FC<ChessBoardProps> = ({ game, rotated = false, soundEna
         }, 400);
       }
 
-      selectSquare(position);
+      // If we have a custom onMove handler (multiplayer), use it
+      if (onMove && game.selectedSquare && isValidTarget) {
+        const fromSquare = `${String.fromCharCode(97 + game.selectedSquare.col)}${8 - game.selectedSquare.row}`;
+        const toSquare = `${String.fromCharCode(97 + position.col)}${8 - position.row}`;
+        
+        const success = onMove(fromSquare, toSquare);
+        if (success) {
+          // Clear selection after successful move
+          selectSquare(position); // This will clear the selection
+        }
+      } else {
+        // Default behavior for single player
+        selectSquare(position);
+      }
     };
 
     return (

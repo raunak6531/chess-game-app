@@ -1,0 +1,412 @@
+/* Multiplayer Chess Board Styles */
+.multiplayer-chess-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+  color: #f4e4bc;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Connection Status Bar */
+.connection-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  background: rgba(0, 0, 0, 0.3);
+  border-bottom: 2px solid rgba(212, 175, 55, 0.2);
+  font-size: 0.9rem;
+  font-weight: 600;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.connection-bar.connected {
+  border-bottom-color: rgba(40, 167, 69, 0.3);
+}
+
+.connection-bar.reconnecting {
+  border-bottom-color: rgba(255, 193, 7, 0.3);
+  animation: pulse 2s infinite;
+}
+
+.connection-bar.disconnected {
+  border-bottom-color: rgba(220, 53, 69, 0.3);
+}
+
+.connection-info,
+.room-info,
+.opponent-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-dot,
+.opponent-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+.connection-bar.connected .status-dot {
+  background: #28a745;
+}
+
+.connection-bar.reconnecting .status-dot {
+  background: #ffc107;
+}
+
+.connection-bar.disconnected .status-dot {
+  background: #dc3545;
+}
+
+.opponent-dot.connected {
+  background: #28a745;
+}
+
+.opponent-dot.disconnected {
+  background: #dc3545;
+}
+
+.room-info {
+  color: #d4af37;
+  font-weight: 700;
+}
+
+/* Game Message */
+.game-message {
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(255, 215, 0, 0.1) 100%);
+  border: 2px solid rgba(212, 175, 55, 0.3);
+  border-radius: 12px;
+  padding: 16px 24px;
+  margin: 16px 24px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: #ffd700;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Main Game Container */
+.game-container {
+  display: flex;
+  flex: 1;
+  gap: 24px;
+  padding: 24px;
+  align-items: flex-start;
+}
+
+.game-info-section {
+  flex: 0 0 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.chess-board-section {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Multiplayer Controls */
+.multiplayer-controls {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+  border: 2px solid rgba(212, 175, 55, 0.2);
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.turn-indicator {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.turn-badge {
+  display: inline-block;
+  padding: 12px 24px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+}
+
+.turn-badge.my-turn {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+.turn-badge.opponent-turn {
+  background: rgba(156, 163, 175, 0.2);
+  color: #9ca3af;
+  border: 2px solid rgba(156, 163, 175, 0.3);
+}
+
+@keyframes glow {
+  from {
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+  }
+  to {
+    box-shadow: 0 4px 25px rgba(40, 167, 69, 0.5);
+  }
+}
+
+.game-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.resign-button,
+.draw-button {
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.resign-button {
+  background: rgba(220, 53, 69, 0.1);
+  border-color: rgba(220, 53, 69, 0.3);
+  color: #dc3545;
+}
+
+.resign-button:hover:not(:disabled) {
+  background: rgba(220, 53, 69, 0.2);
+  border-color: rgba(220, 53, 69, 0.5);
+  transform: translateY(-2px);
+}
+
+.draw-button {
+  background: rgba(255, 193, 7, 0.1);
+  border-color: rgba(255, 193, 7, 0.3);
+  color: #ffc107;
+}
+
+.draw-button:hover:not(:disabled) {
+  background: rgba(255, 193, 7, 0.2);
+  border-color: rgba(255, 193, 7, 0.5);
+  transform: translateY(-2px);
+}
+
+.resign-button:disabled,
+.draw-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Loading State */
+.multiplayer-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+  color: #f4e4bc;
+}
+
+.multiplayer-loading h2 {
+  font-size: 2rem;
+  color: #d4af37;
+  animation: pulse 2s infinite;
+}
+
+/* Resign Confirmation Modal */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  animation: modal-fade-in 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.resign-modal {
+  background: linear-gradient(145deg, rgba(15, 15, 35, 0.98) 0%, rgba(26, 26, 46, 0.95) 100%);
+  border-radius: 20px;
+  padding: 32px;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  border: 2px solid rgba(212, 175, 55, 0.3);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+}
+
+.resign-modal h3 {
+  color: #ffd700;
+  font-size: 1.5rem;
+  margin-bottom: 16px;
+}
+
+.resign-modal p {
+  color: #e5e7eb;
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+
+.confirm-resign,
+.cancel-resign {
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.confirm-resign {
+  background: rgba(220, 53, 69, 0.2);
+  border-color: rgba(220, 53, 69, 0.5);
+  color: #dc3545;
+}
+
+.confirm-resign:hover {
+  background: rgba(220, 53, 69, 0.3);
+  transform: translateY(-2px);
+}
+
+.cancel-resign {
+  background: rgba(156, 163, 175, 0.2);
+  border-color: rgba(156, 163, 175, 0.3);
+  color: #9ca3af;
+}
+
+.cancel-resign:hover {
+  background: rgba(156, 163, 175, 0.3);
+  border-color: rgba(156, 163, 175, 0.5);
+  color: #d1d5db;
+  transform: translateY(-2px);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .game-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .game-info-section {
+    flex: none;
+    width: 100%;
+    max-width: 600px;
+  }
+
+  .chess-board-section {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .connection-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 16px;
+  }
+
+  .connection-info,
+  .room-info,
+  .opponent-status {
+    font-size: 0.8rem;
+  }
+
+  .game-container {
+    padding: 16px;
+    gap: 16px;
+  }
+
+  .multiplayer-controls {
+    padding: 16px;
+  }
+
+  .turn-badge {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+  }
+
+  .game-actions {
+    flex-direction: row;
+  }
+
+  .resign-button,
+  .draw-button {
+    flex: 1;
+    padding: 10px 16px;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .connection-bar {
+    padding: 12px;
+  }
+
+  .game-message {
+    margin: 12px;
+    padding: 12px 16px;
+    font-size: 1rem;
+  }
+
+  .game-container {
+    padding: 12px;
+  }
+
+  .multiplayer-controls {
+    padding: 16px;
+  }
+
+  .resign-modal {
+    padding: 24px;
+    margin: 20px;
+  }
+
+  .resign-modal h3 {
+    font-size: 1.3rem;
+  }
+
+  .modal-actions {
+    flex-direction: column;
+  }
+
+  .confirm-resign,
+  .cancel-resign {
+    width: 100%;
+  }
+}

@@ -4,6 +4,7 @@ import ChessBoard from './ChessBoard';
 import GameInfo from './GameInfo';
 import { useChessGame } from '../hooks/useChessGame';
 import { soundSystem } from '../utils/soundSystem';
+import { notationToPosition } from '../types/chess';
 import './MultiplayerChessBoard.css';
 
 interface MultiplayerChessBoardProps {

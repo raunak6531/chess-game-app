@@ -9,7 +9,7 @@ const server = http.createServer(app);
 // Configure CORS for Socket.IO
 const io = socketIo(server, {
   cors: {
-    origin: ["http://localhost:3000", "http://localhost:5173", "http://127.0.0.1:5173", "https://your-deployed-app.vercel.app"],
+    origin: ["http://localhost:3000", "http://localhost:5173", "http://127.0.0.1:5173", "https://chess-game-app-lemon.vercel.app"],
     methods: ["GET", "POST"],
     credentials: true
   }

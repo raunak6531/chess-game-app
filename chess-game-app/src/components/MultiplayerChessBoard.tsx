@@ -201,7 +201,9 @@ const MultiplayerChessBoard: React.FC<MultiplayerChessBoardProps> = ({
     }
 
     // Try to make the move locally first
-    const moveResult = game.makeMove(from, to);
+    const fromPos = notationToPosition(from);
+    const toPos = notationToPosition(to);
+    const moveResult = game.makeMove(fromPos, toPos);
     
     if (moveResult.success) {
       const newFEN = game.getFEN();

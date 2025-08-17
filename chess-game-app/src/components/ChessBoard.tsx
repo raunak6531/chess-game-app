@@ -184,8 +184,8 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
             <div className="check-indicator" />
           )}
 
-          {/* Computer thinking indicator */}
-          {isComputerThinking && (
+          {/* Computer thinking indicator - hidden in multiplayer (onMove provided) */}
+          {!onMove && isComputerThinking && (
             <div className="computer-thinking-overlay">
               <div className="thinking-indicator">
                 <div className="thinking-spinner"></div>
@@ -194,8 +194,8 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
             </div>
           )}
 
-          {/* Engine status indicator */}
-          {!isEngineReady && (
+          {/* Engine status indicator - hidden in multiplayer */}
+          {!onMove && !isEngineReady && (
             <div className="engine-loading-overlay">
               <div className="loading-indicator">
                 <div className="loading-spinner"></div>

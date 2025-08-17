@@ -128,6 +128,9 @@ const MultiplayerMenu: React.FC<MultiplayerMenuProps> = ({
     };
   }, []); // IMPORTANT: no roomCode/onGameStart in deps
 
+  const [hostColor, setHostColor] = useState<'white' | 'black' | 'random'>('random');
+  const [timeControl, setTimeControl] = useState<'none' | '3+2' | '5+0' | '10+0'>('none');
+
   const createRoom = () => {
     if (!socket || connectionStatus !== 'connected') {
       setError('Not connected to server');
@@ -136,7 +139,7 @@ const MultiplayerMenu: React.FC<MultiplayerMenuProps> = ({
 
     setIsCreatingRoom(true);
     setError('');
-    socket.emit('createRoom');
+    socket.emit('createRoom', { colorPreference: hostColor, timeControl });
   };
 
   const joinRoom = () => {
@@ -222,6 +225,28 @@ const MultiplayerMenu: React.FC<MultiplayerMenuProps> = ({
             <div className="action-card">
               <h3>Create Room</h3>
               <p>Start a new game and get a room code to share</p>
+
+              {/* Host Settings */}
+              <div className="host-settings">
+                <div className="setting-group">
+                  <label>Choose Color</label>
+                  <div className="options">
+                    <label><input type="radio" name="hostColor" value="random" checked={hostColor==='random'} onChange={() => setHostColor('random')} /> Random</label>
+                    <label><input type="radio" name="hostColor" value="white" checked={hostColor==='white'} onChange={() => setHostColor('white')} /> White</label>
+                    <label><input type="radio" name="hostColor" value="black" checked={hostColor==='black'} onChange={() => setHostColor('black')} /> Black</label>
+                  </div>
+                </div>
+                <div className="setting-group">
+                  <label>Timer</label>
+                  <select value={timeControl} onChange={(e) => setTimeControl(e.target.value as any)}>
+                    <option value="none">No timer</option>
+                    <option value="3+2">3 + 2</option>
+                    <option value="5+0">5 + 0</option>
+                    <option value="10+0">10 + 0</option>
+                  </select>
+                </div>
+              </div>
+
               <button
                 onClick={createRoom}
                 disabled={connectionStatus !== 'connected' || isCreatingRoom}

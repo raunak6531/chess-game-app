@@ -44,6 +44,13 @@ const MultiplayerChessBoard: React.FC<MultiplayerChessBoardProps> = ({
   const game = useChessGame();
   const [gameState, setGameState] = useState<GameState | null>(null);
   const [opponent, setOpponent] = useState<OpponentInfo>({ connected: true });
+
+  // Disable computer/Stockfish in multiplayer mode
+  useEffect(() => {
+    if (game && (game as any).setComputerEnabled) {
+      (game as any).setComputerEnabled(false);
+    }
+  }, [game]);
   const [isMyTurn, setIsMyTurn] = useState(playerColor === 'white');
   const [connectionStatus, setConnectionStatus] = useState<'connected' | 'reconnecting' | 'disconnected'>('connected');
   const [showResignConfirm, setShowResignConfirm] = useState(false);
@@ -72,7 +79,7 @@ const MultiplayerChessBoard: React.FC<MultiplayerChessBoardProps> = ({
     socket.on('moveReceived', (data: { from: string; to: string; fen: string; turn: 'white' | 'black' }) => {
       console.log('Move received:', data);
       
-      // Apply the move to our game
+      // Apply the move to our game (from opponent)
       game.loadFEN(data.fen);
       
       setGameState(prev => ({

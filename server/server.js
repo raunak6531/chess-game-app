@@ -33,7 +33,7 @@ function generateRoomCode() {
 }
 
 // Create a new room
-function createRoom() {
+function createRoom(settings = {}, hostSocketId = null) {
   let roomCode;
   do {
     roomCode = generateRoomCode();
@@ -42,6 +42,11 @@ function createRoom() {
   const room = {
     code: roomCode,
     players: [],
+    settings: {
+      colorPreference: settings.colorPreference || 'random', // 'white' | 'black' | 'random'
+      timeControl: settings.timeControl || 'none', // e.g., 'none', '3+2', '5+0'
+    },
+    hostSocketId: hostSocketId,
     gameState: {
       fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', // Starting position
       turn: 'white',
@@ -56,7 +61,7 @@ function createRoom() {
 }
 
 // Add player to room
-function addPlayerToRoom(roomCode, socketId) {
+function addPlayerToRoom(roomCode, socketId, forcedColor = null) {
   const room = rooms.get(roomCode);
   if (!room) return null;
 
@@ -69,12 +74,7 @@ function addPlayerToRoom(roomCode, socketId) {
     return { error: 'Already in this room' };
   }
 
-  // Prevent the same socket from joining the same room twice
-  if (room.players.some(p => p.socketId === socketId)) {
-    return { error: 'Already in this room' };
-  }
-
-  const playerColor = room.players.length === 0 ? 'white' : 'black';
+  const playerColor = forcedColor || (room.players.length === 0 ? 'white' : 'black');
   const player = {
     socketId,
     color: playerColor,
@@ -121,10 +121,17 @@ io.on('connection', (socket) => {
   console.log(`User connected: ${socket.id}`);
 
   // Create room
-  socket.on('createRoom', () => {
+  socket.on('createRoom', (settings = {}) => {
     try {
-      const room = createRoom();
-      const result = addPlayerToRoom(room.code, socket.id);
+      const room = createRoom(settings, socket.id);
+
+      // Assign host color based on preference
+      let hostColor = 'white';
+      if (room.settings.colorPreference === 'white') hostColor = 'white';
+      else if (room.settings.colorPreference === 'black') hostColor = 'black';
+      else hostColor = Math.random() < 0.5 ? 'white' : 'black';
+
+      const result = addPlayerToRoom(room.code, socket.id, hostColor);
       
       if (result.error) {
         socket.emit('error', { message: result.error });
@@ -134,7 +141,7 @@ io.on('connection', (socket) => {
       socket.join(room.code);
       socket.emit('roomCreated', { roomCode: room.code });
       
-      console.log(`Room ${room.code} created by ${socket.id}`);
+      console.log(`Room ${room.code} created by ${socket.id} with settings`, room.settings);
     } catch (error) {
       console.error('Error creating room:', error);
       socket.emit('error', { message: 'Failed to create room' });
@@ -175,11 +182,21 @@ io.on('connection', (socket) => {
       // If room is full, start the game
       if (room.players.length === 2) {
         room.gameState.status = 'playing';
-        
-        // Assign colors and notify players
-        room.players.forEach(player => {
-          io.to(player.socketId).emit('gameStart', { 
-            playerColor: player.color 
+
+        // Ensure second player's color complements host
+        const [p1, p2] = room.players;
+        if (p1.color === p2.color) {
+          p2.color = p1.color === 'white' ? 'black' : 'white';
+          playerSockets.set(p2.socketId, { roomCode: room.code, color: p2.color });
+        }
+        // White moves first
+        room.gameState.turn = 'white';
+
+        // Send start info including timer settings if needed
+        room.players.forEach((player) => {
+          io.to(player.socketId).emit('gameStart', {
+            playerColor: player.color,
+            settings: room.settings,
           });
         });
 

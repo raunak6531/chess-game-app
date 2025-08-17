@@ -37,6 +37,9 @@ const MultiplayerMenu: React.FC<MultiplayerMenuProps> = ({
     onGameStartRef.current = onGameStart;
   }, [onGameStart]);
 
+  // Track whether the socket is handed off to the game page
+  const handedOffRef = useRef(false);
+
   // Connect to server on component mount (once)
   useEffect(() => {
     // Use Vite's import.meta.env instead of process.env
@@ -113,6 +116,7 @@ const MultiplayerMenu: React.FC<MultiplayerMenuProps> = ({
       const fallbackCode = (typeof inputRoomCode === 'string' ? inputRoomCode.trim().toUpperCase() : '') || undefined;
       const code = data.roomCode || roomCodeRef.current || fallbackCode;
       if (code) {
+        handedOffRef.current = true;
         onGameStartRef.current(newSocket, code, data.playerColor);
       }
     });
@@ -125,7 +129,10 @@ const MultiplayerMenu: React.FC<MultiplayerMenuProps> = ({
     });
 
     return () => {
-      newSocket.disconnect();
+      // Don't disconnect if we're handing the live socket to the game screen
+      if (!handedOffRef.current) {
+        newSocket.disconnect();
+      }
     };
   }, []); // IMPORTANT: no roomCode/onGameStart in deps
 

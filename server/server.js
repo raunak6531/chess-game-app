@@ -195,6 +195,7 @@ io.on('connection', (socket) => {
         // Send start info including timer settings if needed
         room.players.forEach((player) => {
           io.to(player.socketId).emit('gameStart', {
+            roomCode: room.code,
             playerColor: player.color,
             settings: room.settings,
           });

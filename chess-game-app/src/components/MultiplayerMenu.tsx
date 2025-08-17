@@ -108,9 +108,10 @@ const MultiplayerMenu: React.FC<MultiplayerMenuProps> = ({
       } : null);
     });
 
-    newSocket.on('gameStart', (data: { playerColor: 'white' | 'black' }) => {
-      console.log('Game starting, you are:', data.playerColor);
-      const code = roomCodeRef.current;
+    newSocket.on('gameStart', (data: { roomCode: string; playerColor: 'white' | 'black' }) => {
+      console.log('Game starting, you are:', data.playerColor, 'room:', data.roomCode);
+      const fallbackCode = (typeof inputRoomCode === 'string' ? inputRoomCode.trim().toUpperCase() : '') || undefined;
+      const code = data.roomCode || roomCodeRef.current || fallbackCode;
       if (code) {
         onGameStartRef.current(newSocket, code, data.playerColor);
       }

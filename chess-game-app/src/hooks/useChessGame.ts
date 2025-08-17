@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import type { GameState, Position, PieceType } from '../types/chess';
+import { notationToPosition } from '../types/chess';
 import { initializeGameState, gameStateToFen } from '../logic/chessGame';
 import { executeMove, getValidMovesForPiece, isPromotionMove } from '../logic/moveValidation';
 import { stockfishService, type Difficulty } from '../services/stockfishService';
@@ -307,6 +308,8 @@ export const useChessGame = (): ChessGameHook => {
           blackKingside: castling?.includes('k') || false,
           blackQueenside: castling?.includes('q') || false,
         },
+        // en passant target from FEN (e.g., 'e3' or '-')
+        enPassantTarget: enPassant && enPassant !== '-' ? notationToPosition(enPassant) : undefined,
         // minimal timing info
         halfMoveClock: parseInt(halfmove || '0', 10),
         fullMoveNumber: parseInt(fullmove || '1', 10),

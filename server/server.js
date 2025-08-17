@@ -82,7 +82,21 @@ function addPlayerToRoom(roomCode, socketId, forcedColor = null) {
     return { error: 'Already in this room' };
   }
 
-  const playerColor = forcedColor || (room.players.length === 0 ? 'white' : 'black');
+  // Decide color deterministically
+  let playerColor;
+  if (forcedColor) {
+    playerColor = forcedColor;
+  } else if (room.players.length === 0) {
+    // First player defaults to white if not forced
+    playerColor = 'white';
+  } else if (room.players.length === 1) {
+    // Second player must be opposite of the first
+    const firstColor = room.players[0].color;
+    playerColor = firstColor === 'white' ? 'black' : 'white';
+  } else {
+    return { error: 'Room is full' };
+  }
+
   const player = {
     socketId,
     color: playerColor,
@@ -133,11 +147,8 @@ io.on('connection', (socket) => {
     try {
       const room = createRoom(settings, socket.id);
 
-      // Assign host color based on preference
-      let hostColor = 'white';
-      if (room.settings.colorPreference === 'white') hostColor = 'white';
-      else if (room.settings.colorPreference === 'black') hostColor = 'black';
-      else hostColor = Math.random() < 0.5 ? 'white' : 'black';
+      // Assign host color based on preference (no randomness for predictability)
+      const hostColor = room.settings.colorPreference === 'black' ? 'black' : 'white';
 
       const result = addPlayerToRoom(room.code, socket.id, hostColor);
       
@@ -191,13 +202,7 @@ io.on('connection', (socket) => {
       if (room.players.length === 2) {
         room.gameState.status = 'playing';
 
-        // Ensure second player's color complements host
-        const [p1, p2] = room.players;
-        if (p1.color === p2.color) {
-          p2.color = p1.color === 'white' ? 'black' : 'white';
-          playerSockets.set(p2.socketId, { roomCode: room.code, color: p2.color });
-        }
-        // White moves first
+        // Colors are already set when players join; enforce white to start
         room.gameState.turn = 'white';
 
         // Send start info including timer settings if needed

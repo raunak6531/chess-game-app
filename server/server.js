@@ -64,6 +64,16 @@ function addPlayerToRoom(roomCode, socketId) {
     return { error: 'Room is full' };
   }
 
+  // Prevent the same socket from joining the same room twice
+  if (room.players.some(p => p.socketId === socketId)) {
+    return { error: 'Already in this room' };
+  }
+
+  // Prevent the same socket from joining the same room twice
+  if (room.players.some(p => p.socketId === socketId)) {
+    return { error: 'Already in this room' };
+  }
+
   const playerColor = room.players.length === 0 ? 'white' : 'black';
   const player = {
     socketId,

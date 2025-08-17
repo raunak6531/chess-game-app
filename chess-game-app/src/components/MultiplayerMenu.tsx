@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { io, Socket } from 'socket.io-client';
 import './MultiplayerMenu.css';
 
@@ -26,12 +26,23 @@ const MultiplayerMenu: React.FC<MultiplayerMenuProps> = ({
   const [isCreatingRoom, setIsCreatingRoom] = useState(false);
   const [isJoiningRoom, setIsJoiningRoom] = useState(false);
 
-  // Connect to server on component mount
+  // Keep latest values in refs for stable socket handlers
+  const roomCodeRef = useRef(roomCode);
+  useEffect(() => {
+    roomCodeRef.current = roomCode;
+  }, [roomCode]);
+
+  const onGameStartRef = useRef(onGameStart);
+  useEffect(() => {
+    onGameStartRef.current = onGameStart;
+  }, [onGameStart]);
+
+  // Connect to server on component mount (once)
   useEffect(() => {
     // Use Vite's import.meta.env instead of process.env
     const serverUrl = import.meta.env.VITE_SERVER_URL || 'http://localhost:3001';
     console.log('Connecting to server:', serverUrl);
-    
+
     const newSocket = io(serverUrl, {
       transports: ['websocket', 'polling']
     });
@@ -99,8 +110,9 @@ const MultiplayerMenu: React.FC<MultiplayerMenuProps> = ({
 
     newSocket.on('gameStart', (data: { playerColor: 'white' | 'black' }) => {
       console.log('Game starting, you are:', data.playerColor);
-      if (roomCode) {
-        onGameStart(newSocket, roomCode, data.playerColor);
+      const code = roomCodeRef.current;
+      if (code) {
+        onGameStartRef.current(newSocket, code, data.playerColor);
       }
     });
 
@@ -114,7 +126,7 @@ const MultiplayerMenu: React.FC<MultiplayerMenuProps> = ({
     return () => {
       newSocket.disconnect();
     };
-  }, [onGameStart, roomCode]);
+  }, []); // IMPORTANT: no roomCode/onGameStart in deps
 
   const createRoom = () => {
     if (!socket || connectionStatus !== 'connected') {

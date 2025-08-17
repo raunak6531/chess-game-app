@@ -51,7 +51,7 @@ const MultiplayerChessBoard: React.FC<MultiplayerChessBoardProps> = ({
       (game as any).setComputerEnabled(false);
     }
   }, [game]);
-  const [isMyTurn, setIsMyTurn] = useState(playerColor === 'white');
+  const [isMyTurn, setIsMyTurn] = useState<boolean>(playerColor === 'white');
   const [connectionStatus, setConnectionStatus] = useState<'connected' | 'reconnecting' | 'disconnected'>('connected');
   const [showResignConfirm, setShowResignConfirm] = useState(false);
   const [gameMessage, setGameMessage] = useState('');
@@ -203,7 +203,17 @@ const MultiplayerChessBoard: React.FC<MultiplayerChessBoardProps> = ({
   };
 
   const handleMove = useCallback((from: string, to: string) => {
-    if (!game || !socket || !isMyTurn || gameState?.gameStatus !== 'playing') {
+    if (!game || !socket) {
+      return false;
+    }
+
+    if (gameState?.gameStatus !== 'playing') {
+      return false;
+    }
+
+    // Only allow moves for the active side
+    const currentTurn = game.getTurn();
+    if (currentTurn !== playerColor) {
       return false;
     }
 
@@ -370,7 +380,7 @@ const MultiplayerChessBoard: React.FC<MultiplayerChessBoardProps> = ({
             soundEnabled={soundEnabled}
             boardTheme={boardTheme}
             onMove={handleMove}
-            disabled={!isMyTurn || gameState.gameStatus !== 'playing' || !opponent.connected}
+            disabled={!isMyTurn || gameState.gameStatus !== 'playing' || !opponent.connected || !game}
           />
         </div>
       </div>

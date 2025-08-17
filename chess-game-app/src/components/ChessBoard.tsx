@@ -113,19 +113,20 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
         }, 400);
       }
 
-      // If we have a custom onMove handler (multiplayer), use it
+      // Always update selection first so valid targets show/highlight
+      selectSquare(position);
+
+      // If we have a custom onMove handler (multiplayer), and this click is a valid target,
+      // trigger the move using the previously selected square
       if (onMove && game.selectedSquare && isValidTarget) {
         const fromSquare = `${String.fromCharCode(97 + game.selectedSquare.col)}${8 - game.selectedSquare.row}`;
         const toSquare = `${String.fromCharCode(97 + position.col)}${8 - position.row}`;
         
         const success = onMove(fromSquare, toSquare);
-        if (success) {
-          // Clear selection after successful move
-          selectSquare(position); // This will clear the selection
+        if (!success) {
+          // If move failed, keep current selection so user can try another target
+          return;
         }
-      } else {
-        // Default behavior for single player
-        selectSquare(position);
       }
     };
 

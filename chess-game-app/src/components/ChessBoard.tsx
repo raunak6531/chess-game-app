@@ -113,21 +113,29 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
         }, 400);
       }
 
-      // Always update selection first so valid targets show/highlight
-      selectSquare(position);
+      // Multiplayer flow: if a move is in progress and this square is a valid target,
+      // send the move to the server instead of performing a local move.
+      if (onMove) {
+        if (game.selectedSquare && isValidTarget) {
+          const fromSquare = `${String.fromCharCode(97 + game.selectedSquare.col)}${8 - game.selectedSquare.row}`;
+          const toSquare = `${String.fromCharCode(97 + position.col)}${8 - position.row}`;
 
-      // If we have a custom onMove handler (multiplayer), and this click is a valid target,
-      // trigger the move using the previously selected square
-      if (onMove && game.selectedSquare && isValidTarget) {
-        const fromSquare = `${String.fromCharCode(97 + game.selectedSquare.col)}${8 - game.selectedSquare.row}`;
-        const toSquare = `${String.fromCharCode(97 + position.col)}${8 - position.row}`;
-        
-        const success = onMove(fromSquare, toSquare);
-        if (!success) {
-          // If move failed, keep current selection so user can try another target
+          const success = onMove(fromSquare, toSquare);
+          if (!success) {
+            // Keep selection so the user can try another target
+            return;
+          }
+          // On success, useChessGame.makeMove clears selection via MultiplayerChessBoard logic
           return;
         }
+
+        // Otherwise, just select/deselect and show valid targets
+        selectSquare(position);
+        return;
       }
+
+      // Single-player flow
+      selectSquare(position);
     };
 
     return (

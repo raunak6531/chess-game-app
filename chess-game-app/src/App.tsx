@@ -58,7 +58,7 @@ function App() {
   const [multiplayerRoomCode, setMultiplayerRoomCode] = useState('');
   const [multiplayerPlayerColor, setMultiplayerPlayerColor] = useState<PlayerColor>('white');
 
-  const game = useChessGame();
+  const game = useChessGame(null, null);
 
   // Add error boundary
   if (!game) {

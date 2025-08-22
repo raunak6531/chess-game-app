@@ -4,6 +4,7 @@ import { notationToPosition } from '../types/chess';
 import { initializeGameState, gameStateToFen } from '../logic/chessGame';
 import { executeMove, getValidMovesForPiece, isPromotionMove } from '../logic/moveValidation';
 import { stockfishService, type Difficulty } from '../services/stockfishService';
+import type { Socket } from 'socket.io-client';
 
 export interface ChessGameHook {
   gameState: GameState;
@@ -32,7 +33,7 @@ export interface ChessGameHook {
   setComputerEnabled: (enabled: boolean) => void;
 }
 
-export const useChessGame = (): ChessGameHook => {
+export const useChessGame = (socket: Socket | null, roomCode: string | null): ChessGameHook => {
   const [gameState, setGameState] = useState<GameState>(initializeGameState());
   const [selectedSquare, setSelectedSquare] = useState<Position | null>(null);
   const [validMoves, setValidMoves] = useState<Position[]>([]);
@@ -110,6 +111,24 @@ export const useChessGame = (): ChessGameHook => {
     }
   }, [gameState.currentPlayer, gameState.gameStatus, isEngineReady, isComputerThinking, playerColor, computerEnabled]);
 
+  // Listen for opponent moves
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleMoveReceived = (data: { fen: string }) => {
+      // The server sends the new FEN state of the board.
+      // Use the existing loadFEN function to update the game.
+      loadFEN(data.fen);
+    };
+
+    socket.on('moveReceived', handleMoveReceived);
+
+    // Clean up the listener when the component unmounts or the socket changes
+    return () => {
+      socket.off('moveReceived', handleMoveReceived);
+    };
+  }, [socket, loadFEN]);
+
   const selectSquare = useCallback((position: Position) => {
     const piece = gameState.board[position.row][position.col];
 
@@ -171,6 +190,20 @@ export const useChessGame = (): ChessGameHook => {
         setValidMoves([]);
         setPendingPromotion(null);
 
+        // --- START OF NEW CODE ---
+        // After updating state locally, send the move to the server
+        if (socket && roomCode) {
+          const fen = gameStateToFen(newGameState);
+          socket.emit('makeMove', {
+            roomCode,
+            from,
+            to,
+            fen,
+            turn: newGameState.currentPlayer,
+          });
+        }
+        // --- END OF NEW CODE ---
+
         // Play simple move sound
         try {
           const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
@@ -198,7 +231,7 @@ export const useChessGame = (): ChessGameHook => {
       }
       return { success: false };
     },
-    [gameState]
+    [gameState, socket, roomCode]
   );
 
   const resetGame = useCallback(() => {

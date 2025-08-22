@@ -127,7 +127,7 @@ export const useChessGame = (socket: Socket | null, roomCode: string | null): Ch
     return () => {
       socket.off('moveReceived', handleMoveReceived);
     };
-  }, [socket, loadFEN]);
+  }, [socket]);
 
   const selectSquare = useCallback((position: Position) => {
     const piece = gameState.board[position.row][position.col];

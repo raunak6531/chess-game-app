@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { Socket } from 'socket.io-client';
 import ChessBoard from './ChessBoard';
 import GameInfo from './GameInfo';
-import { useChessGame, ChessGameHook } from '../hooks/useChessGame'; // Make sure ChessGameHook is exported from your hook file
+import { useChessGame } from '../hooks/useChessGame';
 import { soundSystem } from '../utils/soundSystem';
 import { notationToPosition } from '../types/chess';
 import './MultiplayerChessBoard.css';
@@ -32,7 +32,7 @@ const MultiplayerChessBoard: React.FC<MultiplayerChessBoardProps> = ({
   soundEnabled
 }) => {
   // 1. The hook is now the single source of truth for game logic and state
-  const game = useChessGame(socket, roomCode) as ChessGameHook; // Use the hook
+  const game = useChessGame(socket, roomCode);
   const { gameState, makeMove, setPlayerColor, resetGame, setComputerEnabled } = game;
 
   const [opponent, setOpponent] = useState<OpponentInfo>({ connected: true });

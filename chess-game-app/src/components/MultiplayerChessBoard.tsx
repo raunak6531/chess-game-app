@@ -28,17 +28,8 @@ const MultiplayerChessBoard: React.FC<MultiplayerChessBoardProps> = ({
   boardTheme,
   soundEnabled
 }) => {
-  // 1. Destructure all the necessary state and functions from the hook
   const game = useChessGame(socket, roomCode) as ChessGameHook;
-  const { 
-    gameState, 
-    selectSquare, 
-    selectedSquare, 
-    validMoves, 
-    setPlayerColor, 
-    resetGame, 
-    setComputerEnabled 
-  } = game;
+  const { gameState, setPlayerColor, resetGame, setComputerEnabled } = game;
 
   const [opponent, setOpponent] = useState<OpponentInfo>({ connected: true });
   const [connectionStatus, setConnectionStatus] = useState<'connected' | 'reconnecting' | 'disconnected'>('connected');
@@ -94,8 +85,6 @@ const MultiplayerChessBoard: React.FC<MultiplayerChessBoardProps> = ({
     setPlayerColor(playerColor);
   }, [setComputerEnabled, resetGame, setPlayerColor, playerColor]);
 
-  // 2. The custom 'handleMove' function has been completely removed.
-
   const handleResign = () => {
     if (socket && gameState?.gameStatus === 'playing') {
       socket.emit('resign', { roomCode });
@@ -145,12 +134,9 @@ const MultiplayerChessBoard: React.FC<MultiplayerChessBoardProps> = ({
           </div>
         </div>
         <div className="chess-board-section">
-          {/* 3. The ChessBoard component is now fully controlled by the hook's state */}
+          {/* ## THIS IS THE ONLY PART THAT HAS CHANGED ## */}
           <ChessBoard
-            gameState={gameState}
-            selectedSquare={selectedSquare}
-            validMoves={validMoves}
-            onSquareClick={selectSquare}
+            game={game}
             rotated={playerColor === 'black'}
             soundEnabled={soundEnabled}
             boardTheme={boardTheme}

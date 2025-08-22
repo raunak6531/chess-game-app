@@ -2,7 +2,9 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { Socket } from 'socket.io-client';
 import ChessBoard from './ChessBoard';
 import GameInfo from './GameInfo';
-import { useChessGame, ChessGameHook } from '../hooks/useChessGame';
+// FIX 1: 'ChessGameHook' is now imported as a type.
+import { useChessGame } from '../hooks/useChessGame';
+import type { ChessGameHook } from '../hooks/useChessGame';
 import { soundSystem } from '../utils/soundSystem';
 import { notationToPosition } from '../types/chess';
 import './MultiplayerChessBoard.css';
@@ -29,7 +31,6 @@ const MultiplayerChessBoard: React.FC<MultiplayerChessBoardProps> = ({
   boardTheme,
   soundEnabled
 }) => {
-  // The hook is the single source of truth for game logic and state
   const game = useChessGame(socket, roomCode) as ChessGameHook;
   const { gameState, makeMove, setPlayerColor, resetGame, setComputerEnabled } = game;
 
@@ -40,10 +41,14 @@ const MultiplayerChessBoard: React.FC<MultiplayerChessBoardProps> = ({
 
   const isMyTurn = gameState.currentPlayer === playerColor;
 
-  // Listen for UI/meta-state events
   useEffect(() => {
     if (!socket) return;
-
+    
+    // FIX 2: Added listeners to call 'setConnectionStatus', fixing the unused variable error.
+    const handleConnect = () => setConnectionStatus('connected');
+    const handleDisconnect = () => setConnectionStatus('disconnected');
+    const handleReconnecting = () => setConnectionStatus('reconnecting');
+    
     const handleOpponentConnected = (data: OpponentInfo) => {
       setOpponent(data);
       setGameMessage('');
@@ -73,12 +78,18 @@ const MultiplayerChessBoard: React.FC<MultiplayerChessBoardProps> = ({
         setGameMessage('Your opponent resigned. You win!');
     };
 
+    socket.on('connect', handleConnect);
+    socket.on('disconnect', handleDisconnect);
+    socket.on('reconnecting', handleReconnecting);
     socket.on('opponentConnected', handleOpponentConnected);
     socket.on('opponentDisconnected', handleOpponentDisconnected);
     socket.on('gameEnded', handleGameEnded);
     socket.on('opponentResigned', handleOpponentResigned);
 
     return () => {
+      socket.off('connect', handleConnect);
+      socket.off('disconnect', handleDisconnect);
+      socket.off('reconnecting', handleReconnecting);
       socket.off('opponentConnected', handleOpponentConnected);
       socket.off('opponentDisconnected', handleOpponentDisconnected);
       socket.off('gameEnded', handleGameEnded);
@@ -93,7 +104,6 @@ const MultiplayerChessBoard: React.FC<MultiplayerChessBoardProps> = ({
     setPlayerColor(playerColor);
   }, [setComputerEnabled, resetGame, setPlayerColor, playerColor]);
 
-  // Simplified move handler
   const handleMove = useCallback((from: string, to: string) => {
     if (!isMyTurn || gameState.gameStatus !== 'playing') {
       return false;
@@ -127,7 +137,6 @@ const MultiplayerChessBoard: React.FC<MultiplayerChessBoardProps> = ({
     return <div className="multiplayer-loading"><h2>Loading game...</h2></div>;
   }
 
-  // ** THIS IS THE JSX THAT WAS MISSING **
   return (
     <div className="multiplayer-chess-container">
       <div className={`connection-bar ${connectionStatus}`}>

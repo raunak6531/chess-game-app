@@ -1,12 +1,9 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Socket } from 'socket.io-client';
 import ChessBoard from './ChessBoard';
 import GameInfo from './GameInfo';
-// FIX 1: 'ChessGameHook' is now imported as a type.
 import { useChessGame } from '../hooks/useChessGame';
 import type { ChessGameHook } from '../hooks/useChessGame';
-import { soundSystem } from '../utils/soundSystem';
-import { notationToPosition } from '../types/chess';
 import './MultiplayerChessBoard.css';
 
 interface MultiplayerChessBoardProps {
@@ -31,8 +28,17 @@ const MultiplayerChessBoard: React.FC<MultiplayerChessBoardProps> = ({
   boardTheme,
   soundEnabled
 }) => {
+  // 1. Destructure all the necessary state and functions from the hook
   const game = useChessGame(socket, roomCode) as ChessGameHook;
-  const { gameState, makeMove, setPlayerColor, resetGame, setComputerEnabled } = game;
+  const { 
+    gameState, 
+    selectSquare, 
+    selectedSquare, 
+    validMoves, 
+    setPlayerColor, 
+    resetGame, 
+    setComputerEnabled 
+  } = game;
 
   const [opponent, setOpponent] = useState<OpponentInfo>({ connected: true });
   const [connectionStatus, setConnectionStatus] = useState<'connected' | 'reconnecting' | 'disconnected'>('connected');
@@ -44,39 +50,24 @@ const MultiplayerChessBoard: React.FC<MultiplayerChessBoardProps> = ({
   useEffect(() => {
     if (!socket) return;
     
-    // FIX 2: Added listeners to call 'setConnectionStatus', fixing the unused variable error.
     const handleConnect = () => setConnectionStatus('connected');
     const handleDisconnect = () => setConnectionStatus('disconnected');
     const handleReconnecting = () => setConnectionStatus('reconnecting');
-    
-    const handleOpponentConnected = (data: OpponentInfo) => {
-      setOpponent(data);
-      setGameMessage('');
-    };
+    const handleOpponentConnected = (data: OpponentInfo) => setOpponent(data);
     const handleOpponentDisconnected = () => {
       setOpponent({ connected: false });
-      setGameMessage('Opponent disconnected. Waiting for reconnection...');
+      setGameMessage('Opponent disconnected.');
     };
     const handleGameEnded = (data: { reason: string; winner?: 'white' | 'black' | 'draw' }) => {
-      let message = '';
-      switch (data.reason) {
-        case 'checkmate':
-          message = data.winner === playerColor ? 'Checkmate! You win!' : 'Checkmate! You lose.';
-          break;
-        case 'stalemate':
-          message = "Stalemate! It's a draw.";
-          break;
-        case 'draw':
-          message = "The game ended in a draw.";
-          break;
-        default:
-           message = "The game has ended.";
+      let message = 'The game has ended.';
+      if (data.reason === 'checkmate') {
+        message = data.winner === playerColor ? 'Checkmate! You win!' : 'Checkmate! You lose.';
+      } else if (data.reason === 'stalemate' || data.reason === 'draw') {
+        message = "It's a draw.";
       }
       setGameMessage(message);
     };
-    const handleOpponentResigned = () => {
-        setGameMessage('Your opponent resigned. You win!');
-    };
+    const handleOpponentResigned = () => setGameMessage('Your opponent resigned. You win!');
 
     socket.on('connect', handleConnect);
     socket.on('disconnect', handleDisconnect);
@@ -97,26 +88,13 @@ const MultiplayerChessBoard: React.FC<MultiplayerChessBoardProps> = ({
     };
   }, [socket, playerColor]);
 
-  // Initialize and setup game
   useEffect(() => {
     setComputerEnabled(false);
     resetGame();
     setPlayerColor(playerColor);
   }, [setComputerEnabled, resetGame, setPlayerColor, playerColor]);
 
-  const handleMove = useCallback((from: string, to: string) => {
-    if (!isMyTurn || gameState.gameStatus !== 'playing') {
-      return false;
-    }
-    const fromPos = notationToPosition(from);
-    const toPos = notationToPosition(to);
-    const moveResult = makeMove(fromPos, toPos);
-
-    if (moveResult.success && soundEnabled) {
-      moveResult.capture ? soundSystem.playCapture() : soundSystem.playMove();
-    }
-    return moveResult.success;
-  }, [isMyTurn, gameState.gameStatus, makeMove, soundEnabled]);
+  // 2. The custom 'handleMove' function has been completely removed.
 
   const handleResign = () => {
     if (socket && gameState?.gameStatus === 'playing') {
@@ -140,14 +118,6 @@ const MultiplayerChessBoard: React.FC<MultiplayerChessBoardProps> = ({
   return (
     <div className="multiplayer-chess-container">
       <div className={`connection-bar ${connectionStatus}`}>
-        <div className="connection-info">
-          <span className="status-dot"></span>
-          <span>
-            {connectionStatus === 'connected' && 'Connected'}
-            {connectionStatus === 'reconnecting' && 'Reconnecting...'}
-            {connectionStatus === 'disconnected' && 'Disconnected'}
-          </span>
-        </div>
         <div className="room-info">Room: {roomCode}</div>
         <div className="opponent-status">
           <span className={`opponent-dot ${opponent.connected ? 'connected' : 'disconnected'}`}></span>
@@ -159,12 +129,7 @@ const MultiplayerChessBoard: React.FC<MultiplayerChessBoardProps> = ({
 
       <div className="game-container">
         <div className="game-info-section">
-          <GameInfo
-            game={game}
-            onBackToHome={onBackToMenu}
-            difficulty="multiplayer"
-            playerColor={playerColor}
-          />
+          <GameInfo game={game} onBackToHome={onBackToMenu} difficulty="multiplayer" playerColor={playerColor} />
           <div className="multiplayer-controls">
             <div className="turn-indicator">
               <div className={`turn-badge ${isMyTurn ? 'my-turn' : 'opponent-turn'}`}>
@@ -173,23 +138,22 @@ const MultiplayerChessBoard: React.FC<MultiplayerChessBoardProps> = ({
             </div>
             {gameState.gameStatus === 'playing' && (
               <div className="game-actions">
-                <button onClick={() => setShowResignConfirm(true)} className="resign-button" disabled={!opponent.connected}>
-                  Resign
-                </button>
-                <button onClick={handleOfferDraw} className="draw-button" disabled={!opponent.connected}>
-                  Offer Draw
-                </button>
+                <button onClick={() => setShowResignConfirm(true)} className="resign-button" disabled={!opponent.connected}>Resign</button>
+                <button onClick={handleOfferDraw} className="draw-button" disabled={!opponent.connected}>Offer Draw</button>
               </div>
             )}
           </div>
         </div>
         <div className="chess-board-section">
+          {/* 3. The ChessBoard component is now fully controlled by the hook's state */}
           <ChessBoard
-            game={game}
+            gameState={gameState}
+            selectedSquare={selectedSquare}
+            validMoves={validMoves}
+            onSquareClick={selectSquare}
             rotated={playerColor === 'black'}
             soundEnabled={soundEnabled}
             boardTheme={boardTheme}
-            onMove={handleMove}
             disabled={!isMyTurn || gameState.gameStatus !== 'playing' || !opponent.connected}
           />
         </div>
@@ -199,7 +163,7 @@ const MultiplayerChessBoard: React.FC<MultiplayerChessBoardProps> = ({
         <div className="modal-backdrop">
           <div className="resign-modal">
             <h3>Resign Game?</h3>
-            <p>Are you sure you want to resign? This will end the game and your opponent will win.</p>
+            <p>Are you sure you want to resign?</p>
             <div className="modal-actions">
               <button onClick={handleResign} className="confirm-resign">Yes, Resign</button>
               <button onClick={() => setShowResignConfirm(false)} className="cancel-resign">Cancel</button>

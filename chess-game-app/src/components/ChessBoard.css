@@ -1018,4 +1018,22 @@
   filter: drop-shadow(1px 1px 2px rgba(139, 115, 85, 0.4));
 }
 
+/*
+ * Pulsing red glow for the king in check
+ */
+@keyframes pulse-red {
+  0% {
+    box-shadow: inset 0 0 25px 3px rgba(220, 20, 60, 0.6);
+  }
+  50% {
+    box-shadow: inset 0 0 25px 8px rgba(255, 0, 0, 0.8);
+  }
+  100% {
+    box-shadow: inset 0 0 25px 3px rgba(220, 20, 60, 0.6);
+  }
+}
 
+.chess-square.in-check {
+  /* This animation creates the pulsing effect */
+  animation: pulse-red 1.5s infinite;
+}

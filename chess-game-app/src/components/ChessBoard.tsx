@@ -3,6 +3,7 @@ import type { Position, ChessPiece } from '../types/chess';
 import type { ChessGameHook } from '../hooks/useChessGame';
 import PromotionDialog from './PromotionDialog';
 import { soundSystem } from '../utils/soundSystem';
+import { findKing } from '../logic/chessGame'; // Import findKing
 import './ChessBoard.css';
 
 interface ChessBoardProps {
@@ -41,7 +42,7 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
     const currentMoveCount = gameState.moveHistory.length;
 
     if (currentMoveCount > lastMoveCount && soundEnabled) {
-      const lastMove = gameState.moveHistory[currentMoveCount - 1];
+      const lastMove = gameState.moveHistory[currentMove-Count - 1];
 
       if (lastMove?.isCastling) {
         soundSystem.playCastling();
@@ -87,24 +88,32 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
     const isSelected = isSquareSelected(position);
     const isValidTarget = isValidMoveTarget(position);
 
-    // Check if this is the last move
     const lastMove = gameState.moveHistory[gameState.moveHistory.length - 1];
     const isLastMoveSquare = lastMove &&
       ((lastMove.from.row === row && lastMove.from.col === col) ||
        (lastMove.to.row === row && lastMove.to.col === col));
+
+    // Correctly identify the king in check
+    let isKingInCheck = false;
+    if (gameState.gameStatus === 'check') {
+        const kingPos = findKing(gameState.board, gameState.currentPlayer);
+        if (kingPos && kingPos.row === row && kingPos.col === col) {
+            isKingInCheck = true;
+        }
+    }
 
     const squareClass = [
       'chess-square',
       isLight ? 'light' : 'dark',
       isSelected ? 'selected' : '',
       isValidTarget ? 'valid-move' : '',
-      isLastMoveSquare ? 'last-move' : ''
+      isLastMoveSquare ? 'last-move' : '',
+      isKingInCheck ? 'in-check' : '' // Apply the 'in-check' class
     ].filter(Boolean).join(' ');
 
     const handleSquareClick = () => {
       if (disabled) return;
 
-      // Add selection animation
       const squareElement = document.querySelector(`[data-square="${row}-${col}"]`);
       if (squareElement) {
         squareElement.classList.add('selecting');
@@ -112,29 +121,18 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
           squareElement.classList.remove('selecting');
         }, 400);
       }
-
-      // Multiplayer flow: if a move is in progress and this square is a valid target,
-      // send the move to the server instead of performing a local move.
+      
       if (onMove) {
         if (game.selectedSquare && isValidTarget) {
           const fromSquare = `${String.fromCharCode(97 + game.selectedSquare.col)}${8 - game.selectedSquare.row}`;
           const toSquare = `${String.fromCharCode(97 + position.col)}${8 - position.row}`;
-
           const success = onMove(fromSquare, toSquare);
-          if (!success) {
-            // Keep selection so the user can try another target
-            return;
-          }
-          // On success, useChessGame.makeMove clears selection via MultiplayerChessBoard logic
+          if (!success) { return; }
           return;
         }
-
-        // Otherwise, just select/deselect and show valid targets
         selectSquare(position);
         return;
       }
-
-      // Single-player flow
       selectSquare(position);
     };
 
@@ -159,7 +157,6 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
 
   const renderBoard = () => {
     const squares = [];
-    // Render from top to bottom (row 7 to 0) for proper chess board orientation
     for (let row = 7; row >= 0; row--) {
       for (let col = 0; col < 8; col++) {
         squares.push(renderSquare(row, col));
@@ -174,7 +171,6 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
         <div className={`chess-board ${rotated ? 'rotated' : ''} theme-${boardTheme}`}>
           {renderBoard()}
 
-          {/* Particle effects */}
           <div className="particle-container">
             {particles.map(particle => (
               <div
@@ -188,12 +184,8 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
             ))}
           </div>
 
-          {/* Check indicator */}
-          {gameState.gameStatus === 'check' && (
-            <div className="check-indicator" />
-          )}
+          {/* The old check indicator has been removed */}
 
-          {/* Computer thinking indicator - hidden in multiplayer (onMove provided) */}
           {!onMove && isComputerThinking && (
             <div className="computer-thinking-overlay">
               <div className="thinking-indicator">
@@ -203,7 +195,6 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
             </div>
           )}
 
-          {/* Engine status indicator - hidden in multiplayer */}
           {!onMove && !isEngineReady && (
             <div className="engine-loading-overlay">
               <div className="loading-indicator">
@@ -228,7 +219,6 @@ const ChessBoard: React.FC<ChessBoardProps> = ({
         </div>
       </div>
 
-      {/* Promotion dialog */}
       {pendingPromotion && (
         <PromotionDialog
           color={gameState.currentPlayer}
@@ -253,24 +243,9 @@ const ChessPieceComponent: React.FC<ChessPieceProps> = ({
 }) => {
   const getPieceSymbol = (piece: ChessPiece): string => {
     const symbols = {
-      white: {
-        king: '♔',
-        queen: '♕',
-        rook: '♖',
-        bishop: '♗',
-        knight: '♘',
-        pawn: '♙'
-      },
-      black: {
-        king: '♚',
-        queen: '♛',
-        rook: '♜',
-        bishop: '♝',
-        knight: '♞',
-        pawn: '♟'
-      }
+      white: { king: '♔', queen: '♕', rook: '♖', bishop: '♗', knight: '♘', pawn: '♙' },
+      black: { king: '♚', queen: '♛', rook: '♜', bishop: '♝', knight: '♞', pawn: '♟' }
     };
-    
     return symbols[piece.color][piece.type];
   };
 

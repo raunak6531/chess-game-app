@@ -1,10 +1,10 @@
 import { useState, useCallback, useEffect } from 'react';
+import type { Socket } from 'socket.io-client';
 import type { GameState, Position, PieceType } from '../types/chess';
 import { notationToPosition } from '../types/chess';
 import { initializeGameState, gameStateToFen } from '../logic/chessGame';
-import { executeMove, getValidMovesForPiece, isPromotionMove } from '../logic/moveValidation';
+import { executeMove, getValidMovesForPiece, isPromotionMove, getGameStatus } from '../logic/moveValidation';
 import { stockfishService, type Difficulty } from '../services/stockfishService';
-import type { Socket } from 'socket.io-client';
 
 export interface ChessGameHook {
   gameState: GameState;
@@ -22,14 +22,12 @@ export interface ChessGameHook {
   pendingPromotion: { from: Position; to: Position } | null;
   handlePromotion: (pieceType: PieceType) => void;
   cancelPromotion: () => void;
-  // Multiplayer support methods
   getFEN: () => string;
   loadFEN: (fen: string) => void;
   getTurn: () => 'white' | 'black';
   isGameOver: () => boolean;
   isCheckmate: () => boolean;
   isStalemate: () => boolean;
-  // Control AI usage (disable in multiplayer)
   setComputerEnabled: (enabled: boolean) => void;
 }
 
@@ -44,7 +42,6 @@ export const useChessGame = (socket: Socket | null, roomCode: string | null): Ch
   const [pendingPromotion, setPendingPromotion] = useState<{ from: Position; to: Position } | null>(null);
   const [computerEnabled, setComputerEnabled] = useState<boolean>(true);
 
-  // Initialize Stockfish engine
   useEffect(() => {
     const initEngine = async () => {
       try {
@@ -55,10 +52,7 @@ export const useChessGame = (socket: Socket | null, roomCode: string | null): Ch
         setIsEngineReady(false);
       }
     };
-
     initEngine();
-
-    // Cleanup on unmount
     return () => {
       try {
         stockfishService.destroy();
@@ -68,13 +62,9 @@ export const useChessGame = (socket: Socket | null, roomCode: string | null): Ch
     };
   }, []);
 
-  // Computer move effect - now using Stockfish
   useEffect(() => {
-    // Do not run AI logic when computer is disabled (multiplayer)
     if (!computerEnabled) return;
-
     const computerColor = playerColor === 'white' ? 'black' : 'white';
-
     try {
       if (
         isEngineReady &&
@@ -82,7 +72,6 @@ export const useChessGame = (socket: Socket | null, roomCode: string | null): Ch
         (gameState.gameStatus === 'playing' || gameState.gameStatus === 'check') &&
         !isComputerThinking
       ) {
-        // Set position in Stockfish
         try {
           const fen = gameStateToFen(gameState);
           stockfishService.setPosition(fen);
@@ -90,13 +79,10 @@ export const useChessGame = (socket: Socket | null, roomCode: string | null): Ch
           console.error('Error generating FEN:', fenError);
           return;
         }
-
-        // Request computer move
         stockfishService.requestMove(
           (move) => {
-            // Convert Stockfish move to our format and execute
             const moveSuccess = makeMove(move.from, move.to);
-            if (!moveSuccess) {
+            if (!moveSuccess.success) {
               console.error('Computer move was invalid:', move);
               setIsComputerThinking(false);
             }
@@ -109,30 +95,81 @@ export const useChessGame = (socket: Socket | null, roomCode: string | null): Ch
     } catch (error) {
       console.error('Error in computer move effect:', error);
     }
-  }, [gameState.currentPlayer, gameState.gameStatus, isEngineReady, isComputerThinking, playerColor, computerEnabled]);
+  }, [gameState, isEngineReady, isComputerThinking, playerColor, computerEnabled]);
 
-  // Listen for opponent moves
+  const loadFEN = useCallback((fen: string) => {
+    try {
+      const [boardPart, activeColor, castling, enPassant, halfmove, fullmove] = fen.split(' ');
+      const rows = boardPart.split('/');
+      const newBoard: GameState['board'] = Array(8)
+        .fill(null)
+        .map(() => Array(8).fill(null));
+
+      for (let fenRow = 0; fenRow < 8; fenRow++) {
+        const rowStr = rows[fenRow];
+        let col = 0;
+        for (const ch of rowStr) {
+          if (/\d/.test(ch)) {
+            col += parseInt(ch, 10);
+          } else {
+            const isUpper = ch === ch.toUpperCase();
+            const color = isUpper ? 'white' : 'black';
+            const typeMap: Record<string, any> = {
+              k: 'king', q: 'queen', r: 'rook', b: 'bishop', n: 'knight', p: 'pawn',
+            };
+            const type = typeMap[ch.toLowerCase()];
+            const rowIndex = 7 - fenRow;
+            newBoard[rowIndex][col] = { type, color } as any;
+            col++;
+          }
+        }
+      }
+
+      setGameState((prev) => {
+        const updatedGameState = {
+          ...prev,
+          board: newBoard,
+          currentPlayer: activeColor === 'w' ? 'white' : 'black',
+          canCastle: {
+            whiteKingside: castling?.includes('K') || false,
+            whiteQueenside: castling?.includes('Q') || false,
+            blackKingside: castling?.includes('k') || false,
+            blackQueenside: castling?.includes('q') || false,
+          },
+          enPassantTarget: enPassant && enPassant !== '-' ? notationToPosition(enPassant) : undefined,
+          halfMoveClock: parseInt(halfmove || '0', 10),
+          fullMoveNumber: parseInt(fullmove || '1', 10),
+        };
+
+        const newStatus = getGameStatus(updatedGameState as GameState);
+
+        return {
+          ...updatedGameState,
+          gameStatus: newStatus,
+        };
+      });
+
+      setSelectedSquare(null);
+      setValidMoves([]);
+    } catch (e) {
+      console.error('Failed to load FEN:', e);
+    }
+  }, []);
+
   useEffect(() => {
     if (!socket) return;
-
     const handleMoveReceived = (data: { fen: string }) => {
-      // The server sends the new FEN state of the board.
-      // Use the existing loadFEN function to update the game.
       loadFEN(data.fen);
     };
-
     socket.on('moveReceived', handleMoveReceived);
-
-    // Clean up the listener when the component unmounts or the socket changes
     return () => {
       socket.off('moveReceived', handleMoveReceived);
     };
-  }, [socket]);
+  }, [socket, loadFEN]);
 
   const selectSquare = useCallback((position: Position) => {
     const piece = gameState.board[position.row][position.col];
 
-    // If clicking on the same square, deselect
     if (
       selectedSquare &&
       selectedSquare.row === position.row &&
@@ -143,7 +180,6 @@ export const useChessGame = (socket: Socket | null, roomCode: string | null): Ch
       return;
     }
 
-    // If there's a selected square and this is a valid move target, make the move
     if (
       selectedSquare &&
       validMoves.some((move) => move.row === position.row && move.col === position.col)
@@ -154,13 +190,11 @@ export const useChessGame = (socket: Socket | null, roomCode: string | null): Ch
       return;
     }
 
-    // If clicking on a piece of the current player AND it's the player's turn, select it
     if (piece && piece.color === gameState.currentPlayer && piece.color === playerColor) {
       setSelectedSquare(position);
       const moves = getValidMovesForPiece(gameState, position);
       setValidMoves(moves);
     } else {
-      // Clicking on empty square or opponent piece without selection
       setSelectedSquare(null);
       setValidMoves([]);
     }
@@ -168,21 +202,17 @@ export const useChessGame = (socket: Socket | null, roomCode: string | null): Ch
 
   const makeMove = useCallback(
     (from: Position, to: Position, promotionPiece?: PieceType): { success: boolean; capture?: boolean; piece?: string } => {
-      // Check if this move would result in promotion
       const piece = gameState.board[from.row][from.col];
       if (piece && isPromotionMove({ from, to, piece })) {
         if (!promotionPiece) {
-          // Set pending promotion and wait for user selection
           setPendingPromotion({ from, to });
-          return { success: false }; // Don't execute the move yet
+          return { success: false };
         }
       }
 
-      // Check if this is a capture move
       const targetPiece = gameState.board[to.row][to.col];
       const isCapture = targetPiece !== null;
 
-      // Execute the move with promotion piece if provided
       const newGameState = executeMove(gameState, from, to, promotionPiece);
       if (newGameState) {
         setGameState(newGameState);
@@ -190,37 +220,15 @@ export const useChessGame = (socket: Socket | null, roomCode: string | null): Ch
         setValidMoves([]);
         setPendingPromotion(null);
 
-        // --- START OF NEW CODE ---
-        // After updating state locally, send the move to the server
         if (socket && roomCode) {
           const fen = gameStateToFen(newGameState);
           socket.emit('makeMove', {
             roomCode,
-            from,
-            to,
+            from: `${String.fromCharCode(97 + from.col)}${from.row + 1}`,
+            to: `${String.fromCharCode(97 + to.col)}${to.row + 1}`,
             fen,
             turn: newGameState.currentPlayer,
           });
-        }
-        // --- END OF NEW CODE ---
-
-        // Play simple move sound
-        try {
-          const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-          const oscillator = audioContext.createOscillator();
-          const gainNode = audioContext.createGain();
-
-          oscillator.connect(gainNode);
-          gainNode.connect(audioContext.destination);
-
-          oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
-          gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-          gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
-
-          oscillator.start(audioContext.currentTime);
-          oscillator.stop(audioContext.currentTime + 0.1);
-        } catch (error) {
-          // Ignore audio errors
         }
 
         return {
@@ -258,7 +266,6 @@ export const useChessGame = (socket: Socket | null, roomCode: string | null): Ch
     [validMoves]
   );
 
-  // Update difficulty in Stockfish service
   const handleSetDifficulty = useCallback(
     (newDifficulty: Difficulty) => {
       setDifficulty(newDifficulty);
@@ -269,7 +276,6 @@ export const useChessGame = (socket: Socket | null, roomCode: string | null): Ch
     [isEngineReady]
   );
 
-  // Handle promotion selection
   const handlePromotion = useCallback(
     (pieceType: PieceType) => {
       if (pendingPromotion) {
@@ -279,81 +285,19 @@ export const useChessGame = (socket: Socket | null, roomCode: string | null): Ch
     [pendingPromotion, makeMove]
   );
 
-  // Cancel promotion
   const cancelPromotion = useCallback(() => {
     setPendingPromotion(null);
     setSelectedSquare(null);
     setValidMoves([]);
   }, []);
 
-  // Set player color
   const setPlayerColor = useCallback((color: 'white' | 'black') => {
     setPlayerColorState(color);
   }, []);
 
-  // Multiplayer support methods
   const getFEN = useCallback(() => {
     return gameStateToFen(gameState);
   }, [gameState]);
-
-  const loadFEN = useCallback((fen: string) => {
-    try {
-      const [boardPart, activeColor, castling, enPassant, halfmove, fullmove] = fen.split(' ');
-      const rows = boardPart.split('/');
-      const newBoard: GameState['board'] = Array(8)
-        .fill(null)
-        .map(() => Array(8).fill(null));
-
-      // FEN rows go rank 8 -> 1; our board indexes 7->0 are top to bottom
-      for (let fenRow = 0; fenRow < 8; fenRow++) {
-        const rowStr = rows[fenRow];
-        let col = 0;
-        for (const ch of rowStr) {
-          if (/\d/.test(ch)) {
-            col += parseInt(ch, 10);
-          } else {
-            const isUpper = ch === ch.toUpperCase();
-            const color = isUpper ? 'white' : 'black';
-            const typeMap: Record<string, any> = {
-              k: 'king',
-              q: 'queen',
-              r: 'rook',
-              b: 'bishop',
-              n: 'knight',
-              p: 'pawn',
-            };
-            const type = typeMap[ch.toLowerCase()];
-            const rowIndex = 7 - fenRow; // map FEN rank to our row index
-            newBoard[rowIndex][col] = { type, color } as any;
-            col++;
-          }
-        }
-      }
-
-      setGameState((prev) => ({
-        ...prev,
-        board: newBoard,
-        currentPlayer: activeColor === 'w' ? 'white' : 'black',
-        // very basic castling info
-        canCastle: {
-          whiteKingside: castling?.includes('K') || false,
-          whiteQueenside: castling?.includes('Q') || false,
-          blackKingside: castling?.includes('k') || false,
-          blackQueenside: castling?.includes('q') || false,
-        },
-        // en passant target from FEN (e.g., 'e3' or '-')
-        enPassantTarget: enPassant && enPassant !== '-' ? notationToPosition(enPassant) : undefined,
-        // minimal timing info
-        halfMoveClock: parseInt(halfmove || '0', 10),
-        fullMoveNumber: parseInt(fullmove || '1', 10),
-      }));
-
-      setSelectedSquare(null);
-      setValidMoves([]);
-    } catch (e) {
-      console.error('Failed to load FEN:', e);
-    }
-  }, []);
 
   const getTurn = useCallback(() => {
     return gameState.currentPlayer;
@@ -374,6 +318,10 @@ export const useChessGame = (socket: Socket | null, roomCode: string | null): Ch
   const isStalemate = useCallback(() => {
     return gameState.gameStatus === 'stalemate';
   }, [gameState]);
+  
+  const setComputerEnabledCallback = useCallback((enabled: boolean) => {
+    setComputerEnabled(enabled);
+  }, []);
 
   return {
     gameState,
@@ -391,14 +339,12 @@ export const useChessGame = (socket: Socket | null, roomCode: string | null): Ch
     pendingPromotion,
     handlePromotion,
     cancelPromotion,
-    // Multiplayer methods
     getFEN,
     loadFEN,
     getTurn,
     isGameOver,
     isCheckmate,
     isStalemate,
-    // Control AI usage
-    setComputerEnabled,
+    setComputerEnabled: setComputerEnabledCallback,
   };
 };

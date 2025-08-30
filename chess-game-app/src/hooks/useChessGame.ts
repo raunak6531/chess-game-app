@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import type { Socket } from 'socket.io-client';
-import type { GameState, Position, PieceType } from '../types/chess';
+import type { GameState, Position, PieceType, PieceColor } from '../types/chess'; // Import PieceColor
 import { notationToPosition } from '../types/chess';
 import { initializeGameState, gameStateToFen } from '../logic/chessGame';
 import { executeMove, getValidMovesForPiece, isPromotionMove, getGameStatus } from '../logic/moveValidation';
@@ -36,7 +36,7 @@ export const useChessGame = (socket: Socket | null, roomCode: string | null): Ch
   const [selectedSquare, setSelectedSquare] = useState<Position | null>(null);
   const [validMoves, setValidMoves] = useState<Position[]>([]);
   const [, setDifficulty] = useState<Difficulty>('intermediate');
-  const [playerColor, setPlayerColorState] = useState<'white' | 'black'>('white');
+  const [playerColor, setPlayerColorState] = useState<PieceColor>('white');
   const [isComputerThinking, setIsComputerThinking] = useState(false);
   const [isEngineReady, setIsEngineReady] = useState(false);
   const [pendingPromotion, setPendingPromotion] = useState<{ from: Position; to: Position } | null>(null);
@@ -129,7 +129,9 @@ export const useChessGame = (socket: Socket | null, roomCode: string | null): Ch
         const updatedGameState = {
           ...prev,
           board: newBoard,
-          currentPlayer: activeColor === 'w' ? 'white' : 'black',
+          // ** THIS IS THE FIX **
+          // We explicitly tell TypeScript this is a PieceColor
+          currentPlayer: (activeColor === 'w' ? 'white' : 'black') as PieceColor,
           canCastle: {
             whiteKingside: castling?.includes('K') || false,
             whiteQueenside: castling?.includes('Q') || false,

@@ -140,7 +140,7 @@ const MultiplayerChessBoard: React.FC<MultiplayerChessBoardProps> = ({
             rotated={playerColor === 'black'}
             soundEnabled={soundEnabled}
             boardTheme={boardTheme}
-            disabled={!isMyTurn || gameState.gameStatus !== 'playing' || !opponent.connected}
+            disabled={!isMyTurn || (gameState.gameStatus !== 'playing' && gameState.gameStatus !== 'check') || !opponent.connected}
           />
         </div>
       </div>

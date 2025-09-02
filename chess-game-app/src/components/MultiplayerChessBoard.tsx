@@ -107,6 +107,14 @@ const MultiplayerChessBoard: React.FC<MultiplayerChessBoardProps> = ({
   return (
     <div className="multiplayer-chess-container">
       <div className={`connection-bar ${connectionStatus}`}>
+        <div className="connection-info">
+          <span className="status-dot"></span>
+          <span>
+            {connectionStatus === 'connected' && 'Connected'}
+            {connectionStatus === 'reconnecting' && 'Reconnecting...'}
+            {connectionStatus === 'disconnected' && 'Disconnected'}
+          </span>
+        </div>
         <div className="room-info">Room: {roomCode}</div>
         <div className="opponent-status">
           <span className={`opponent-dot ${opponent.connected ? 'connected' : 'disconnected'}`}></span>
@@ -116,9 +124,23 @@ const MultiplayerChessBoard: React.FC<MultiplayerChessBoardProps> = ({
 
       {gameMessage && <div className="game-message">{gameMessage}</div>}
 
-      <div className="game-container">
+      {/* --- UPDATED JSX STRUCTURE FOR 3-COLUMN LAYOUT --- */}
+      <div className="game-layout-grid">
         <div className="game-info-section">
           <GameInfo game={game} onBackToHome={onBackToMenu} difficulty="multiplayer" playerColor={playerColor} />
+        </div>
+
+        <div className="chess-board-section">
+          <ChessBoard
+            game={game}
+            rotated={playerColor === 'black'}
+            soundEnabled={soundEnabled}
+            boardTheme={boardTheme}
+            disabled={!isMyTurn || (gameState.gameStatus !== 'playing' && gameState.gameStatus !== 'check') || !opponent.connected}
+          />
+        </div>
+
+        <div className="multiplayer-controls-section">
           <div className="multiplayer-controls">
             <div className="turn-indicator">
               <div className={`turn-badge ${isMyTurn ? 'my-turn' : 'opponent-turn'}`}>
@@ -132,16 +154,6 @@ const MultiplayerChessBoard: React.FC<MultiplayerChessBoardProps> = ({
               </div>
             )}
           </div>
-        </div>
-        <div className="chess-board-section">
-          {/* ## THIS IS THE ONLY PART THAT HAS CHANGED ## */}
-          <ChessBoard
-            game={game}
-            rotated={playerColor === 'black'}
-            soundEnabled={soundEnabled}
-            boardTheme={boardTheme}
-            disabled={!isMyTurn || (gameState.gameStatus !== 'playing' && gameState.gameStatus !== 'check') || !opponent.connected}
-          />
         </div>
       </div>
 

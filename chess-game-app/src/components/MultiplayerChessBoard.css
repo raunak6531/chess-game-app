@@ -12,34 +12,37 @@
   overflow: hidden; /* ** Prevents scrollbars ** */
 }
 
-/* --- SLEEK HEADER --- */
+/* --- ULTRA-SLEEK HEADER --- */
 .connection-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 24px; /* Reduced vertical padding for a thinner bar */
-  background: rgba(0, 0, 0, 0.3);
-  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
-  font-size: 0.85rem;
-  flex-shrink: 0; /* Important: Prevents this bar from shrinking */
+  padding: 4px 20px; /* Minimized padding for ultra-thin bar */
+  background: rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+  font-size: 0.8rem;
+  height: 40px; /* Fixed small height */
+  flex-shrink: 0;
+  backdrop-filter: blur(4px);
 }
-.connection-info, .room-info, .opponent-status { display: flex; align-items: center; gap: 8px; }
-.status-dot, .opponent-dot { width: 8px; height: 8px; border-radius: 50%; }
+.connection-info, .room-info, .opponent-status { display: flex; align-items: center; gap: 6px; }
+.status-dot, .opponent-dot { width: 6px; height: 6px; border-radius: 50%; }
 .connection-bar.connected .status-dot, .opponent-dot.connected { background: #28a745; }
-.room-info { color: #d4af37; font-weight: 700; }
+.room-info { color: #d4af37; font-weight: 600; font-size: 0.9rem; }
 
-/* --- ROBUST 3-COLUMN GRID LAYOUT --- */
+/* --- OPTIMIZED 3-COLUMN GRID LAYOUT --- */
 .game-layout-grid {
   flex-grow: 1; /* Allows the grid to fill all remaining vertical space */
   display: grid;
   grid-template-columns: minmax(280px, 1fr) auto minmax(280px, 1fr); /* Left (flex) | Center (auto) | Right (flex) */
-  align-items: center;
-  gap: 2rem;
-  padding: 1.5rem 2rem;
+  align-items: start; /* Changed from center to start for more upward positioning */
+  gap: 1.5rem; /* Reduced gap */
+  padding: 0.8rem 1.5rem; /* Reduced padding significantly */
   width: 100%;
-  max-width: 1800px; /* Adjust as needed for very large screens */
+  max-width: 1800px;
   margin: 0 auto;
-  min-height: 0; /* A crucial fix for flexbox overflow bugs */
+  min-height: 0;
+  padding-top: 1rem; /* Minimal top padding to bring content up */
 }
 
 .game-info-section, 
@@ -100,7 +103,7 @@
 }
 
 /* (Keep your existing modal, message, and loading styles) */
-.game-message { background: linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(255, 215, 0, 0.1) 100%); border: 2px solid rgba(212, 175, 55, 0.3); border-radius: 12px; padding: 16px 24px; margin: 16px auto; text-align: center; font-weight: 600; font-size: 1.1rem; color: #ffd700; max-width: 1200px; width: calc(100% - 48px); box-sizing: border-box; }
+.game-message { background: linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(255, 215, 0, 0.1) 100%); border: 2px solid rgba(212, 175, 55, 0.3); border-radius: 12px; padding: 12px 20px; margin: 8px auto; text-align: center; font-weight: 600; font-size: 1rem; color: #ffd700; max-width: 1200px; width: calc(100% - 40px); box-sizing: border-box; }
 .modal-backdrop { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 10000; }
 .resign-modal { background: linear-gradient(145deg, rgba(15, 15, 35, 0.98) 0%, rgba(26, 26, 46, 0.95) 100%); border-radius: 20px; padding: 32px; max-width: 400px; width: 90%; text-align: center; border: 2px solid rgba(212, 175, 55, 0.3); box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5); }
 /* ... etc */
